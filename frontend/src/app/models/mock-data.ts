@@ -17,11 +17,18 @@ export interface Product {
 }
 
 export interface Order {
-  id: string;
-  customer: string;
-  amount: string;
-  date: string;
-  status: string;
+  id: number;
+  numero: string;
+  dateCommande: Date;
+  totalHT: number;
+  totalTVA: number;
+  totalTTC: number;
+  estValider: boolean;
+  estSolder: boolean;
+  montantRegle: number;
+  soldeDu: number;
+  clientNom: string;
+  statusLibelle: string;
 }
 
 export interface Invoice {
@@ -99,9 +106,48 @@ export const products: Product[] = [
 ];
 
 export const orders: Order[] = [
-  { id: 'ORD-1024', customer: 'A. Martin', amount: '€2,450', date: '05 Jul', status: 'Expédiée' },
-  { id: 'ORD-1025', customer: 'L. Bernard', amount: '€860', date: '04 Jul', status: 'En cours' },
-  { id: 'ORD-1026', customer: 'S. Dupont', amount: '€1,320', date: '03 Jul', status: 'Confirmée' }
+  {
+    id: 1,
+    numero: 'ORD-1024',
+    dateCommande: new Date('2026-07-05'),
+    totalHT: 2000,
+    totalTVA: 400,
+    totalTTC: 2450,
+    estValider: true,
+    estSolder: true,
+    montantRegle: 2450,
+    soldeDu: 0,
+    clientNom: 'A. Martin',
+    statusLibelle: 'Expédiée'
+  },
+  {
+    id: 2,
+    numero: 'ORD-1025',
+    dateCommande: new Date('2026-07-04'),
+    totalHT: 700,
+    totalTVA: 140,
+    totalTTC: 860,
+    estValider: true,
+    estSolder: false,
+    montantRegle: 430,
+    soldeDu: 430,
+    clientNom: 'L. Bernard',
+    statusLibelle: 'En cours'
+  },
+  {
+    id: 3,
+    numero: 'ORD-1026',
+    dateCommande: new Date('2026-07-03'),
+    totalHT: 1100,
+    totalTVA: 220,
+    totalTTC: 1320,
+    estValider: false,
+    estSolder: false,
+    montantRegle: 0,
+    soldeDu: 1320,
+    clientNom: 'S. Dupont',
+    statusLibelle: 'Confirmée'
+  }
 ];
 
 export const invoices: Invoice[] = [
