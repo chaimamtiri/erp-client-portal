@@ -4,10 +4,11 @@ import { SidebarComponent } from '../../shared/components/sidebar/sidebar.compon
 import { TopbarComponent } from '../../shared/components/topbar/topbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ThemeService } from '../../services/theme.service';
+import { ChatbotComponent } from '../../shared/components/chatbot/chatbot.component';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterOutlet, SidebarComponent, TopbarComponent, FooterComponent],
+  imports: [RouterOutlet, SidebarComponent, TopbarComponent, FooterComponent, ChatbotComponent],
   template: `
     <div class="shell" [class.dark-theme]="theme.darkMode()">
       <div class="shell__sidebar">
@@ -20,6 +21,7 @@ import { ThemeService } from '../../services/theme.service';
         </main>
         <app-footer />
       </div>
+      <app-chatbot />
     </div>
   `,
   styles: [
@@ -45,12 +47,9 @@ export class MainLayoutComponent {
     { label: 'Paiements', icon: 'payments', route: '/payments' },
     { label: 'Livraisons', icon: 'local_shipping', route: '/deliveries' },
     { label: 'Documents', icon: 'folder_open', route: '/documents' },
-    { label: 'Support', icon: 'support_agent', route: '/support' },
-    { label: 'Notifications', icon: 'notifications', route: '/notifications' },
-    { label: 'Profil', icon: 'person', route: '/profile' },
-    { label: 'Adresses', icon: 'home_work', route: '/addresses' },
-    { label: 'Activité', icon: 'timeline', route: '/activity' },
-    { label: 'Paramètres', icon: 'settings', route: '/settings' }
+    { label: 'Support Ticket', icon: 'support_agent', route: '/support' },
+    { label: 'Activité', icon: 'timeline', route: '/activity' }
   ];
 }
+
 

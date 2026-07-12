@@ -11,7 +11,6 @@ import { activity, deliveries, invoices, notifications, orders, stats } from '..
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatListModule, BreadcrumbComponent, SectionCardComponent, StatCardComponent],
   template: `
     <app-breadcrumb [items]="['Accueil', 'Dashboard']" />
@@ -26,43 +25,51 @@ import { activity, deliveries, invoices, notifications, orders, stats } from '..
     </div>
 
     <section class="stats-grid">
-      <app-stat-card *ngFor="let item of statsList; trackBy: trackByTitle" [title]="item.title" [value]="item.value" [change]="item.change" [icon]="item.icon" [tone]="item.tone"></app-stat-card>
+      @for (item of statsList; track item.title) {
+        <app-stat-card [title]="item.title" [value]="item.value" [change]="item.change" [icon]="item.icon" [tone]="item.tone" />
+      }
     </section>
 
     <section class="content-grid">
       <app-section-card title="Dernières commandes" subtitle="Suivi en temps réel" actionLabel="Voir tout" actionLink="/orders" class="full-width">
         <mat-list>
-          <mat-list-item *ngFor="let order of latestOrders; trackBy: trackById">
-            <div class="row-item">
-              <span>{{ order.id }}</span>
-              <span>{{ order.customer }}</span>
-              <span>{{ order.amount }}</span>
-              <span>{{ order.status }}</span>
-            </div>
-          </mat-list-item>
+          @for (order of latestOrders; track order.id) {
+            <mat-list-item>
+              <div class="row-item">
+                <span>{{ order.numero }}</span>
+                <span>{{ order.clientNom }}</span>
+                <span>€{{ order.totalTTC }}</span>
+                <span>{{ order.statusLibelle }}</span>
+              </div>
+            </mat-list-item>
+          }
         </mat-list>
       </app-section-card>
 
       <app-section-card title="Dernières factures" subtitle="État de paiement" actionLabel="Consulter" actionLink="/invoices">
         <mat-list>
-          <mat-list-item *ngFor="let invoice of latestInvoices; trackBy: trackById">
-            <div class="row-item">
-              <span>{{ invoice.id }}</span>
-              <span>{{ invoice.amount }}</span>
-              <span>{{ invoice.status }}</span>
-            </div>
-          </mat-list-item>
+          @for (invoice of latestInvoices; track invoice.id) {
+            <mat-list-item>
+              <div class="row-item">
+                <span>{{ invoice.numero }}</span>
+                <span>{{ invoice.total_ttc | currency: 'EUR':'symbol':'1.2-2' }}</span>
+                <span>{{ invoice.est_solder ? 'Payée' : 'En attente' }}</span>
+              </div>
+            </mat-list-item>
+          }
         </mat-list>
       </app-section-card>
 
       <app-section-card title="Notifications" subtitle="Alertes récentes" actionLabel="Voir tout" actionLink="/notifications">
         <mat-list>
-          <mat-list-item *ngFor="let notification of notificationList; trackBy: trackByTitle">
-            <div class="notification-item">
-              <strong>{{ notification.title }}</strong>
-              <span>{{ notification.detail }}</span>
-            </div>
-          </mat-list-item>
+          @for (notification of notificationList; track notification.titre) {
+            <mat-list-item>
+              <div class="notification-item">
+                <strong>{{ notification.titre }}</strong>
+                <span>{{ notification.message }}</span>
+              </div>
+            </mat-list-item>
+          }
         </mat-list>
       </app-section-card>
 
@@ -80,12 +87,14 @@ import { activity, deliveries, invoices, notifications, orders, stats } from '..
 
       <app-section-card title="Livraisons à venir" subtitle="Planning de la semaine" actionLabel="Voir" actionLink="/deliveries">
         <mat-list>
-          <mat-list-item *ngFor="let delivery of deliveryList; trackBy: trackById">
-            <div class="delivery-item">
-              <strong>{{ delivery.order }}</strong>
-              <span>{{ delivery.eta }}</span>
-            </div>
-          </mat-list-item>
+          @for (delivery of deliveryList; track delivery.id) {
+            <mat-list-item>
+              <div class="delivery-item">
+                <strong>{{ delivery.numero }}</strong>
+                <span>{{ delivery.date_livraison | date: 'dd/MM/yyyy' }}</span>
+              </div>
+            </mat-list-item>
+          }
         </mat-list>
       </app-section-card>
     </section>
@@ -117,12 +126,4 @@ export class DashboardComponent {
   protected readonly latestInvoices = invoices.slice(0, 3);
   protected readonly notificationList = notifications.slice(0, 3);
   protected readonly deliveryList = deliveries.slice(0, 3);
-
-  protected trackById(_: number, item: { id: string }) {
-    return item.id;
-  }
-
-  protected trackByTitle(_: number, item: { title: string }) {
-    return item.title;
-  }
 }

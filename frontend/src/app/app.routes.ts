@@ -22,7 +22,7 @@ export const routes: Routes = [
       { path: 'support/detail', loadComponent: () => import('./pages/ticket-detail/ticket-detail.component').then((m) => m.TicketDetailComponent) },
       { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then((m) => m.NotificationsComponent) },
       { path: 'profile', loadComponent: () => import('./pages/profile/profile.component').then((m) => m.ProfileComponent) },
-      { path: 'addresses', loadComponent: () => import('./pages/addresses/addresses.component').then((m) => m.AddressesComponent) },
+      { path: 'addresses', redirectTo: 'profile' },
       { path: 'activity', loadComponent: () => import('./pages/activity/activity.component').then((m) => m.ActivityComponent) },
       { path: 'settings', loadComponent: () => import('./pages/settings/settings.component').then((m) => m.SettingsComponent) }
     ]

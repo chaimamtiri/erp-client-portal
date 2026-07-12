@@ -35,13 +35,13 @@ import { products } from '../../models/mock-data';
         <mat-card class="product-card">
           <div class="product-card__emoji">{{ product.image }}</div>
           <div class="product-card__category">{{ product.category }}</div>
-          <div class="product-card__name">{{ product.name }}</div>
+          <div class="product-card__name">{{ product.nom }}</div>
           <div class="product-card__meta">
-            <span>{{ product.stock }}</span>
+            <span>{{ product.stock_disponible }} en stock</span>
             <span>★ {{ product.rating }}</span>
           </div>
           <div class="product-card__footer">
-            <div class="product-card__price">€{{ product.price }}</div>
+            <div class="product-card__price">€{{ product.prix_vente_ht }}</div>
             <button mat-flat-button color="primary">Ajouter au panier</button>
           </div>
         </mat-card>
