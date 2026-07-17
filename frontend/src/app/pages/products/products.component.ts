@@ -4,8 +4,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { products } from '../../models/mock-data';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-products',
@@ -42,7 +44,7 @@ import { products } from '../../models/mock-data';
           </div>
           <div class="product-card__footer">
             <div class="product-card__price">€{{ product.prix_vente_ht }}</div>
-            <button mat-flat-button color="primary">Ajouter au panier</button>
+            <button mat-flat-button color="primary" (click)="addToCart(product)">Ajouter au panier</button>
           </div>
         </mat-card>
       }
@@ -69,5 +71,14 @@ import { products } from '../../models/mock-data';
 })
 export class ProductsComponent {
   protected readonly productList = products;
+
+  constructor(
+    private cartService: CartService,
+    private router: Router
+  ) {}
+
+  addToCart(product: any): void {
+    this.cartService.addToCart(product);
+  }
 }
 

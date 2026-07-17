@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ThemeService } from '../../../services/theme.service';
 import { NotificationService } from '../../../services/notification.service';
 import { ProfileService } from '../../../services/profile.service';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-topbar',
@@ -30,15 +31,6 @@ import { ProfileService } from '../../../services/profile.service';
       <!-- Right side: Actions -->
       <div class="topbar__actions">
         <!-- ERP Selector -->
-
-        <!-- Theme Toggle -->
-        <button mat-icon-button (click)="theme.toggleTheme()" aria-label="Changer le thème">
-          @if (theme.darkMode()) {
-            <mat-icon>light_mode</mat-icon>
-          } @else {
-            <mat-icon>dark_mode</mat-icon>
-          }
-        </button>
 
         <!-- Notifications Bell -->
         <div class="topbar__dropdown-wrapper">
@@ -85,9 +77,12 @@ import { ProfileService } from '../../../services/profile.service';
           }
         </div>
 
-        <!-- Settings Shortcut -->
-        <button mat-icon-button routerLink="/settings" aria-label="Paramètres">
-          <mat-icon>settings</mat-icon>
+        <!-- Panier Shortcut -->
+        <button mat-icon-button routerLink="/cart" aria-label="Panier" class="cart-btn">
+          <mat-icon>shopping_cart</mat-icon>
+          @if (cartCount() > 0) {
+            <span class="cart-badge">{{ cartCount() }}</span>
+          }
         </button>
 
         <!-- Profile Avatar Dropdown -->
@@ -160,6 +155,10 @@ import { ProfileService } from '../../../services/profile.service';
     /* Notifications Badge */
     .bell-btn { position: relative; }
     .bell-badge { position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; font-size: 0.68rem; font-weight: 700; min-width: 16px; height: 16px; border-radius: 999px; display: grid; place-items: center; padding: 0 4px; border: 2px solid #f8fafc; }
+
+    /* Cart Badge */
+    .cart-btn { position: relative; }
+    .cart-badge { position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; font-size: 0.68rem; font-weight: 700; min-width: 16px; height: 16px; border-radius: 999px; display: grid; place-items: center; padding: 0 4px; border: 2px solid #f8fafc; }
 
     /* Dropdown Wrapper & Panels */
     .topbar__dropdown-wrapper { position: relative; }
@@ -260,7 +259,10 @@ export class TopbarComponent {
   protected readonly theme = inject(ThemeService);
   protected readonly notifications = inject(NotificationService);
   protected readonly profile = inject(ProfileService);
+  protected readonly cartService = inject(CartService);
   private readonly router = inject(Router);
+
+  cartCount = computed(() => this.cartService.getCartCount());
 
   erpDropdownOpen = signal<boolean>(false);
   notificationsOpen = signal<boolean>(false);

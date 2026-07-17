@@ -13,6 +13,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { orders, Commande } from '../../models/mock-data';
+import { CartService } from '../../services/cart.service';
 
 type StepStatus = 'done' | 'active' | 'pending' | 'canceled';
 
@@ -117,7 +118,7 @@ interface TimelineStep {
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectOrder(row)" [class.selected]="selectedOrder()?.numero === row.numero"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewOrderDetail(row)" [class.selected]="selectedOrder()?.numero === row.numero"></tr>
       </table>
 
       <!-- Dialog template for order timeline -->
@@ -267,11 +268,27 @@ interface TimelineStep {
 export class OrdersComponent {
   protected readonly displayedColumns = ['numero', 'clientNom', 'date_commande', 'total_ttc', 'est_valider', 'est_solder', 'statusLibelle', 'actions'];
 
-  protected readonly allOrders = signal<Commande[]>(orders);
+  protected readonly allOrders = computed<Commande[]>(() => {
+    const cartOrders = this.cartService.getOrders().map(order => ({
+      ...order,
+      clientNom: 'Acme SAS',
+      dateCommande: order.date_commande,
+      totalTTC: order.total_ttc,
+      totalHT: order.total_ht,
+      totalTVA: order.total_tva,
+      estValider: order.est_valider,
+      estSolder: order.est_solder,
+      montantRegle: order.montant_regle,
+      soldeDu: order.solde_du
+    }));
+    return [...orders, ...cartOrders];
+  });
   protected searchTerm = signal('');
   protected validationFilter = signal<boolean | ''>('');
   protected paymentFilter = signal<boolean | ''>('');
   protected statusFilter = signal('');
+
+  constructor(private cartService: CartService) {}
 
   protected readonly filteredOrders = computed(() => {
     const search = this.searchTerm().toLowerCase();
@@ -311,6 +328,10 @@ export class OrdersComponent {
 
   protected goToProducts(): void {
     this.router.navigate(['/products']);
+  }
+
+  protected viewOrderDetail(order: Commande): void {
+    this.router.navigate(['/orders/detail'], { queryParams: { orderId: order.id } });
   }
 
   protected selectedOrder = signal<Commande | null>(null);

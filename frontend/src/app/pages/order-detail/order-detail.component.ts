@@ -1,20 +1,23 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-order-detail',
   imports: [MatCardModule, MatIconModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb [items]="['Accueil', 'Commandes', 'Détail']" />
-    <mat-card class="detail-card">
+    @if (order) {
+      <mat-card class="detail-card">
       <div class="detail-card__header">
         <div>
-          <h2>Commande ORD-1024</h2>
-          <p>Expédiée • 05 Juillet 2026</p>
+          <h2>Commande {{ order.numero }}</h2>
+          <p>{{ order.statusLibelle }} • {{ formatDate(order.date_commande) }}</p>
         </div>
-        <span class="pill">Expédiée</span>
+        <span class="pill">{{ order.statusLibelle }}</span>
       </div>
       <div class="detail-grid">
         <div>
@@ -29,11 +32,22 @@ import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcru
         </div>
       </div>
       <div class="items-list">
-        <div class="items-list__row"><span>ERP Pro Suite</span><span>€980</span></div>
-        <div class="items-list__row"><span>Terminal Mobile</span><span>€640</span></div>
-        <div class="items-list__row total"><span>Total</span><span>€1,620</span></div>
+        @for (item of order.items; track item.id) {
+          <div class="items-list__row">
+            <span>{{ item.nom }} (x{{ item.quantity }})</span>
+            <span>€{{ (item.prix_vente_ht || 0) * item.quantity }}</span>
+          </div>
+        }
+        <div class="items-list__row"><span>Sous-total</span><span>€{{ order.total_ht }}</span></div>
+        <div class="items-list__row"><span>TVA</span><span>€{{ order.total_tva }}</span></div>
+        <div class="items-list__row total"><span>Total</span><span>€{{ order.total_ttc }}</span></div>
       </div>
     </mat-card>
+    } @else {
+      <mat-card class="detail-card">
+        <p>Commande non trouvée</p>
+      </mat-card>
+    }
   `,
   styles: [
     `:host { display: block; }`,
@@ -47,5 +61,27 @@ import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcru
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrderDetailComponent {}
+export class OrderDetailComponent implements OnInit {
+  order: any;
 
+  constructor(
+    private route: ActivatedRoute,
+    private cartService: CartService
+  ) {}
+
+  ngOnInit(): void {
+    const orderId = this.route.snapshot.queryParamMap.get('orderId');
+    if (orderId) {
+      const orders = this.cartService.getOrders();
+      this.order = orders.find(o => o.id === Number(orderId));
+    }
+  }
+
+  formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+}
