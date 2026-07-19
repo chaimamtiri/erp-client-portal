@@ -1,3 +1,4 @@
+// Composant de la liste des produits - Finalisation Task #14
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
