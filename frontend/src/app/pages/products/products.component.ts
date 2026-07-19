@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -9,9 +10,18 @@ import { products } from '../../models/mock-data';
 
 @Component({
   selector: 'app-products',
-  imports: [MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, BreadcrumbComponent],
+  imports: [MatCardModule, MatButtonModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb [items]="['Accueil', 'Catalogue']" />
+    <mat-form-field appearance="outline" class="filter-bar">
+  <mat-label>Filtrer par catégorie</mat-label>
+  <mat-select (selectionChange)="onFilterCategory($event.value)">
+    <mat-option value="">Toutes les catégories</mat-option>
+    <mat-option value="Informatique">Informatique</mat-option>
+    <mat-option value="Bureautique">Bureautique</mat-option>
+    <mat-option value="Accessoires">Accessoires</mat-option>
+  </mat-select>
+</mat-form-field>
 
     <div class="catalog-toolbar">
       <div>
@@ -68,6 +78,15 @@ import { products } from '../../models/mock-data';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductsComponent {
+  onFilterCategory(category: string) {
+  if (!category) {
+    this.productList = [...this.allProducts];
+  } else {
+    this.productList = this.allProducts.filter(product => 
+      product.category.toLowerCase() === category.toLowerCase()
+    );
+  }
+}
   protected readonly productList = products;
 }
 
