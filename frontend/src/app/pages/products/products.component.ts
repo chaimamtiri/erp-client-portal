@@ -13,6 +13,10 @@ import { products } from '../../models/mock-data';
   imports: [MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb [items]="['Accueil', 'Catalogue']" />
+    <mat-form-field appearance="outline" class="search-bar">
+     <mat-label>Rechercher un produit...</mat-label>
+      <input matInput (input)="onSearch($event)" placeholder="Ex: Clavier, HP...">
+    </mat-form-field>
 
     <div class="catalog-toolbar">
       <div>
@@ -69,6 +73,13 @@ import { products } from '../../models/mock-data';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductsComponent {
+  onSearch(event: any) {
+  const searchTerm = event.target.value.toLowerCase().trim();
+  this.productList = this.allProducts.filter(product => 
+    product.name.toLowerCase().includes(searchTerm) || 
+    product.category.toLowerCase().includes(searchTerm)
+  );
+}
   protected readonly productList = products;
 }
 
