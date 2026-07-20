@@ -1,17 +1,29 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { products } from '../../models/mock-data';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-products',
-  imports: [MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, BreadcrumbComponent],
+  imports: [MatCardModule, MatButtonModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb [items]="['Accueil', 'Catalogue']" />
+    <mat-form-field appearance="outline" class="filter-bar">
+  <mat-label>Filtrer par catégorie</mat-label>
+  <mat-select (selectionChange)="onFilterCategory($event.value)">
+    <mat-option value="">Toutes les catégories</mat-option>
+    <mat-option value="Informatique">Informatique</mat-option>
+    <mat-option value="Bureautique">Bureautique</mat-option>
+    <mat-option value="Accessoires">Accessoires</mat-option>
+  </mat-select>
+</mat-form-field>
 
     <div class="catalog-toolbar">
       <div>
@@ -42,7 +54,7 @@ import { products } from '../../models/mock-data';
           </div>
           <div class="product-card__footer">
             <div class="product-card__price">€{{ product.prix_vente_ht }}</div>
-            <button mat-flat-button color="primary">Ajouter au panier</button>
+            <button mat-flat-button color="primary" (click)="addToCart(product)">Ajouter au panier</button>
           </div>
         </mat-card>
       }
@@ -68,6 +80,26 @@ import { products } from '../../models/mock-data';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductsComponent {
-  protected readonly productList = products;
+  protected productList = products;
+  private readonly allProducts = products;
+
+  constructor(
+    private cartService: CartService,
+    private router: Router
+  ) {}
+
+  onFilterCategory(category: string) {
+    if (!category) {
+      this.productList = [...this.allProducts];
+    } else {
+      this.productList = this.allProducts.filter(product =>
+        product.category?.toLowerCase() === category.toLowerCase()
+      );
+    }
+  }
+
+  addToCart(product: any): void {
+    this.cartService.addToCart(product);
+  }
 }
 
