@@ -17,10 +17,10 @@ import { products } from '../../models/mock-data';
           <div class="cart-item">
             <div class="cart-item__icon">{{ product.image }}</div>
             <div>
-              <strong>{{ product.name }}</strong>
+              <strong>{{ product.nom }}</strong>
               <div class="muted">{{ product.category }}</div>
             </div>
-            <div class="cart-item__price">€{{ product.price }}</div>
+            <div class="cart-item__price">€{{ product.prix_vente_ht }}</div>
           </div>
         }
       </mat-card>
