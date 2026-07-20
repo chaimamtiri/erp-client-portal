@@ -80,21 +80,23 @@ import { CartService } from '../../services/cart.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductsComponent {
-  onFilterCategory(category: string) {
-  if (!category) {
-    this.productList = [...this.allProducts];
-  } else {
-    this.productList = this.allProducts.filter(product => 
-      product.category.toLowerCase() === category.toLowerCase()
-    );
-  }
-}
-  protected readonly productList = products;
+  protected productList = products;
+  private readonly allProducts = products;
 
   constructor(
     private cartService: CartService,
     private router: Router
   ) {}
+
+  onFilterCategory(category: string) {
+    if (!category) {
+      this.productList = [...this.allProducts];
+    } else {
+      this.productList = this.allProducts.filter(product =>
+        product.category?.toLowerCase() === category.toLowerCase()
+      );
+    }
+  }
 
   addToCart(product: any): void {
     this.cartService.addToCart(product);
