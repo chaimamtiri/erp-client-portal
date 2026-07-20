@@ -1,3 +1,4 @@
+// Composant de la liste des produits - Finalisation Task #14
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +16,10 @@ import { CartService } from '../../services/cart.service';
   imports: [MatCardModule, MatButtonModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule, BreadcrumbComponent],
   template: `
     <app-breadcrumb [items]="['Accueil', 'Catalogue']" />
+    <mat-form-field appearance="outline" class="search-bar">
+     <mat-label>Rechercher un produit...</mat-label>
+      <input matInput (input)="onSearch($event)" placeholder="Ex: Clavier, HP...">
+    </mat-form-field>
     <mat-form-field appearance="outline" class="filter-bar">
   <mat-label>Filtrer par catégorie</mat-label>
   <mat-select (selectionChange)="onFilterCategory($event.value)">
@@ -62,6 +67,8 @@ import { CartService } from '../../services/cart.service';
   `,
   styles: [
     `:host { display: block; }`,
+    `.search-bar { min-width: 280px; margin-bottom: 1rem; }`,
+    `.filter-bar { min-width: 280px; margin-bottom: 1rem; }`,
     `.catalog-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }`,
     `.catalog-toolbar h2 { margin: 0; }`,
     `.catalog-toolbar p { color: #64748b; margin-top: 0.2rem; }`,
@@ -87,6 +94,14 @@ export class ProductsComponent {
     private cartService: CartService,
     private router: Router
   ) {}
+
+  onSearch(event: any) {
+    const searchTerm = event.target.value.toLowerCase().trim();
+    this.productList = this.allProducts.filter(product =>
+      product.name?.toLowerCase().includes(searchTerm) ||
+      product.category?.toLowerCase().includes(searchTerm)
+    );
+  }
 
   onFilterCategory(category: string) {
     if (!category) {
