@@ -1,0 +1,8 @@
+:host { display: block; }
+.detail-card { padding: 1rem; border-radius: 20px; }
+.detail-card__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.pill { padding: 0.45rem 0.75rem; border-radius: 999px; background: #dcfce7; color: #15803d; font-weight: 600; }
+.detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.items-list__row { display: flex; justify-content: space-between; padding: 0.55rem 0; border-bottom: 1px solid #e2e8f0; }
+.items-list__row.total { font-weight: 700; }
+@media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }

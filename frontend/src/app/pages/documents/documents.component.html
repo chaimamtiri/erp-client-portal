@@ -1,0 +1,16 @@
+<app-breadcrumb [items]="['Accueil', 'Documents']" />
+    <mat-card class="documents-card">
+      <h2>Documents</h2>
+      <div class="documents-list">
+        @for (document of documentList; track document.name) {
+          <div class="document-item">
+            <div class="document-item__icon"><mat-icon>description</mat-icon></div>
+            <div>
+              <strong>{{ document.name }}</strong>
+              <p>{{ document.type }} • {{ document.size }}</p>
+            </div>
+            <span>{{ document.updated }}</span>
+          </div>
+        }
+      </div>
+    </mat-card>

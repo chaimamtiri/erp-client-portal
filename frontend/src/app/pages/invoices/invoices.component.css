@@ -1,0 +1,6 @@
+:host { display: block; }
+.invoices-card { border-radius: 20px; padding: 1rem; }
+.invoices-card__header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.invoices-table { width: 100%; }
+mat-chip { font-size: 0.8rem; }
+mat-chip.paid { background: #dcfce7; color: #15803d; }

@@ -159,7 +159,7 @@ interface ChatMessage {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatbotComponent {
-  private readonly router = inject(Router);
+  private readonly router: Router = inject(Router);
 
   @ViewChild('messageContainer') private messageContainer?: ElementRef;
 

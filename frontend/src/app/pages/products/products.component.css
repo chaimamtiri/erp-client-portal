@@ -1,0 +1,28 @@
+:host { display: block; }
+.catalog-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.catalog-header__info { flex: 1; min-width: 250px; }
+.catalog-header__info h2 { margin: 0 0 0.5rem 0; }
+.catalog-header__info p { color: #64748b; margin: 0; }
+.catalog-header__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.search-bar { min-width: 250px; }
+.filter-bar { min-width: 200px; }
+.filters-row { display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.filters-row button { display: flex; align-items: center; gap: 0.5rem; }
+.empty-state { text-align: center; padding: 4rem 2rem; }
+.empty-state__icon { font-size: 4rem; color: #94a3b8; margin-bottom: 1rem; }
+.empty-state h3 { margin: 0 0 0.5rem 0; color: #475569; }
+.empty-state p { color: #64748b; margin: 0; }
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+.product-card { padding: 1.25rem; border-radius: 16px; display: flex; flex-direction: column; gap: 0.75rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+.product-card__emoji { font-size: 2.5rem; text-align: center; margin-bottom: 0.25rem; }
+.product-card__category { color: #2563eb; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.product-card__name { font-size: 1.125rem; font-weight: 700; color: #1e293b; line-height: 1.4; }
+.product-card__description { color: #64748b; font-size: 0.875rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.product-card__meta { display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 0.875rem; }
+.product-card__stock.low-stock { color: #dc2626; font-weight: 600; }
+.product-card__rating { color: #f59e0b; font-weight: 600; }
+.product-card__footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; }
+.product-card__price { font-size: 1.25rem; font-weight: 700; color: #1e293b; }
+.product-card__footer button { display: flex; align-items: center; gap: 0.5rem; }
+@media (max-width: 768px) { .catalog-header { flex-direction: column; } .catalog-header__actions { width: 100%; } .search-bar, .filter-bar { flex: 1; } .products-grid { grid-template-columns: 1fr; } }

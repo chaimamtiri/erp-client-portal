@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
+import { SidebarComponent, NavItem } from '../../shared/components/sidebar/sidebar.component';
 import { TopbarComponent } from '../../shared/components/topbar/topbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { ThemeService } from '../../services/theme.service';
+import { ThemeService } from '../../Core/services/theme.service';
 import { ChatbotComponent } from '../../shared/components/chatbot/chatbot.component';
 
 @Component({
@@ -36,15 +36,20 @@ import { ChatbotComponent } from '../../shared/components/chatbot/chatbot.compon
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainLayoutComponent {
-  protected readonly theme = inject(ThemeService);
+  protected readonly theme: ThemeService = inject(ThemeService);
   protected readonly pageTitle = 'Tableau de bord';
-  protected readonly navItems = [
+  protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
     { label: 'Catalogue', icon: 'inventory_2', route: '/products' },
-    { label: 'Panier', icon: 'shopping_cart', route: '/cart' },
-    { label: 'Commandes', icon: 'receipt_long', route: '/orders' },
-    { label: 'Factures', icon: 'description', route: '/invoices' },
-    { label: 'Paiements', icon: 'payments', route: '/payments' },
+    { 
+      label: 'Achats', 
+      icon: 'shopping_cart', 
+      children: [
+        { label: 'Commandes', icon: 'receipt_long', route: '/orders' },
+        { label: 'Factures', icon: 'description', route: '/invoices' },
+        { label: 'Paiements', icon: 'payments', route: '/payments' }
+      ]
+    },
     { label: 'Livraisons', icon: 'local_shipping', route: '/deliveries' },
     { label: 'Documents', icon: 'folder_open', route: '/documents' },
     { label: 'Support Ticket', icon: 'support_agent', route: '/support' },

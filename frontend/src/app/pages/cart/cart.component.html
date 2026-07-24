@@ -1,0 +1,39 @@
+<app-breadcrumb [items]="['Accueil', 'Panier']" />
+<div class="cart-grid">
+  <mat-card class="cart-list">
+    <h2>Votre panier</h2>
+    @if (cartItems().length === 0) {
+      <p class="empty-cart">Votre panier est vide</p>
+    } @else {
+      @for (item of cartItems(); track item.id) {
+        <div class="cart-item">
+          <div class="cart-item__icon">{{ item.image }}</div>
+          <div>
+            <strong>{{ item.nom }}</strong>
+            <div class="muted">{{ item.category }}</div>
+          </div>
+          <div class="cart-item__quantity">
+            <button mat-icon-button (click)="updateQuantity(item.id, item.quantity - 1)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span>{{ item.quantity }}</span>
+            <button mat-icon-button (click)="updateQuantity(item.id, item.quantity + 1)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <div class="cart-item__price">€{{ (item.prix_vente_ht || 0) * item.quantity }}</div>
+          <button mat-icon-button color="warn" (click)="removeFromCart(item.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    }
+  </mat-card>
+  <mat-card class="summary-card">
+    <h3>Résumé</h3>
+    <div class="summary-row"><span>Sous-total</span><span>€{{ subtotal() }}</span></div>
+    <div class="summary-row"><span>Livraison</span><span>€{{ shippingCost() }}</span></div>
+    <div class="summary-row total"><span>Total</span><span>€{{ total() }}</span></div>
+    <button mat-flat-button color="primary" [disabled]="cartItems().length === 0" (click)="placeOrder()">Passer la commande</button>
+  </mat-card>
+</div>

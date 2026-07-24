@@ -1,0 +1,5 @@
+:host { display: block; }
+.deliveries-card { border-radius: 20px; padding: 1rem; }
+.deliveries-table { width: 100%; }
+mat-chip { font-size: 0.8rem; }
+mat-chip.delivered { background: #dcfce7; color: #15803d; }

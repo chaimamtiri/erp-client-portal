@@ -4,15 +4,14 @@ import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  private readonly fb = inject(FormBuilder);
-  private readonly router = inject(Router);
+  private readonly fb: FormBuilder = inject(FormBuilder);
+  private readonly router: Router = inject(Router);
 
   showPassword = signal(false);
   formSubmitted = false;

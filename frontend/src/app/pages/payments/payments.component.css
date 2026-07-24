@@ -1,0 +1,5 @@
+:host { display: block; }
+.payments-card { border-radius: 20px; padding: 1rem; }
+.payments-table { width: 100%; }
+mat-chip { font-size: 0.8rem; }
+mat-chip.encaisse { background: #dcfce7; color: #15803d; }

@@ -19,8 +19,8 @@ export class CartService {
     this.cartItems.update(items => {
       const existingItem = items.find(item => item.id === product.id);
       if (existingItem) {
-        return items.map(item => 
-          item.id === product.id 
+        return items.map(item =>
+          item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -38,8 +38,8 @@ export class CartService {
       this.removeFromCart(productId);
       return;
     }
-    this.cartItems.update(items => 
-      items.map(item => 
+    this.cartItems.update(items =>
+      items.map(item =>
         item.id === productId ? { ...item, quantity } : item
       )
     );
@@ -99,7 +99,7 @@ export class CartService {
 
     this.orders.update(orders => [...orders, order]);
     this.clearCart();
-    
+
     return order;
   }
 

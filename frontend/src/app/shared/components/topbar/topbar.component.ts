@@ -5,10 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ThemeService } from '../../../services/theme.service';
-import { NotificationService } from '../../../services/notification.service';
-import { ProfileService } from '../../../services/profile.service';
-import { CartService } from '../../../services/cart.service';
+import { ThemeService } from '../../../Core/services/theme.service';
+import { NotificationService } from '../../../Core/services/notification.service';
+import { ProfileService } from '../../../Core/services/profile.service';
+import { CartService } from '../../../Core/services/cart.service';
 
 @Component({
   selector: 'app-topbar',
@@ -36,8 +36,8 @@ import { CartService } from '../../../services/cart.service';
         <div class="topbar__dropdown-wrapper">
           <button mat-icon-button (click)="toggleNotifications()" aria-label="Notifications" class="bell-btn">
             <mat-icon>notifications</mat-icon>
-            @if (notifications.unreadCount() > 0) {
-              <span class="bell-badge">{{ notifications.unreadCount() }}</span>
+            @if (notificationService.unreadCount() > 0) {
+              <span class="bell-badge">{{ notificationService.unreadCount() }}</span>
             }
           </button>
 
@@ -45,13 +45,13 @@ import { CartService } from '../../../services/cart.service';
             <div class="dropdown-panel notification-panel">
               <div class="dropdown-panel__header">
                 <h3>Notifications</h3>
-                @if (notifications.unreadCount() > 0) {
-                  <button mat-button class="mark-all-btn" (click)="notifications.markAllAsRead()">Tout marquer comme lu</button>
+                @if (notificationService.unreadCount() > 0) {
+                  <button mat-button class="mark-all-btn" (click)="notificationService.markAllAsRead()">Tout marquer comme lu</button>
                 }
               </div>
               
               <div class="dropdown-panel__body">
-                @if (notifications.notifications().length === 0) {
+                @if (notificationService.notifications().length === 0) {
                   <div class="empty-state">
                     <mat-icon>notifications_off</mat-icon>
                     <p>Aucune notification</p>
@@ -256,11 +256,11 @@ import { CartService } from '../../../services/cart.service';
 export class TopbarComponent {
   title = input.required<string>();
 
-  protected readonly theme = inject(ThemeService);
-  protected readonly notifications = inject(NotificationService);
-  protected readonly profile = inject(ProfileService);
-  protected readonly cartService = inject(CartService);
-  private readonly router = inject(Router);
+  protected readonly theme: ThemeService = inject(ThemeService);
+  protected readonly notificationService: NotificationService = inject(NotificationService);
+  protected readonly profile: ProfileService = inject(ProfileService);
+  protected readonly cartService: CartService = inject(CartService);
+  private readonly router: Router = inject(Router);
 
   cartCount = computed(() => this.cartService.getCartCount());
 
@@ -269,7 +269,7 @@ export class TopbarComponent {
   profileOpen = signal<boolean>(false);
 
   recentNotifications = () => {
-    return this.notifications.notifications().slice(0, 3);
+    return this.notificationService.notifications().slice(0, 3);
   };
 
   initials = () => {
@@ -306,6 +306,6 @@ export class TopbarComponent {
   }
 
   markAsRead(index: number): void {
-    this.notifications.markAsRead(index);
+    this.notificationService.markAsRead(index);
   }
 }

@@ -1,6 +1,13 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+
+export interface NavItem {
+  label: string;
+  icon: string;
+  route?: string;
+  children?: NavItem[];
+}
 
 @Component({
   selector: 'app-sidebar',
@@ -17,10 +24,30 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
       <nav class="sidebar__nav" aria-label="Navigation principale">
         @for (item of items(); track item.label) {
-          <a class="sidebar__link" [routerLink]="item.route" routerLinkActive="active">
-            <mat-icon>{{ item.icon }}</mat-icon>
-            <span>{{ item.label }}</span>
-          </a>
+          @if (hasChildren(item)) {
+            <div class="sidebar__dropdown">
+              <button class="sidebar__link sidebar__dropdown-toggle" (click)="toggleDropdown(item.label)" [class.expanded]="expandedDropdown() === item.label">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+                <mat-icon class="chevron">expand_more</mat-icon>
+              </button>
+              @if (expandedDropdown() === item.label) {
+                <div class="sidebar__dropdown-menu">
+                  @for (child of item.children; track child.label) {
+                    <a class="sidebar__dropdown-item" [routerLink]="child.route" routerLinkActive="active">
+                      <mat-icon>{{ child.icon }}</mat-icon>
+                      <span>{{ child.label }}</span>
+                    </a>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <a class="sidebar__link" [routerLink]="item.route" routerLinkActive="active">
+              <mat-icon>{{ item.icon }}</mat-icon>
+              <span>{{ item.label }}</span>
+            </a>
+          }
         }
       </nav>
     </aside>
@@ -33,12 +60,30 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
     `.sidebar__brand-name { font-weight: 700; }`,
     `.sidebar__brand-subtitle { font-size: 0.82rem; color: #94a3b8; }`,
     `.sidebar__nav { display: flex; flex-direction: column; gap: 0.35rem; overflow: visible; }`,
-    `.sidebar__link { display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 0.9rem; border-radius: 12px; color: inherit; text-decoration: none; transition: background 180ms ease; min-width: 0; white-space: normal; }`,
-    `.sidebar__link:hover, .sidebar__link.active { background: rgba(37,99,235,0.18); color: #fff; }`
+    `.sidebar__link { display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 0.9rem; border-radius: 12px; color: inherit; text-decoration: none; transition: background 180ms ease; min-width: 0; white-space: normal; width: 100%; border: none; background: none; cursor: pointer; font-family: inherit; font-size: inherit; }`,
+    `.sidebar__link:hover, .sidebar__link.active { background: rgba(37,99,235,0.18); color: #fff; }`,
+    `.sidebar__dropdown { display: flex; flex-direction: column; gap: 0.25rem; }`,
+    `.sidebar__dropdown-toggle { justify-content: space-between; }`,
+    `.sidebar__dropdown-toggle .chevron { transition: transform 180ms ease; font-size: 20px; width: 20px; height: 20px; }`,
+    `.sidebar__dropdown-toggle.expanded .chevron { transform: rotate(180deg); }`,
+    `.sidebar__dropdown-menu { display: flex; flex-direction: column; gap: 0.15rem; padding-left: 2.5rem; margin-top: 0.25rem; }`,
+    `.sidebar__dropdown-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.8rem; border-radius: 10px; color: #94a3b8; text-decoration: none; transition: all 180ms ease; font-size: 0.9rem; }`,
+    `.sidebar__dropdown-item:hover, .sidebar__dropdown-item.active { background: rgba(37,99,235,0.15); color: #fff; }`,
+    `.sidebar__dropdown-item mat-icon { font-size: 18px; width: 18px; height: 18px; }`
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent {
-  items = input.required<Array<{ label: string; icon: string; route: string }>>();
+  items = input.required<NavItem[]>();
+
+  expandedDropdown = signal<string | null>(null);
+
+  toggleDropdown(label: string): void {
+    this.expandedDropdown.set(this.expandedDropdown() === label ? null : label);
+  }
+
+  hasChildren(item: NavItem): boolean {
+    return !!(item.children && item.children.length > 0);
+  }
 }
 

@@ -1,0 +1,15 @@
+:host { display: block; }
+.support-card { border-radius: 20px; padding: 1rem; }
+.support-card__header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.ticket-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.ticket-item { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1rem; background: #f8fafc; border-radius: 16px; gap: 1rem; flex-wrap: wrap; }
+.ticket-item__meta strong { display: block; font-weight: 600; color: #1e293b; }
+.ticket-item__meta p { margin: 0.2rem 0 0; font-size: 0.85rem; color: #64748b; }
+.ticket-item__chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+mat-chip { font-size: 0.78rem; }
+.prio-haute, .prio-urgente { background: #fee2e2; color: #dc2626; }
+.prio-normale { background: #fef3c7; color: #d97706; }
+.prio-basse { background: #f0fdf4; color: #16a34a; }
+.status-ouvert { background: #dbeafe; color: #1d4ed8; }
+.status-en_cours { background: #fef9c3; color: #a16207; }
+.status-resolu, .status-ferme { background: #dcfce7; color: #15803d; }
