@@ -9,6 +9,7 @@ import { ThemeService } from '../../../services/theme.service';
 import { NotificationService } from '../../../services/notification.service';
 import { ProfileService } from '../../../services/profile.service';
 import { CartService } from '../../../services/cart.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-topbar',
@@ -119,7 +120,7 @@ import { CartService } from '../../../services/cart.service';
                 </a>
               </div>
               <div class="profile-panel__footer">
-                <button class="logout-btn">
+                <button class="logout-btn" (click)="logout()">
                   <mat-icon>logout</mat-icon>
                   <span>Se déconnecter</span>
                 </button>
@@ -261,6 +262,7 @@ export class TopbarComponent {
   protected readonly profile = inject(ProfileService);
   protected readonly cartService = inject(CartService);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   cartCount = computed(() => this.cartService.getCartCount());
 
@@ -307,5 +309,11 @@ export class TopbarComponent {
 
   markAsRead(index: number): void {
     this.notifications.markAsRead(index);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.closeAllDropdowns();
+    this.router.navigate(['/']);
   }
 }
