@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { passwordStrengthValidator } from '../../shared/validators/password.validator';
@@ -12,14 +12,19 @@ import { AuthService } from '../../services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-<<<<<<< HEAD
   private readonly fb: FormBuilder = inject(FormBuilder);
   private readonly router: Router = inject(Router);
-=======
+export class LoginComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
->>>>>>> 11d99fd (Update login)
+
+
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
 
   mode = signal<'login' | 'register'>('login');
   showPassword = signal(false);
@@ -115,7 +120,7 @@ export class LoginComponent {
           next: (res) => {
             this.isLoading.set(false);
             console.log('Connexion réussie ! Saisie :', res);
-            this.router.navigateByUrl('/dashboard');
+            this.router.navigate(['/dashboard']);
           },
           error: (err) => {
             this.isLoading.set(false);
@@ -132,7 +137,7 @@ export class LoginComponent {
             this.isLoading.set(false);
             console.log('Inscription réussie ! Saisie :', res);
             // Simulation d'une connexion automatique après inscription
-            this.router.navigateByUrl('/dashboard');
+            this.router.navigate(['/dashboard']);
           },
           error: (err) => {
             this.isLoading.set(false);

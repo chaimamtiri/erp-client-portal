@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, tap } from 'rxjs/operators';
 
 export interface AuthResponse {
   success: boolean;
@@ -16,6 +16,7 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly TOKEN_KEY = 'auth_token';
   
   /**
    * Valide la force du mot de passe selon les règles métier ("backend").
@@ -68,7 +69,14 @@ export class AuthService {
         name: 'Claire Martin',
         email: email
       }
-    }).pipe(delay(500));
+    }).pipe(
+      delay(500),
+      tap((res) => {
+        if (res.token) {
+          localStorage.setItem(this.TOKEN_KEY, res.token);
+        }
+      })
+    );
   }
 
   /**
@@ -98,6 +106,27 @@ export class AuthService {
         name: name,
         email: email
       }
-    }).pipe(delay(500));
+    }).pipe(
+      delay(500),
+      tap((res) => {
+        if (res.token) {
+          localStorage.setItem(this.TOKEN_KEY, res.token);
+        }
+      })
+    );
+  }
+
+  /**
+   * Vérifie si l'utilisateur est connecté (présence du token dans le localStorage)
+   */
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  /**
+   * Déconnecte l'utilisateur en supprimant le token du localStorage
+   */
+  logout(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
   }
 }
