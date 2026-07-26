@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { CartService } from '../../Core/services/cart.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart',

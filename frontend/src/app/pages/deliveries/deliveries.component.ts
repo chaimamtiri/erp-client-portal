@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { DeliveriesService } from '../../Core/services/deliveries.service';
+import { DeliveriesService } from '../../core/services/deliveries.service';
 
 @Component({
   selector: 'app-deliveries',

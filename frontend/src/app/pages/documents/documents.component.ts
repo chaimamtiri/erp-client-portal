@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { DocumentsService } from '../../Core/services/documents.service';
+import { DocumentsService } from '../../core/services/documents.service';
 
 @Component({
   selector: 'app-documents',

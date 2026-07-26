@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { ActivityService } from '../../Core/services/activity.service';
+import { ActivityService } from '../../core/services/activity.service';
 
 @Component({
   selector: 'app-activity',

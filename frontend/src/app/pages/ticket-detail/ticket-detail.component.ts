@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { SupportService } from '../../Core/services/support.service';
+import { SupportService } from '../../core/services/support.service';
 
 @Component({
   selector: 'app-ticket-detail',

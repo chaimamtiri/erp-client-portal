@@ -1,7 +1,7 @@
 <app-breadcrumb [items]="['Accueil', 'Paiements']" />
     <mat-card class="payments-card">
       <h2>Paiements</h2>
-      <table mat-table [dataSource]="dataSource" class="payments-table">
+      <table mat-table [dataSource]="dataSource()" class="payments-table">
         <ng-container matColumnDef="numero">
           <th mat-header-cell *matHeaderCellDef>N° Règlement</th>
           <td mat-cell *matCellDef="let element">{{ element.numero }}</td>

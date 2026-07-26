@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { CartService } from '../../Core/services/cart.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-order-detail',

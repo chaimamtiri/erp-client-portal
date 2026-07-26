@@ -8,8 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { products } from '../../Core/models/mock-data';
-import { CartService } from '../../Core/services/cart.service';
+import { products } from '../../core/models/mock-data';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-products',

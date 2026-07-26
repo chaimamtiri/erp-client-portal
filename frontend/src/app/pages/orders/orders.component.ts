@@ -13,8 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { orders, Commande } from '../../Core/models/mock-data';
-import { CartService } from '../../Core/services/cart.service';
+import { orders, Commande } from '../../core/models/mock-data';
+import { CartService } from '../../core/services/cart.service';
 
 type StepStatus = 'done' | 'active' | 'pending' | 'canceled';
 
@@ -54,6 +54,7 @@ export class OrdersComponent {
     }));
     return [...orders, ...cartOrders];
   });
+
   protected searchTerm = signal('');
   protected validationFilter = signal<boolean | ''>('');
   protected paymentFilter = signal<boolean | ''>('');
@@ -93,113 +94,10 @@ export class OrdersComponent {
   @ViewChild('timelineTpl') private readonly timelineTpl!: TemplateRef<unknown>;
   private dialogRef: ReturnType<MatDialog['open']> | null = null;
 
-  protected goToProducts(): void {
-    this.router.navigate(['/products']);
-  }
-
-  protected viewOrderDetail(order: Commande): void {
-    this.router.navigate(['/orders/detail'], { queryParams: { orderId: order.id } });
-  }
-
   protected selectedOrder = signal<Commande | null>(null);
 
-  protected readonly copiedTracking = signal(false);
-  protected readonly trackingSteps = computed(() => {
-    const order = this.selectedOrder();
-    if (!order) {
-      return [];
-    }
-
-    const statusLabel = order.statusLibelle ?? '';
-    const validated = order.est_valider;
-    const prepared = validated && (statusLabel === 'En cours' || statusLabel === 'Confirmée' || statusLabel === 'Expédiée');
-    const shipped = statusLabel === 'Expédiée';
-
-    return [
-      {
-        title: 'Commande reçue',
-        shortTitle: 'Order',
-        status: 'completed',
-        icon: 'shopping_cart',
-        description: 'Votre commande a bien été enregistrée.'
-      },
-      {
-        title: 'Commande validée',
-        shortTitle: 'Payment',
-        status: validated ? 'completed' : 'current',
-        icon: 'payments',
-        description: validated ? 'La commande a été validée.' : 'Validation en cours.'
-      },
-      {
-        title: 'Préparation',
-        shortTitle: 'Shipped',
-        status: prepared ? 'completed' : validated ? 'current' : 'pending',
-        icon: 'inventory',
-        description: prepared ? 'Le colis est en préparation.' : 'Préparation à venir.'
-      },
-      {
-        title: 'Expédiée',
-        shortTitle: 'Transit',
-        status: shipped ? 'completed' : prepared ? 'current' : 'pending',
-        icon: 'local_shipping',
-        description: shipped ? 'Le colis a été expédié.' : 'Expédition en attente.'
-      },
-      {
-        title: 'Livraison',
-        shortTitle: 'Delivery',
-        status: shipped ? 'current' : 'pending',
-        icon: 'delivery_dining',
-        description: shipped ? 'Le colis est en cours de livraison.' : 'Livraison à venir.'
-      },
-      {
-        title: 'Livré',
-        shortTitle: 'Delivered',
-        status: 'pending',
-        icon: 'home',
-        description: 'La livraison sera finalisée prochainement.'
-      }
-    ];
-  });
-
-  protected readonly trackingProgress = computed(() => {
-    const steps = this.trackingSteps();
-    if (steps.length === 0) {
-      return 0;
-    }
-
-    const completed = steps.filter((step) => step.status === 'completed').length;
-    const currentIndex = steps.findIndex((step) => step.status === 'current');
-
-    if (currentIndex === -1) {
-      return (completed / steps.length) * 100;
-    }
-
-    return ((completed + 0.5) / steps.length) * 100;
-  });
-
-  protected readonly currentStatusLabel = computed(() => {
-    const order = this.selectedOrder();
-    if (!order) {
-      return 'En attente';
-    }
-
-    return order.statusLibelle ?? 'En attente';
-  });
-
-  protected selectOrder(order: Commande): void {
-    this.selectedOrder.set(order);
-    this.copiedTracking.set(false);
-  }
-
-  protected async copyTrackingNumber(order: Commande): Promise<void> {
-    try {
-      await navigator.clipboard.writeText(order.numero);
-      this.copiedTracking.set(true);
-      window.setTimeout(() => this.copiedTracking.set(false), 1400);
-    } catch {
-      this.copiedTracking.set(true);
-      window.setTimeout(() => this.copiedTracking.set(false), 1400);
-    }
+  protected goToProducts(): void {
+    this.router.navigate(['/products']);
   }
 
   protected openTimeline(order: Commande): void {
@@ -207,7 +105,7 @@ export class OrdersComponent {
     this.dialogRef = this.dialog.open(this.timelineTpl, {
       width: '680px',
       maxWidth: '95vw',
-      panelClass: 'timeline-panel',
+      panelClass: 'timeline-dialog-panel',
       autoFocus: false
     });
     this.dialogRef.afterClosed().subscribe(() => this.selectedOrder.set(null));
@@ -223,7 +121,6 @@ export class OrdersComponent {
 
     const isCanceled = order.statusLibelle === 'Annulée';
 
-    // Raw completion state for each stage, in order.
     const raw = [
       { title: 'Commande reçue', subtitle: order.numero, done: true },
       { title: 'Commande validée', subtitle: order.est_valider ? 'Validée' : 'En attente de validation', done: order.est_valider },
@@ -236,12 +133,9 @@ export class OrdersComponent {
       { title: 'Paiement', done: order.est_valider && order.est_solder, subtitle: order.est_solder ? 'Soldée' : 'Solde dû: ' + order.solde_du }
     ];
 
-    // Fill in subtitles that depend on done state, once computed.
     raw[2].subtitle = raw[2].done ? 'Articles préparés' : 'En attente';
     raw[3].subtitle = raw[3].done ? 'Expédiée au client' : '';
 
-    // Find the first not-done step: that's the "active" one (in process).
-    // Everything before it is "done", everything after is "pending".
     const firstNotDoneIndex = raw.findIndex(s => !s.done);
 
     return raw.map((s, i) => {

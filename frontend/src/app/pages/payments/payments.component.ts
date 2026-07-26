@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { PaymentsService } from '../../Core/services/payments.service';
+import { PaymentsService } from '../../core/services/payments.service';
 
 @Component({
   selector: 'app-payments',

@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { InvoicesService } from '../../Core/services/invoices.service';
+import { InvoicesService } from '../../core/services/invoices.service';
 
 @Component({
   selector: 'app-invoice-detail',

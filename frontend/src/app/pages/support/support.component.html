@@ -8,7 +8,7 @@
         <button mat-flat-button color="primary">Nouveau ticket</button>
       </div>
       <div class="ticket-list">
-        @for (ticket of ticketList; track ticket.id) {
+        @for (ticket of ticketList(); track ticket.id) {
           <div class="ticket-item">
             <div class="ticket-item__meta">
               <strong>{{ ticket.sujet }}</strong>

@@ -10,7 +10,7 @@
 </div>
 
 <section class="stats-grid">
-  @for (item of statsList; track item.title) {
+  @for (item of statsList(); track item.title) {
     <app-stat-card [title]="item.title" [value]="item.value" [change]="item.change" [icon]="item.icon" [tone]="item.tone" />
   }
 </section>
@@ -18,7 +18,7 @@
 <section class="content-grid">
   <app-section-card title="Dernières commandes" subtitle="Suivi en temps réel" actionLabel="Voir tout" actionLink="/orders" class="full-width">
     <mat-list>
-      @for (order of latestOrders; track order.id) {
+      @for (order of latestOrders(); track order.id) {
         <mat-list-item>
           <div class="row-item">
             <span>{{ order.numero }}</span>
@@ -33,7 +33,7 @@
 
   <app-section-card title="Dernières factures" subtitle="État de paiement" actionLabel="Consulter" actionLink="/invoices">
     <mat-list>
-      @for (invoice of latestInvoices; track invoice.id) {
+      @for (invoice of latestInvoices(); track invoice.id) {
         <mat-list-item>
           <div class="row-item">
             <span>{{ invoice.numero }}</span>
@@ -47,7 +47,7 @@
 
   <app-section-card title="Notifications" subtitle="Alertes récentes" actionLabel="Voir tout" actionLink="/notifications">
     <mat-list>
-      @for (notification of notificationList; track notification.titre) {
+      @for (notification of notificationList(); track notification.titre) {
         <mat-list-item>
           <div class="notification-item">
             <strong>{{ notification.titre }}</strong>
@@ -72,7 +72,7 @@
 
   <app-section-card title="Livraisons à venir" subtitle="Planning de la semaine" actionLabel="Voir" actionLink="/deliveries">
     <mat-list>
-      @for (delivery of deliveryList; track delivery.id) {
+      @for (delivery of deliveryList(); track delivery.id) {
         <mat-list-item>
           <div class="delivery-item">
             <strong>{{ delivery.numero }}</strong>

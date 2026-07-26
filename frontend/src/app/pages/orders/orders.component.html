@@ -1,254 +1,171 @@
 <app-breadcrumb [items]="['Accueil', 'Commandes']" />
-    <mat-card class="orders-card">
-      <div class="orders-card__header">
-        <div>
-          <h2>Commandes</h2>
-          <p>Historique des commandes et suivi de livraison.</p>
+<mat-card class="orders-card">
+  <div class="orders-card__header">
+    <div>
+      <h2>Commandes</h2>
+      <p>Historique des commandes et suivi de livraison.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="goToProducts()">Nouvelle commande</button>
+  </div>
+
+  <div class="orders-filters">
+    <mat-form-field class="filter-field">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" placeholder="N° commande, client...">
+    </mat-form-field>
+    <mat-form-field class="filter-field">
+      <mat-label>Validation</mat-label>
+      <mat-select [ngModel]="validationFilter()" (ngModelChange)="validationFilter.set($event)">
+        <mat-option [value]="true">Validée</mat-option>
+        <mat-option [value]="false">En attente</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="filter-field">
+      <mat-label>Paiement</mat-label>
+      <mat-select [ngModel]="paymentFilter()" (ngModelChange)="paymentFilter.set($event)">
+        <mat-option value="">Tous</mat-option>
+        <mat-option [value]="true">Soldée</mat-option>
+        <mat-option [value]="false">Solde dû</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="filter-field">
+      <mat-label>Statut</mat-label>
+      <mat-select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
+        <mat-option value="">Tous</mat-option>
+        <mat-option value="Confirmée">Confirmée</mat-option>
+        <mat-option value="En cours">En cours</mat-option>
+        <mat-option value="Expédiée">Expédiée</mat-option>
+        <mat-option value="Annulée">Annulée</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-stroked-button (click)="resetFilters()">Réinitialiser</button>
+  </div>
+
+  @if (filteredOrders().length === 0) {
+    <div class="filter-results">
+      <p>Aucune commande ne correspond à vos critères de filtrage.</p>
+    </div>
+  }
+
+  <table mat-table [dataSource]="filteredOrders()" class="orders-table">
+    <ng-container matColumnDef="numero">
+      <th mat-header-cell *matHeaderCellDef>N° Commande</th>
+      <td mat-cell *matCellDef="let element">{{ element.numero }}</td>
+    </ng-container>
+    <ng-container matColumnDef="clientNom">
+      <th mat-header-cell *matHeaderCellDef>Client</th>
+      <td mat-cell *matCellDef="let element">{{ element.clientNom }}</td>
+    </ng-container>
+    <ng-container matColumnDef="date_commande">
+      <th mat-header-cell *matHeaderCellDef>Date Commande</th>
+      <td mat-cell *matCellDef="let element">{{ element.date_commande | date: 'dd/MM/yyyy' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="total_ttc">
+      <th mat-header-cell *matHeaderCellDef>Montant TTC</th>
+      <td mat-cell *matCellDef="let element">{{ element.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="est_valider">
+      <th mat-header-cell *matHeaderCellDef>Validation</th>
+      <td mat-cell *matCellDef="let element">
+        <mat-chip [class.validated]="element.est_valider">
+          {{ element.est_valider ? 'Validée' : 'En attente' }}
+        </mat-chip>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="est_solder">
+      <th mat-header-cell *matHeaderCellDef>Paiement</th>
+      <td mat-cell *matCellDef="let element">
+        <mat-chip [class.paid]="element.est_solder">
+          {{ element.est_solder ? 'Soldée' : 'Solde: ' + (element.solde_du | currency: 'EUR': 'symbol': '1.2-2') }}
+        </mat-chip>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="statusLibelle">
+      <th mat-header-cell *matHeaderCellDef>Statut</th>
+      <td mat-cell *matCellDef="let element">{{ element.statusLibelle }}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+        class="order-row"
+        (click)="openTimeline(row)"
+        [class.selected]="selectedOrder()?.numero === row.numero"></tr>
+  </table>
+
+  <ng-template #timelineTpl>
+    @if (selectedOrder(); as order) {
+      <div class="timeline-dialog">
+        <div class="dialog-header">
+          <div class="dialog-header__title">
+            <span class="dialog-header__eyebrow">Suivi de commande</span>
+            <h3>{{ order.numero }}</h3>
+          </div>
+          <button mat-icon-button class="dialog-close" (click)="closeTimeline()" aria-label="Fermer">
+            <mat-icon>close</mat-icon>
+          </button>
         </div>
-        <button mat-flat-button color="primary" (click)="goToProducts()">Nouvelle commande</button>
-      </div>
-      <div class="orders-filters">
-        <mat-form-field class="filter-field">
-          <mat-label>Rechercher</mat-label>
-          <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" placeholder="N° commande, client...">
-        </mat-form-field>
-        <mat-form-field class="filter-field">
-          <mat-label>Validation</mat-label>
-          <mat-select [ngModel]="validationFilter()" (ngModelChange)="validationFilter.set($event)">
-            <mat-option [value]="true">Validée</mat-option>
-            <mat-option [value]="false">En attente</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="filter-field">
-          <mat-label>Paiement</mat-label>
-          <mat-select [ngModel]="paymentFilter()" (ngModelChange)="paymentFilter.set($event)">
-            <mat-option value="">Tous</mat-option>
-            <mat-option [value]="true">Soldée</mat-option>
-            <mat-option [value]="false">Solde dû</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="filter-field">
-          <mat-label>Statut</mat-label>
-          <mat-select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
-            <mat-option value="">Tous</mat-option>
-            <mat-option value="Confirmée">Confirmée</mat-option>
-            <mat-option value="En cours">En cours</mat-option>
-            <mat-option value="Expédiée">Expédiée</mat-option>
-            <mat-option value="Annulée">Annulée</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-stroked-button (click)="resetFilters()">Réinitialiser</button>
-      </div>
-      @if (filteredOrders().length === 0) {
-        <div class="filter-results">
-          <p>Aucune commande ne correspond à vos critères de filtrage.</p>
+
+        <div class="dialog-summary">
+          <div class="summary-item">
+            <span class="summary-label">Client</span>
+            <span class="summary-value">{{ order.clientNom }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Date</span>
+            <span class="summary-value">{{ order.date_commande | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Montant TTC</span>
+            <span class="summary-value">{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Statut</span>
+            <mat-chip class="summary-chip" [class.validated]="order.est_valider">{{ order.statusLibelle }}</mat-chip>
+          </div>
         </div>
-      }
-      <table mat-table [dataSource]="filteredOrders()" class="orders-table">
-        <ng-container matColumnDef="numero">
-          <th mat-header-cell *matHeaderCellDef>N° Commande</th>
-          <td mat-cell *matCellDef="let element">{{ element.numero }}</td>
-        </ng-container>
-        <ng-container matColumnDef="clientNom">
-          <th mat-header-cell *matHeaderCellDef>Client</th>
-          <td mat-cell *matCellDef="let element">{{ element.clientNom }}</td>
-        </ng-container>
-        <ng-container matColumnDef="date_commande">
-          <th mat-header-cell *matHeaderCellDef>Date Commande</th>
-          <td mat-cell *matCellDef="let element">{{ element.date_commande | date: 'dd/MM/yyyy' }}</td>
-        </ng-container>
-        <ng-container matColumnDef="total_ttc">
-          <th mat-header-cell *matHeaderCellDef>Montant TTC</th>
-          <td mat-cell *matCellDef="let element">{{ element.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</td>
-        </ng-container>
-        <ng-container matColumnDef="est_valider">
-          <th mat-header-cell *matHeaderCellDef>Validation</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-chip [class.validated]="element.est_valider">
-              {{ element.est_valider ? 'Validée' : 'En attente' }}
-            </mat-chip>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="est_solder">
-          <th mat-header-cell *matHeaderCellDef>Paiement</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-chip [class.paid]="element.est_solder">
-              {{ element.est_solder ? 'Soldée' : 'Solde: ' + (element.solde_du | currency: 'EUR': 'symbol': '1.2-2') }}
-            </mat-chip>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="statusLibelle">
-          <th mat-header-cell *matHeaderCellDef>Statut</th>
-          <td mat-cell *matCellDef="let element">{{ element.statusLibelle }}</td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="order-row" (click)="selectOrder(row)" [class.selected]="selectedOrder()?.numero === row.numero"></tr>
-      </table>
 
-      @if (selectedOrder(); as order) {
-        <div class="tracking-panel">
-          <div class="tracking-card">
-            <div class="tracking-card__header">
-              <div>
-                <p class="tracking-card__eyebrow">Suivi de commande</p>
-                <h3>{{ order.numero }}</h3>
-              </div>
-              <div class="tracking-card__actions">
-                <button matButton="filled" class="tracking-card__button" (click)="copyTrackingNumber(order)">
-                  <mat-icon>content_copy</mat-icon>
-                  <span>{{ copiedTracking() ? 'Copié' : 'Copier' }}</span>
-                </button>
-                <mat-chip class="tracking-chip">{{ currentStatusLabel() }}</mat-chip>
-              </div>
-            </div>
+        <div class="dialog-body">
+          <div class="timeline-legend">
+            <span class="legend-item"><span class="legend-dot done"></span>Terminé</span>
+            <span class="legend-item"><span class="legend-dot active"></span>En cours</span>
+            <span class="legend-item"><span class="legend-dot pending"></span>À venir</span>
+            <span class="legend-item"><span class="legend-dot canceled"></span>Annulé</span>
+          </div>
 
-            <div class="tracking-card__summary">
-              <div class="summary-item">
-                <span class="summary-item__label">Client</span>
-                <strong>{{ order.clientNom }}</strong>
-              </div>
-              <div class="summary-item">
-                <span class="summary-item__label">Date</span>
-                <strong>{{ order.date_commande | date: 'dd/MM/yyyy' }}</strong>
-              </div>
-              <div class="summary-item">
-                <span class="summary-item__label">Montant TTC</span>
-                <strong>{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</strong>
-              </div>
-              <div class="summary-item">
-                <span class="summary-item__label">Statut</span>
-                <strong>{{ order.statusLibelle }}</strong>
-              </div>
-            </div>
-
-            <div class="tracking-progress">
-              <div class="tracking-progress__meta">
-                <span>Progression de la commande</span>
-                <strong>{{ trackingProgress() | number: '1.0-0' }}%</strong>
-              </div>
-              <mat-progress-bar mode="determinate" [value]="trackingProgress()"></mat-progress-bar>
-            </div>
-
-            <div class="timeline-progress" role="list" aria-label="Progression de la commande">
-              @for (step of trackingSteps(); track step.title; let isLast = $last) {
-                <div class="timeline-progress__item">
-                  <div class="timeline-progress__marker" [class.completed]="step.status === 'completed'" [class.current]="step.status === 'current'" [class.pending]="step.status === 'pending'">
-                    @if (step.status === 'completed') {
+          <div class="timeline-vertical">
+            @for (step of timelineSteps(); track step.index; let last = $last) {
+              <div class="timeline-row">
+                <div class="timeline-row__marker">
+                  <div class="step-circle" [class]="step.status">
+                    @if (step.status === 'done') {
                       <mat-icon>check</mat-icon>
-                    } @else if (step.status === 'current') {
-                      <span class="timeline-progress__pulse"></span>
-                    } @else {
-                      <span class="timeline-progress__dot"></span>
+                    }
+                    @if (step.status === 'canceled') {
+                      <mat-icon>close</mat-icon>
+                    }
+                    @if (step.status === 'active' || step.status === 'pending') {
+                      <span class="step-number">{{ step.index }}</span>
                     }
                   </div>
-                  @if (!isLast) {
-                    <div class="timeline-progress__line" [class.active]="step.status !== 'pending'"></div>
+                  @if (!last) {
+                    <div class="step-connector" [class.done]="step.status === 'done'"></div>
                   }
-                  <span class="timeline-progress__label">{{ step.shortTitle }}</span>
                 </div>
-              }
-            </div>
-
-            <div class="timeline">
-              @for (step of trackingSteps(); track step.title) {
-                <div class="timeline-step" [class.completed]="step.status === 'completed'" [class.current]="step.status === 'current'" [class.pending]="step.status === 'pending'">
-                  <div class="timeline-step__icon" aria-hidden="true">
-                    @if (step.status === 'completed') {
-                      <mat-icon>check</mat-icon>
-                    } @else if (step.status === 'current') {
-                      <mat-icon>{{ step.icon }}</mat-icon>
-                    } @else {
-                      <mat-icon>{{ step.icon }}</mat-icon>
-                    }
-                  </div>
-                  <div class="timeline-step__content">
-                    <div class="timeline-step__header">
-                      <h4>{{ step.title }}</h4>
-                    </div>
-                    <p>{{ step.description }}</p>
-                  </div>
+                <div class="timeline-row__content" [class]="step.status">
+                  <strong class="step-title">{{ step.title }}</strong>
+                  @if (step.subtitle) {
+                    <p class="step-subtitle">{{ step.subtitle }}</p>
+                  }
                 </div>
-              }
-            </div>
+              </div>
+            }
           </div>
         </div>
-      }
-
-      <!-- Dialog template for order timeline -->
-      <ng-template #timelineTpl>
-        @if (selectedOrder(); as order) {
-          <div class="timeline-dialog">
-            <div class="dialog-header">
-              <div class="dialog-header__title">
-                <span class="dialog-header__eyebrow">Suivi de commande</span>
-                <h3>{{ order.numero }}</h3>
-              </div>
-              <button mat-icon-button class="dialog-close" (click)="closeTimeline()" aria-label="Fermer">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-
-            <div class="dialog-summary">
-              <div class="summary-item">
-                <span class="summary-label">Client</span>
-                <span class="summary-value">{{ order.clientNom }}</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-label">Date</span>
-                <span class="summary-value">{{ order.date_commande | date: 'dd/MM/yyyy' }}</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-label">Montant TTC</span>
-                <span class="summary-value">{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-label">Statut</span>
-                <mat-chip class="summary-chip" [class.validated]="order.est_valider">{{ order.statusLibelle }}</mat-chip>
-              </div>
-            </div>
-
-            <div class="dialog-body">
-              <div class="timeline-legend">
-                <span class="legend-item"><span class="legend-dot done"></span>Terminé</span>
-                <span class="legend-item"><span class="legend-dot active"></span>En cours</span>
-                <span class="legend-item"><span class="legend-dot pending"></span>À venir</span>
-                <span class="legend-item"><span class="legend-dot canceled"></span>Annulé</span>
-              </div>
-
-              <div class="timeline-vertical">
-                @for (step of timelineSteps(); track step.index; let last = $last) {
-                  <div class="timeline-row">
-                    <div class="timeline-row__marker">
-                      <div class="step-circle" [class]="step.status">
-                        @if (step.status === 'done') {
-                          <mat-icon>check</mat-icon>
-                        }
-                        @if (step.status === 'canceled') {
-                          <mat-icon>close</mat-icon>
-                        }
-                        @if (step.status === 'active' || step.status === 'pending') {
-                          <span class="step-number">{{ step.index }}</span>
-                        }
-                      </div>
-                      @if (!last) {
-                        <div class="step-connector" [class.done]="step.status === 'done'"></div>
-                      }
-                    </div>
-                    <div class="timeline-row__content" [class]="step.status">
-                      <strong class="step-title">{{ step.title }}</strong>
-                      @if (step.subtitle) {
-                        <p class="step-subtitle">{{ step.subtitle }}</p>
-                      }
-                    </div>
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
-        } @else {
-          <div class="timeline-dialog timeline-dialog--empty">
-            <p>Sélectionnez une commande pour voir son historique.</p>
-          </div>
-        }
-      </ng-template>
-    </mat-card>
+      </div>
+    } @else {
+      <div class="timeline-dialog timeline-dialog--empty">
+        <p>Sélectionnez une commande pour voir son historique.</p>
+      </div>
+    }
+  </ng-template>
+</mat-card>
