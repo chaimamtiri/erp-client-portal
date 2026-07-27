@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, inject, sign
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 interface ChatMessage {
   sender: 'bot' | 'user';
@@ -13,19 +14,16 @@ interface ChatMessage {
 
 @Component({
   selector: 'app-chatbot',
-  imports: [ReactiveFormsModule, MatIconModule, MatButtonModule],
+  imports: [ReactiveFormsModule, MatIconModule, MatButtonModule, HttpClientModule],
   template: `
     <div class="chatbot-container">
-      <!-- Floating Action Button -->
       <button class="chat-fab" (click)="toggleChat()" aria-label="Ouvrir l'assistant de chat">
         <mat-icon>smart_toy</mat-icon>
         <span class="chat-badge"></span>
       </button>
 
-      <!-- Chat Popup Window -->
       @if (isOpen()) {
         <div class="chat-window">
-          <!-- Chat Header -->
           <div class="chat-header">
             <div class="chat-header__info">
               <div class="chat-avatar">
@@ -44,7 +42,6 @@ interface ChatMessage {
             </button>
           </div>
 
-          <!-- Chat Messages Body -->
           <div class="chat-messages" #messageContainer>
             @for (msg of messages(); track msg.time + msg.text) {
               <div class="message-wrapper" [class.user]="msg.sender === 'user'">
@@ -70,7 +67,6 @@ interface ChatMessage {
             }
           </div>
 
-          <!-- Suggestions Chips -->
           <div class="chat-suggestions">
             <button class="suggestion-chip" (click)="selectSuggestion('📦 Suivre mes commandes')">
               📦 Suivre mes commandes
@@ -83,7 +79,6 @@ interface ChatMessage {
             </button>
           </div>
 
-          <!-- Chat Input Footer -->
           <form class="chat-input-form" (submit)="sendMessage(); $event.preventDefault()">
             <input
               type="text"
@@ -140,34 +135,33 @@ interface ChatMessage {
     `.chat-input-form input { flex: 1; border: 1px solid #e2e8f0; padding: 0.6rem 1rem; border-radius: 999px; outline: none; font-size: 0.88rem; transition: border-color 0.2s ease; background: #f8fafc; }`,
     `.chat-input-form input:focus { border-color: #2563eb; background: white; }`,
     `.chat-input-form button { flex-shrink: 0; }`,
-    `/* Dark Mode override */
-    .dark-theme .chat-window { background: #1e293b; border-color: #334155; }
-    .dark-theme .chat-header { background: linear-gradient(135deg, #0f172a, #020617); }
-    .dark-theme .chat-messages { background: #0f172a; }
-    .dark-theme .message-bubble { background: #1e293b; color: #f8fafc; border-color: #334155; }
-    .dark-theme .message-bubble.user { background: #2563eb; color: white; border: none; }
-    .dark-theme .chat-suggestions { background: #1e293b; border-top-color: #334155; }
-    .dark-theme .suggestion-chip { background: #0f172a; border-color: #334155; color: #94a3b8; }
-    .dark-theme .suggestion-chip:hover { background: rgba(37,99,235,0.15); border-color: #2563eb; color: #3b82f6; }
-    .dark-theme .chat-input-form { background: #1e293b; border-top-color: #334155; }
-    .dark-theme .chat-input-form input { background: #0f172a; border-color: #334155; color: #f8fafc; }
-    .dark-theme .chat-input-form input:focus { border-color: #2563eb; background: #1e293b; }
-    .dark-theme .message-bubble a { color: #60a5fa; }
-    .dark-theme .message-bubble.user a { color: white; }
-    `
+    `.dark-theme .chat-window { background: #1e293b; border-color: #334155; }`,
+    `.dark-theme .chat-header { background: linear-gradient(135deg, #0f172a, #020617); }`,
+    `.dark-theme .chat-messages { background: #0f172a; }`,
+    `.dark-theme .message-bubble { background: #1e293b; color: #f8fafc; border-color: #334155; }`,
+    `.dark-theme .message-bubble.user { background: #2563eb; color: white; border: none; }`,
+    `.dark-theme .chat-suggestions { background: #1e293b; border-top-color: #334155; }`,
+    `.dark-theme .suggestion-chip { background: #0f172a; border-color: #334155; color: #94a3b8; }`,
+    `.dark-theme .suggestion-chip:hover { background: rgba(37,99,235,0.15); border-color: #2563eb; color: #3b82f6; }`,
+    `.dark-theme .chat-input-form { background: #1e293b; border-top-color: #334155; }`,
+    `.dark-theme .chat-input-form input { background: #0f172a; border-color: #334155; color: #f8fafc; }`,
+    `.dark-theme .chat-input-form input:focus { border-color: #2563eb; background: #1e293b; }`,
+    `.dark-theme .message-bubble a { color: #60a5fa; }`,
+    `.dark-theme .message-bubble.user a { color: white; }`
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatbotComponent {
-  private readonly router: Router = inject(Router);
+  private readonly http: HttpClient = inject(HttpClient);
 
   @ViewChild('messageContainer') private messageContainer?: ElementRef;
 
   isOpen = signal<boolean>(false);
   isTyping = signal<boolean>(false);
   messageInput = new FormControl('');
-  
-  messages = signal<ChatMessage[]>([
+
+private readonly GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+messages = signal<ChatMessage[]>([
     {
       sender: 'bot',
       text: 'Bonjour Claire ! Je suis votre assistant ERP. Comment puis-je vous aider aujourd\'hui ?',
@@ -176,10 +170,8 @@ export class ChatbotComponent {
   ]);
 
   constructor() {
-    // Scroll to bottom when messages list updates
     effect(() => {
       this.messages();
-      // Wait for DOM layout
       setTimeout(() => this.scrollToBottom(), 50);
     });
   }
@@ -197,7 +189,6 @@ export class ChatbotComponent {
     const text = this.messageInput.value?.trim();
     if (!text) return;
 
-    // Add user message
     const userMsg: ChatMessage = {
       sender: 'user',
       text: text,
@@ -206,44 +197,55 @@ export class ChatbotComponent {
     this.messages.update((list) => [...list, userMsg]);
     this.messageInput.setValue('');
 
-    // Trigger bot reply simulation
     this.isTyping.set(true);
-    setTimeout(() => {
-      this.isTyping.set(false);
-      this.generateBotResponse(text);
-    }, 850);
+    this.fetchLLMResponse(text);
   }
 
-  private generateBotResponse(userText: string): void {
-    let replyText = '';
-    let isHtml = false;
+  private fetchLLMResponse(userText: string): void {
+    const url = `${this.GEMINI_URL}?key=${environment.geminiApiKey}`;
 
-    const lowerText = userText.toLowerCase();
-
-    if (lowerText.includes('commande')) {
-      replyText = `Voici vos commandes récentes :
-• <b>ORD-1025</b> : En cours (Livraison prévue : Demain, 10:30)
-• <b>ORD-1026</b> : Confirmée (En attente d'expédition)`;
-      isHtml = true;
-    } else if (lowerText.includes('facture')) {
-      replyText = `Votre dernière facture <b>INV-2048</b> (Montant: €2,450, Statut: Payée) est disponible au téléchargement. <a href="/documents">Télécharger INV-2048.pdf (760 KB)</a>`;
-      isHtml = true;
-    } else if (lowerText.includes('adresse')) {
-      replyText = `Vous pouvez gérer vos adresses de livraison et de facturation directement depuis votre espace <a href="/profile?tab=addresses">Profil & Adresses</a>.`;
-      isHtml = true;
-    } else {
-      replyText = `Je comprends votre demande concernant "${userText}". 
-
-En tant qu'assistant prototype, mes réponses complètes seront connectées à notre IA dans la prochaine version. Pour l'instant, vous pouvez utiliser les raccourcis d'actions rapides ci-dessous !`;
-    }
-
-    const botMsg: ChatMessage = {
-      sender: 'bot',
-      text: replyText,
-      time: this.getCurrentTime(),
-      isHtml: isHtml
+    const body = {
+      contents: [{
+        parts: [{
+          text: `You are "Assistant Client", a helpful ERP customer support bot.
+You help users track orders, download invoices, and manage addresses.
+Be concise, friendly, and professional.
+Respond in the same language the user writes in (French or English).
+User message: ${userText}`
+        }]
+      }],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 350,
+        topP: 0.95
+      }
     };
-    this.messages.update((list) => [...list, botMsg]);
+
+    this.http.post<any>(url, body).subscribe({
+      next: (res) => {
+        this.isTyping.set(false);
+        const reply = res.candidates?.[0]?.content?.parts?.[0]?.text || "Désolé, je n'ai pas compris.";
+
+        const botMsg: ChatMessage = {
+          sender: 'bot',
+          text: reply.trim(),
+          time: this.getCurrentTime(),
+          isHtml: false
+        };
+        this.messages.update((list) => [...list, botMsg]);
+      },
+      error: (err) => {
+        this.isTyping.set(false);
+        console.error('Gemini API error:', err);
+
+        const botMsg: ChatMessage = {
+          sender: 'bot',
+          text: "Oups ! Mon cerveau numérique fait une sieste. Réessayez dans quelques secondes !",
+          time: this.getCurrentTime()
+        };
+        this.messages.update((list) => [...list, botMsg]);
+      }
+    });
   }
 
   private getCurrentTime(): string {
