@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
       }
       return null;
     }
-  });
+  })
 
   // Getters simples pour faciliter l'accès dans le template HTML
   get name(): AbstractControl | null {
