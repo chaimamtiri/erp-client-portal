@@ -1,8 +1,13 @@
 <app-breadcrumb [items]="['Accueil', 'Support', 'Détail']" />
-    <mat-card class="ticket-card">
-      <h2>Ticket TKT-118</h2>
-      <p>Accès au portail • Priorité élevée</p>
-      <div class="ticket-card__body">
-        <p>Une mise à jour d’accès est nécessaire pour l’utilisateur Claire Martin.</p>
-      </div>
-    </mat-card>
+<mat-card class="ticket-card" *ngIf="ticket; else noTicket">
+  <h2>{{ ticket?.numero }}</h2>
+  <p>{{ ticket?.sujet }} • Priorité {{ supportService.getPriorityLabel(ticket?.priorite || '') }}</p>
+  <div class="ticket-card__body">
+    <p>{{ ticket?.description }}</p>
+  </div>
+</mat-card>
+<ng-template #noTicket>
+  <mat-card class="ticket-card">
+    <p>Ticket non trouvé</p>
+  </mat-card>
+</ng-template>

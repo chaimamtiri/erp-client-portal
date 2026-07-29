@@ -5,20 +5,18 @@
           <h2>Tickets support</h2>
           <p>Suivez l'état de vos requêtes.</p>
         </div>
-        <button mat-flat-button color="primary">Nouveau ticket</button>
+        <button mat-flat-button color="primary" (click)="createNewTicket()">Nouveau ticket</button>
       </div>
       <div class="ticket-list">
-        @for (ticket of ticketList(); track ticket.id) {
-          <div class="ticket-item">
-            <div class="ticket-item__meta">
-              <strong>{{ ticket.sujet }}</strong>
-              <p>{{ ticket.categorie }} • {{ ticket.numero }}</p>
-            </div>
-            <div class="ticket-item__chips">
-              <mat-chip [class]="'prio-' + ticket.priorite">{{ ticket.priorite }}</mat-chip>
-              <mat-chip [class]="'status-' + ticket.status">{{ statusLabel(ticket.status) }}</mat-chip>
-            </div>
+        <div *ngFor="let ticket of ticketList()" class="ticket-item" (click)="viewTicketDetail(ticket.id)">
+          <div class="ticket-item__meta">
+            <strong>{{ ticket.sujet }}</strong>
+            <p>{{ ticket.categorie }} • {{ ticket.numero }}</p>
           </div>
-        }
+          <div class="ticket-item__chips">
+            <mat-chip [class]="'prio-' + ticket.priorite">{{ ticket.priorite }}</mat-chip>
+            <mat-chip [class]="'status-' + ticket.status">{{ statusLabel(ticket.status) }}</mat-chip>
+          </div>
+        </div>
       </div>
     </mat-card>

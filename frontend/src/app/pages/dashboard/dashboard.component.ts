@@ -7,7 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { SectionCardComponent } from '../../shared/components/section-card/section-card.component';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
-import { DashboardService } from '../../core/services/dashboard.service';
+import { DashboardService } from '../../Core/services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',

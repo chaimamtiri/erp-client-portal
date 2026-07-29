@@ -8,8 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { ProfileService, UserProfile } from '../../core/services/profile.service';
-import { Adresse } from '../../core/models/mock-data';
+import { ProfileService, UserProfile } from '../../Core/services/profile.service';
+import { Adresse } from '../../Core/models/mock-data';
 
 @Component({
   selector: 'app-profile',
