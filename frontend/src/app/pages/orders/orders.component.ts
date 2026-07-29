@@ -206,6 +206,7 @@ export class OrdersComponent {
   });
 
   protected trackParcel(): void {
+    this.closeTimeline();
     this.router.navigate(['/deliveries']);
   }
 
