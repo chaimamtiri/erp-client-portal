@@ -26,6 +26,14 @@ mat-card, mat-form-field, button, input { font-family: inherit; }
 /* Limit excessive letter-spacing that may cause layout issues */
 * { letter-spacing: normal; }
 
+/* Dialog de suivi de commande : surface arrondie et sans padding par défaut */
+.timeline-dialog-panel .mat-mdc-dialog-surface {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.22);
+}
+.timeline-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface { padding: 0; }
+
 /* Ensure mat-icon elements use the icon font for ligatures */
 mat-icon, .mat-icon, .material-icons, .material-symbols-outlined {
   font-family: 'Material Icons', 'Material Symbols Outlined', sans-serif !important;
