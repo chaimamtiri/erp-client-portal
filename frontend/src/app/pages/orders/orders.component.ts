@@ -238,7 +238,7 @@ export class OrdersComponent {
     link.href = url;
     link.download = `facture-${order.numero}.txt`;
     link.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
   private toTimelineStep(definition: StepDefinition, status: StepStatus, date: Date | null, description?: string): TimelineStep {
