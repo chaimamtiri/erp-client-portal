@@ -45,19 +45,6 @@
     </mat-list>
   </app-section-card>
 
-  <app-section-card title="Notifications" subtitle="Alertes récentes" actionLabel="Voir tout" actionLink="/notifications">
-    <mat-list>
-      @for (notification of notificationList(); track notification.titre) {
-        <mat-list-item>
-          <div class="notification-item">
-            <strong>{{ notification.titre }}</strong>
-            <span>{{ notification.message }}</span>
-          </div>
-        </mat-list-item>
-      }
-    </mat-list>
-  </app-section-card>
-
   <app-section-card title="Solde du compte" subtitle="Disponibilité" actionLabel="Paiements" actionLink="/payments">
     <div class="balance-card">
       <div class="balance-card__amount">€48 250.00</div>

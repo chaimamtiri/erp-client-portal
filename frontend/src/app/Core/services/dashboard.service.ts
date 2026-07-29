@@ -1,45 +1,35 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { stats, orders, invoices, notifications, deliveries } from '../models/mock-data';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { stats, orders, invoices, deliveries } from '../models/mock-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = '/api/dashboard';
+
   private statsData = signal(stats);
   private ordersData = signal(orders);
   private invoicesData = signal(invoices);
-  private notificationsData = signal(notifications);
   private deliveriesData = signal(deliveries);
-
-  readonly stats$ = this.statsData.asReadonly();
-  readonly orders$ = this.ordersData.asReadonly();
-  readonly invoices$ = this.invoicesData.asReadonly();
-  readonly notifications$ = this.notificationsData.asReadonly();
-  readonly deliveries$ = this.deliveriesData.asReadonly();
 
   readonly stats = computed(() => this.statsData());
   readonly latestOrders = computed(() => this.ordersData().slice(0, 3));
   readonly latestInvoices = computed(() => this.invoicesData().slice(0, 3));
-  readonly latestNotifications = computed(() => this.notificationsData().slice(0, 3));
   readonly latestDeliveries = computed(() => this.deliveriesData().slice(0, 3));
 
-  getStats() {
-    return this.statsData();
-  }
+  loadDashboardData(): void {
+    this.http.get<any[]>(`${this.apiUrl}/stats`)
+      .subscribe(data => this.statsData.set(data));
 
-  getLatestOrders(count: number = 3) {
-    return this.ordersData().slice(0, count);
-  }
+    this.http.get<any[]>(`${this.apiUrl}/orders/latest`)
+      .subscribe(data => this.ordersData.set(data));
 
-  getLatestInvoices(count: number = 3) {
-    return this.invoicesData().slice(0, count);
-  }
+    this.http.get<any[]>(`${this.apiUrl}/invoices/latest`)
+      .subscribe(data => this.invoicesData.set(data));
 
-  getLatestNotifications(count: number = 3) {
-    return this.notificationsData().slice(0, count);
-  }
-
-  getLatestDeliveries(count: number = 3) {
-    return this.deliveriesData().slice(0, count);
+    this.http.get<any[]>(`${this.apiUrl}/deliveries/latest`)
+      .subscribe(data => this.deliveriesData.set(data));
   }
 }

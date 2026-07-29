@@ -38,7 +38,6 @@
         <mat-option value="Annulée">Annulée</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-stroked-button (click)="resetFilters()">Réinitialiser</button>
   </div>
 
   @if (filteredOrders().length === 0) {
@@ -105,17 +104,6 @@
           </button>
         </div>
 
-        <div class="dialog-actions">
-          <button mat-flat-button color="primary" class="pill-button" [disabled]="!delivery()" (click)="trackParcel()">
-            <mat-icon>local_shipping</mat-icon>
-            Suivre le colis
-          </button>
-          <button mat-stroked-button class="pill-button" (click)="downloadInvoice()">
-            <mat-icon>download</mat-icon>
-            Télécharger la facture
-          </button>
-        </div>
-
         <div class="dialog-body">
           <section class="dialog-section">
             <h4 class="section-title"><mat-icon>receipt_long</mat-icon>Informations générales</h4>
@@ -140,36 +128,34 @@
           </section>
 
           <section class="dialog-section">
-            <h4 class="section-title"><mat-icon>payments</mat-icon>Résumé financier</h4>
-            <div class="finance-card">
-              <div class="finance-row">
-                <span>Sous-total HT</span>
-                <span>{{ order.total_ht | currency: 'EUR': 'symbol': '1.2-2' }}</span>
-              </div>
-              <div class="finance-row">
-                <span>TVA</span>
-                <span>{{ order.total_tva | currency: 'EUR': 'symbol': '1.2-2' }}</span>
-              </div>
-              <mat-divider />
-              <div class="finance-row finance-row--total">
-                <span>Total TTC</span>
-                <span>{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</span>
-              </div>
-              <div class="finance-row">
-                <span>Montant réglé</span>
-                <span class="finance-paid">{{ order.montant_regle | currency: 'EUR': 'symbol': '1.2-2' }}</span>
-              </div>
-              <div class="finance-row">
-                <span>Solde dû</span>
-                <span [class.finance-due]="!order.est_solder">{{ order.solde_du | currency: 'EUR': 'symbol': '1.2-2' }}</span>
-              </div>
+            <h4 class="section-title"><mat-icon>timeline</mat-icon>Suivi de la commande</h4>
+            <div class="timeline timeline--horizontal">
+              @for (step of timelineSteps(); track step.key; let last = $last) {
+                <div class="timeline-row" [class]="step.status">
+                  <div class="timeline-row__marker">
+                    <div class="step-circle">
+                      <mat-icon>{{ step.icon }}</mat-icon>
+                    </div>
+                    @if (!last) {
+                      <div class="step-connector"></div>
+                    }
+                  </div>
+                  <div class="timeline-row__content">
+                    <strong class="step-title">{{ step.title }}</strong>
+                    @if (step.dateLabel) {
+                      <span class="step-date">{{ step.dateLabel }}<br>{{ step.timeLabel }}</span>
+                    }
+                    <p class="step-description">{{ step.description }}</p>
+                  </div>
+                </div>
+              }
             </div>
           </section>
 
           <section class="dialog-section">
             <h4 class="section-title"><mat-icon>inventory_2</mat-icon>Articles commandés</h4>
             @if (orderItems().length === 0) {
-              <p class="empty-hint">Aucun article n’est rattaché à cette commande.</p>
+              <p class="empty-hint">Aucun article n'est rattaché à cette commande.</p>
             } @else {
               <div class="items-list">
                 @for (item of orderItems(); track item.id) {
@@ -243,32 +229,34 @@
                 </div>
               </div>
             } @else {
-              <p class="empty-hint">Aucun bon de livraison n’est encore associé à cette commande.</p>
+              <p class="empty-hint">Aucun bon de livraison n'est encore associé à cette commande.</p>
             }
           </section>
 
           <section class="dialog-section">
-            <h4 class="section-title"><mat-icon>timeline</mat-icon>Suivi de la commande</h4>
-            <div class="timeline">
-              @for (step of timelineSteps(); track step.key; let last = $last) {
-                <div class="timeline-row" [class]="step.status">
-                  <div class="timeline-row__marker">
-                    <div class="step-circle">
-                      <mat-icon>{{ step.icon }}</mat-icon>
-                    </div>
-                    @if (!last) {
-                      <div class="step-connector"></div>
-                    }
-                  </div>
-                  <div class="timeline-row__content">
-                    <strong class="step-title">{{ step.title }}</strong>
-                    @if (step.dateLabel) {
-                      <span class="step-date">{{ step.dateLabel }} - {{ step.timeLabel }}</span>
-                    }
-                    <p class="step-description">{{ step.description }}</p>
-                  </div>
-                </div>
-              }
+            <h4 class="section-title"><mat-icon>payments</mat-icon>Résumé financier</h4>
+            <div class="finance-card">
+              <div class="finance-row">
+                <span>Sous-total HT</span>
+                <span>{{ order.total_ht | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+              <div class="finance-row">
+                <span>TVA</span>
+                <span>{{ order.total_tva | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+              <mat-divider />
+              <div class="finance-row finance-row--total">
+                <span>Total TTC</span>
+                <span>{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+              <div class="finance-row">
+                <span>Montant réglé</span>
+                <span class="finance-paid">{{ order.montant_regle | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+              <div class="finance-row">
+                <span>Solde dû</span>
+                <span [class.finance-due]="!order.est_solder">{{ order.solde_du | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
             </div>
           </section>
         </div>

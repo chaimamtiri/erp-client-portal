@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule, DOCUMENT, formatDate, registerLocaleData } from '@angular/common';
+import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -72,7 +72,6 @@ export class OrdersComponent {
   private readonly cartService: CartService = inject(CartService);
   private readonly router: Router = inject(Router);
   private readonly dialog: MatDialog = inject(MatDialog);
-  private readonly document: Document = inject(DOCUMENT);
 
   protected readonly displayedColumns = ['numero', 'clientNom', 'date_commande', 'total_ttc', 'est_valider', 'est_solder', 'statusLibelle'];
 
@@ -122,13 +121,6 @@ export class OrdersComponent {
     });
   });
 
-  protected resetFilters(): void {
-    this.searchTerm.set('');
-    this.validationFilter.set('');
-    this.paymentFilter.set('');
-    this.statusFilter.set('');
-  }
-
   @ViewChild('timelineTpl') private readonly timelineTpl!: TemplateRef<unknown>;
   private dialogRef: ReturnType<MatDialog['open']> | null = null;
 
@@ -141,7 +133,7 @@ export class OrdersComponent {
   protected openTimeline(order: Commande): void {
     this.selectedOrder.set(order);
     this.dialogRef = this.dialog.open(this.timelineTpl, {
-      width: '820px',
+      width: '960px',
       maxWidth: '96vw',
       panelClass: 'timeline-dialog-panel',
       autoFocus: false
@@ -204,42 +196,6 @@ export class OrdersComponent {
     const canceledDate = events.get('annulee')?.date ?? null;
     return [...visible, this.toTimelineStep(CANCELED_STEP, 'canceled', canceledDate, events.get('annulee')?.description)];
   });
-
-  protected trackParcel(): void {
-    this.closeTimeline();
-    this.router.navigate(['/deliveries']);
-  }
-
-  /** Génère un récapitulatif de facture téléchargeable à partir des données mock. */
-  protected downloadInvoice(): void {
-    const order = this.selectedOrder();
-    if (!order) return;
-
-    const lines = this.orderItems().map(
-      line => `${line.reference}\t${line.designation}\tx${line.quantite}\t${line.prix_unitaire_ht} EUR\t${line.total_ht} EUR`
-    );
-    const content = [
-      `Facture - Commande ${order.numero}`,
-      `Client : ${order.clientNom ?? ''}`,
-      `Date : ${this.formatDay(order.date_commande)}`,
-      '',
-      'Reference\tDesignation\tQte\tPU HT\tTotal HT',
-      ...lines,
-      '',
-      `Total HT : ${order.total_ht} EUR`,
-      `TVA : ${order.total_tva} EUR`,
-      `Total TTC : ${order.total_ttc} EUR`,
-      `Montant réglé : ${order.montant_regle} EUR`,
-      `Solde dû : ${order.solde_du} EUR`
-    ].join('\n');
-
-    const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
-    const link = this.document.createElement('a');
-    link.href = url;
-    link.download = `facture-${order.numero}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }
 
   private toTimelineStep(definition: StepDefinition, status: StepStatus, date: Date | null, description?: string): TimelineStep {
     return {

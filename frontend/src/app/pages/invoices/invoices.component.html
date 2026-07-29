@@ -1,37 +1,45 @@
 <app-breadcrumb [items]="['Accueil', 'Factures']" />
-    <mat-card class="invoices-card">
-      <div class="invoices-card__header">
-        <div>
-          <h2>Factures</h2>
-          <p>Consultez vos factures et leur statut.</p>
-        </div>
-      </div>
-      <table mat-table [dataSource]="dataSource()" class="invoices-table">
-        <ng-container matColumnDef="numero">
-          <th mat-header-cell *matHeaderCellDef>N° Facture</th>
-          <td mat-cell *matCellDef="let element">{{ element.numero }}</td>
-        </ng-container>
-        <ng-container matColumnDef="customer">
-          <th mat-header-cell *matHeaderCellDef>Client</th>
-          <td mat-cell *matCellDef="let element">{{ element.customer }}</td>
-        </ng-container>
-        <ng-container matColumnDef="total_ttc">
-          <th mat-header-cell *matHeaderCellDef>Montant TTC</th>
-          <td mat-cell *matCellDef="let element">{{ element.total_ttc | currency: 'EUR':'symbol':'1.2-2' }}</td>
-        </ng-container>
-        <ng-container matColumnDef="date_facture">
-          <th mat-header-cell *matHeaderCellDef>Date</th>
-          <td mat-cell *matCellDef="let element">{{ element.date_facture | date: 'dd/MM/yyyy' }}</td>
-        </ng-container>
-        <ng-container matColumnDef="est_solder">
-          <th mat-header-cell *matHeaderCellDef>Statut</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-chip [class.paid]="element.est_solder">
-              {{ element.est_solder ? 'Payée' : (element.solde_du > 0 ? 'Solde dû: ' + element.solde_du + '€' : 'En attente') }}
-            </mat-chip>
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </mat-card>
+<mat-card class="invoices-card">
+  <div class="invoices-card__header">
+    <div>
+      <h2>Factures</h2>
+      <p>Consultez vos factures et leur statut.</p>
+    </div>
+  </div>
+  <table mat-table [dataSource]="dataSource()" class="invoices-table">
+    <ng-container matColumnDef="numero">
+      <th mat-header-cell *matHeaderCellDef>N° Facture</th>
+      <td mat-cell *matCellDef="let element">{{ element.numero }}</td>
+    </ng-container>
+    <ng-container matColumnDef="customer">
+      <th mat-header-cell *matHeaderCellDef>Client</th>
+      <td mat-cell *matCellDef="let element">{{ element.customer }}</td>
+    </ng-container>
+    <ng-container matColumnDef="total_ttc">
+      <th mat-header-cell *matHeaderCellDef>Montant TTC</th>
+      <td mat-cell *matCellDef="let element">{{ element.total_ttc | currency: 'EUR':'symbol':'1.2-2' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="date_facture">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let element">{{ element.date_facture | date: 'dd/MM/yyyy' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="est_solder">
+      <th mat-header-cell *matHeaderCellDef>Statut</th>
+      <td mat-cell *matCellDef="let element">
+        <mat-chip [class.paid]="element.est_solder">
+          {{ element.est_solder ? 'Payée' : (element.solde_du > 0 ? 'Solde dû: ' + element.solde_du + '€' : 'En attente') }}
+        </mat-chip>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Facture</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button (click)="downloadInvoice(element)" aria-label="Télécharger la facture">
+          <mat-icon>download</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-card>
