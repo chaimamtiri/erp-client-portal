@@ -94,7 +94,7 @@
 
   <ng-template #timelineTpl>
     @if (selectedOrder(); as order) {
-      <div class="timeline-dialog">
+      <div class="order-dialog">
         <div class="dialog-header">
           <div class="dialog-header__title">
             <span class="dialog-header__eyebrow">Suivi de commande</span>
@@ -105,65 +105,176 @@
           </button>
         </div>
 
-        <div class="dialog-summary">
-          <div class="summary-item">
-            <span class="summary-label">Client</span>
-            <span class="summary-value">{{ order.clientNom }}</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">Date</span>
-            <span class="summary-value">{{ order.date_commande | date: 'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">Montant TTC</span>
-            <span class="summary-value">{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">Statut</span>
-            <mat-chip class="summary-chip" [class.validated]="order.est_valider">{{ order.statusLibelle }}</mat-chip>
-          </div>
+        <div class="dialog-actions">
+          <button mat-flat-button color="primary" class="pill-button" [disabled]="!delivery()" (click)="trackParcel()">
+            <mat-icon>local_shipping</mat-icon>
+            Suivre le colis
+          </button>
+          <button mat-stroked-button class="pill-button" (click)="downloadInvoice()">
+            <mat-icon>download</mat-icon>
+            Télécharger la facture
+          </button>
         </div>
 
         <div class="dialog-body">
-          <div class="timeline-legend">
-            <span class="legend-item"><span class="legend-dot done"></span>Terminé</span>
-            <span class="legend-item"><span class="legend-dot active"></span>En cours</span>
-            <span class="legend-item"><span class="legend-dot pending"></span>À venir</span>
-            <span class="legend-item"><span class="legend-dot canceled"></span>Annulé</span>
-          </div>
+          <section class="dialog-section">
+            <h4 class="section-title"><mat-icon>receipt_long</mat-icon>Informations générales</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Client</span>
+                <span class="info-value">{{ order.clientNom }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Date de commande</span>
+                <span class="info-value">{{ order.date_commande | date: 'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Articles</span>
+                <span class="info-value">{{ itemsCount() }} article(s)</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Statut</span>
+                <mat-chip class="info-chip" [class.validated]="order.est_valider">{{ order.statusLibelle }}</mat-chip>
+              </div>
+            </div>
+          </section>
 
-          <div class="timeline-vertical">
-            @for (step of timelineSteps(); track step.index; let last = $last) {
-              <div class="timeline-row">
-                <div class="timeline-row__marker">
-                  <div class="step-circle" [class]="step.status">
-                    @if (step.status === 'done') {
-                      <mat-icon>check</mat-icon>
-                    }
-                    @if (step.status === 'canceled') {
-                      <mat-icon>close</mat-icon>
-                    }
-                    @if (step.status === 'active' || step.status === 'pending') {
-                      <span class="step-number">{{ step.index }}</span>
-                    }
+          <section class="dialog-section">
+            <h4 class="section-title"><mat-icon>payments</mat-icon>Résumé financier</h4>
+            <div class="finance-card">
+              <div class="finance-row">
+                <span>Sous-total HT</span>
+                <span>{{ order.total_ht | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+              <div class="finance-row">
+                <span>TVA</span>
+                <span>{{ order.total_tva | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+              <mat-divider />
+              <div class="finance-row finance-row--total">
+                <span>Total TTC</span>
+                <span>{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+              <div class="finance-row">
+                <span>Montant réglé</span>
+                <span class="finance-paid">{{ order.montant_regle | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+              <div class="finance-row">
+                <span>Solde dû</span>
+                <span [class.finance-due]="!order.est_solder">{{ order.solde_du | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="dialog-section">
+            <h4 class="section-title"><mat-icon>inventory_2</mat-icon>Articles commandés</h4>
+            @if (orderItems().length === 0) {
+              <p class="empty-hint">Aucun article n’est rattaché à cette commande.</p>
+            } @else {
+              <div class="items-list">
+                @for (item of orderItems(); track item.id) {
+                  <div class="item-card">
+                    <div class="item-card__thumb" aria-hidden="true">
+                      @if (item.image) {
+                        <span class="item-card__emoji">{{ item.image }}</span>
+                      } @else {
+                        <mat-icon>inventory_2</mat-icon>
+                      }
+                    </div>
+                    <div class="item-card__info">
+                      <strong class="item-card__name">{{ item.designation }}</strong>
+                      <span class="item-card__ref">Réf. {{ item.reference }}</span>
+                      <span class="item-card__meta">
+                        {{ item.quantite }} × {{ item.prix_unitaire_ht | currency: 'EUR': 'symbol': '1.2-2' }}
+                      </span>
+                    </div>
+                    <div class="item-card__total">
+                      <span class="item-card__total-label">Sous-total</span>
+                      <span class="item-card__total-value">{{ item.total_ht | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                    </div>
                   </div>
-                  @if (!last) {
-                    <div class="step-connector" [class.done]="step.status === 'done'"></div>
-                  }
-                </div>
-                <div class="timeline-row__content" [class]="step.status">
-                  <strong class="step-title">{{ step.title }}</strong>
-                  @if (step.subtitle) {
-                    <p class="step-subtitle">{{ step.subtitle }}</p>
-                  }
-                </div>
+                }
+              </div>
+              <div class="items-footer">
+                <span>Total articles ({{ itemsCount() }})</span>
+                <strong>{{ itemsSubtotal() | currency: 'EUR': 'symbol': '1.2-2' }}</strong>
               </div>
             }
-          </div>
+          </section>
+
+          <section class="dialog-section">
+            <h4 class="section-title"><mat-icon>local_shipping</mat-icon>Informations de livraison</h4>
+            @if (delivery(); as shipment) {
+              <div class="delivery-card">
+                <div class="delivery-item">
+                  <mat-icon class="delivery-icon">local_shipping</mat-icon>
+                  <div>
+                    <span class="info-label">Transporteur</span>
+                    <span class="info-value">{{ shipment.transporteur }}</span>
+                  </div>
+                </div>
+                <div class="delivery-item">
+                  <mat-icon class="delivery-icon">qr_code_2</mat-icon>
+                  <div>
+                    <span class="info-label">N° de suivi</span>
+                    <span class="info-value">{{ shipment.numero_suivi }}</span>
+                  </div>
+                </div>
+                <div class="delivery-item">
+                  <mat-icon class="delivery-icon">location_on</mat-icon>
+                  <div>
+                    <span class="info-label">Adresse de livraison</span>
+                    <span class="info-value">{{ shipment.adresse_livraison }}</span>
+                  </div>
+                </div>
+                <div class="delivery-item">
+                  <mat-icon class="delivery-icon">schedule</mat-icon>
+                  <div>
+                    <span class="info-label">Estimation de livraison</span>
+                    <span class="info-value">{{ shipment.eta }}</span>
+                  </div>
+                </div>
+                <div class="delivery-item">
+                  <mat-icon class="delivery-icon">flag</mat-icon>
+                  <div>
+                    <span class="info-label">Statut de livraison</span>
+                    <mat-chip class="info-chip">{{ shipment.status }}</mat-chip>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <p class="empty-hint">Aucun bon de livraison n’est encore associé à cette commande.</p>
+            }
+          </section>
+
+          <section class="dialog-section">
+            <h4 class="section-title"><mat-icon>timeline</mat-icon>Suivi de la commande</h4>
+            <div class="timeline">
+              @for (step of timelineSteps(); track step.key; let last = $last) {
+                <div class="timeline-row" [class]="step.status">
+                  <div class="timeline-row__marker">
+                    <div class="step-circle">
+                      <mat-icon>{{ step.icon }}</mat-icon>
+                    </div>
+                    @if (!last) {
+                      <div class="step-connector"></div>
+                    }
+                  </div>
+                  <div class="timeline-row__content">
+                    <strong class="step-title">{{ step.title }}</strong>
+                    @if (step.dateLabel) {
+                      <span class="step-date">{{ step.dateLabel }} - {{ step.timeLabel }}</span>
+                    }
+                    <p class="step-description">{{ step.description }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
         </div>
       </div>
     } @else {
-      <div class="timeline-dialog timeline-dialog--empty">
+      <div class="order-dialog order-dialog--empty">
         <p>Sélectionnez une commande pour voir son historique.</p>
       </div>
     }

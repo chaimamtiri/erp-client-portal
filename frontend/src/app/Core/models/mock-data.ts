@@ -112,6 +112,37 @@ export interface Commande {
   soldeDu?: boolean | number;
   clientNom?: string;
   statusLibelle?: string;
+  lignes?: LigneCommande[];
+}
+
+export interface LigneCommande {
+  id: number;
+  commande_id: number;
+  article_id?: number;
+  designation: string;
+  reference: string;
+  quantite: number;
+  prix_unitaire_ht: number;
+  total_ht: number;
+  image?: string;
+  est_supprime: boolean;
+}
+
+export type EtapeCommande =
+  | 'commande'
+  | 'paiement'
+  | 'preparation'
+  | 'expediee'
+  | 'centre_local'
+  | 'en_livraison'
+  | 'livree'
+  | 'annulee';
+
+export interface SuiviCommande {
+  commande_numero: string;
+  etape: EtapeCommande;
+  date: Date;
+  description: string;
 }
 
 export interface Facture {
@@ -434,6 +465,31 @@ export const orders: Commande[] = [
     clientNom: 'Acme SAS',
     statusLibelle: 'Confirmée'
   }
+];
+
+export const orderLines: LigneCommande[] = [
+  { id: 1, commande_id: 1, article_id: 1, designation: 'ERP Pro Suite', reference: 'REF-ERP-PRO', quantite: 1, prix_unitaire_ht: 980, total_ht: 980, image: '📦', est_supprime: false },
+  { id: 2, commande_id: 1, article_id: 2, designation: 'Terminal Mobile', reference: 'REF-TERM-MOB', quantite: 1, prix_unitaire_ht: 640, total_ht: 640, image: '📱', est_supprime: false },
+  { id: 3, commande_id: 1, article_id: 3, designation: 'Pack Analytics', reference: 'REF-PACK-ANA', quantite: 1, prix_unitaire_ht: 320, total_ht: 320, image: '📊', est_supprime: false },
+  { id: 4, commande_id: 1, designation: 'Mise en service & formation', reference: 'REF-SRV-SETUP', quantite: 1, prix_unitaire_ht: 60, total_ht: 60, image: '🛠️', est_supprime: false },
+  { id: 5, commande_id: 2, article_id: 3, designation: 'Pack Analytics', reference: 'REF-PACK-ANA', quantite: 2, prix_unitaire_ht: 320, total_ht: 640, image: '📊', est_supprime: false },
+  { id: 6, commande_id: 2, designation: 'Mise en service & formation', reference: 'REF-SRV-SETUP', quantite: 1, prix_unitaire_ht: 60, total_ht: 60, image: '🛠️', est_supprime: false },
+  { id: 7, commande_id: 3, article_id: 4, designation: 'Assistant IA', reference: 'REF-AST-IA', quantite: 1, prix_unitaire_ht: 540, total_ht: 540, image: '🤖', est_supprime: false },
+  { id: 8, commande_id: 3, article_id: 3, designation: 'Pack Analytics', reference: 'REF-PACK-ANA', quantite: 1, prix_unitaire_ht: 320, total_ht: 320, image: '📊', est_supprime: false },
+  { id: 9, commande_id: 3, designation: 'Mise en service & formation', reference: 'REF-SRV-SETUP', quantite: 1, prix_unitaire_ht: 240, total_ht: 240, image: '🛠️', est_supprime: false }
+];
+
+export const orderTracking: SuiviCommande[] = [
+  { commande_numero: 'ORD-1024', etape: 'commande', date: new Date('2026-07-05T09:12:00'), description: 'Commande enregistrée sur le portail client.' },
+  { commande_numero: 'ORD-1024', etape: 'paiement', date: new Date('2026-07-05T09:24:00'), description: 'Paiement reçu avec succès.' },
+  { commande_numero: 'ORD-1024', etape: 'preparation', date: new Date('2026-07-06T14:05:00'), description: 'Articles préparés et emballés en entrepôt.' },
+  { commande_numero: 'ORD-1024', etape: 'expediee', date: new Date('2026-07-08T08:30:00'), description: 'Colis remis au transporteur DHL Express.' },
+  { commande_numero: 'ORD-1024', etape: 'centre_local', date: new Date('2026-07-11T07:15:00'), description: 'Colis arrivé au centre de distribution de Lyon.' },
+  { commande_numero: 'ORD-1024', etape: 'en_livraison', date: new Date('2026-07-12T08:05:00'), description: 'Le livreur est en route, livraison prévue avant 16:00.' },
+  { commande_numero: 'ORD-1025', etape: 'commande', date: new Date('2026-07-04T10:02:00'), description: 'Commande enregistrée sur le portail client.' },
+  { commande_numero: 'ORD-1025', etape: 'paiement', date: new Date('2026-07-04T11:40:00'), description: 'Acompte de 430 € encaissé, solde à régler à la livraison.' },
+  { commande_numero: 'ORD-1025', etape: 'preparation', date: new Date('2026-07-05T09:15:00'), description: 'Préparation en cours dans l’entrepôt de Lille.' },
+  { commande_numero: 'ORD-1026', etape: 'commande', date: new Date('2026-07-03T16:47:00'), description: 'Commande enregistrée, en attente de validation.' }
 ];
 
 export const invoices: Facture[] = [
