@@ -5,10 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ThemeService } from '../../../core/services/theme.service';
-import { NotificationService } from '../../../core/services/notification.service';
-import { ProfileService } from '../../../core/services/profile.service';
-import { CartService } from '../../../core/services/cart.service';
+import { ThemeService } from '../../../Core/services/theme.service';
+import { NotificationService } from '../../../Core/services/notification.service';
+import { ProfileService } from '../../../Core/services/profile.service';
+import { CartService } from '../../../Core/services/cart.service';
 
 @Component({
   selector: 'app-topbar',
@@ -49,7 +49,7 @@ import { CartService } from '../../../core/services/cart.service';
                   <button mat-button class="mark-all-btn" (click)="notificationService.markAllAsRead()">Tout marquer comme lu</button>
                 }
               </div>
-              
+
               <div class="dropdown-panel__body">
                 @if (notificationService.notifications().length === 0) {
                   <div class="empty-state">
@@ -140,7 +140,7 @@ import { CartService } from '../../../core/services/cart.service';
     .topbar__search ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
     .topbar__search ::ng-deep .mat-mdc-text-field-wrapper { border-radius: 999px !important; background: white !important; }
     .topbar__actions { display: flex; align-items: center; gap: 0.8rem; }
-    
+
     /* ERP selector badge */
     .topbar__erp-select { position: relative; }
     .erp-badge { display: flex; align-items: center; gap: 0.5rem; background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.15); color: #2563eb; font-weight: 600; padding: 0.5rem 0.9rem; border-radius: 999px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s ease; }
@@ -164,16 +164,16 @@ import { CartService } from '../../../core/services/cart.service';
     .topbar__dropdown-wrapper { position: relative; }
     .dropdown-panel { position: absolute; top: 100%; right: 0; margin-top: 0.6rem; width: 340px; background: white; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; display: flex; flex-direction: column; overflow: hidden; animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    
+
     .dropdown-panel__header { padding: 0.9rem 1.2rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
     .dropdown-panel__header h3 { margin: 0; font-size: 0.95rem; font-weight: 600; color: #1e293b; }
     .mark-all-btn { font-size: 0.78rem; height: auto; padding: 0.2rem 0.5rem; line-height: 1; color: #2563eb; }
-    
+
     .dropdown-panel__body { max-height: 280px; overflow-y: auto; }
     .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; color: #94a3b8; gap: 0.5rem; }
     .empty-state mat-icon { font-size: 32px; width: 32px; height: 32px; }
     .empty-state p { margin: 0; font-size: 0.85rem; }
-    
+
     .notification-preview-item { display: flex; gap: 0.8rem; padding: 0.8rem 1.2rem; border-bottom: 1px solid #f8fafc; cursor: pointer; transition: background 0.2s ease; position: relative; }
     .notification-preview-item:hover { background: #f8fafc; }
     .notification-preview-item.unread { background: #eff6ff; }
@@ -183,7 +183,7 @@ import { CartService } from '../../../core/services/cart.service';
     .notif-content strong { font-size: 0.85rem; color: #1e293b; font-weight: 600; }
     .notif-content p { margin: 0; font-size: 0.8rem; color: #64748b; line-height: 1.3; }
     .notif-time { font-size: 0.72rem; color: #94a3b8; margin-top: 0.2rem; }
-    
+
     .dropdown-panel__footer { padding: 0.8rem; border-top: 1px solid #f1f5f9; text-align: center; background: #f8fafc; }
     .view-all-link { font-size: 0.82rem; color: #2563eb; font-weight: 600; text-decoration: none; display: inline-block; }
     .view-all-link:hover { text-decoration: underline; }
@@ -194,18 +194,18 @@ import { CartService } from '../../../core/services/cart.service';
     .avatar-circle { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
     .profile-name { font-weight: 600; font-size: 0.88rem; color: #334155; }
     .profile-avatar-btn .chevron { font-size: 18px; width: 18px; height: 18px; color: #64748b; }
-    
+
     .profile-panel { width: 260px; }
     .profile-panel__header { padding: 1.2rem; display: flex; align-items: center; gap: 0.8rem; border-bottom: 1px solid #f1f5f9; background: #f8fafc; }
     .avatar-large { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; display: grid; place-items: center; font-weight: 700; font-size: 1.1rem; }
     .profile-panel__header h4 { margin: 0; font-size: 0.95rem; font-weight: 700; color: #1e293b; }
     .profile-panel__header p { margin: 0; font-size: 0.78rem; color: #64748b; }
-    
+
     .profile-panel__body { padding: 0.5rem; display: flex; flex-direction: column; gap: 0.2rem; }
     .profile-menu-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 8px; color: #475569; text-decoration: none; font-size: 0.85rem; transition: all 0.2s ease; }
     .profile-menu-item:hover { background: #f1f5f9; color: #0f172a; }
     .profile-menu-item mat-icon { font-size: 18px; width: 18px; height: 18px; color: #64748b; }
-    
+
     .profile-panel__footer { padding: 0.5rem; border-top: 1px solid #f1f5f9; }
     .logout-btn { width: 100%; border: none; background: none; display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 8px; color: #ef4444; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease; }
     .logout-btn:hover { background: #fef2f2; }

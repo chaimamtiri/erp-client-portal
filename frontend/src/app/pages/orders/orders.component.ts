@@ -14,8 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { orders, orderLines, orderTracking, deliveries, Commande, LigneCommande, BonLivraison, EtapeCommande } from '../../core/models/mock-data';
-import { CartService } from '../../core/services/cart.service';
+import { orders, orderLines, orderTracking, deliveries, Commande, LigneCommande, BonLivraison, EtapeCommande } from '../../Core/models/mock-data';
+import { CartService } from '../../Core/services/cart.service';
 
 type StepStatus = 'done' | 'active' | 'pending' | 'canceled';
 

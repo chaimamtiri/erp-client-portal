@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { SupportService } from '../../core/services/support.service';
+import { SupportService } from '../../Core/services/support.service';
 
 @Component({
   selector: 'app-support',

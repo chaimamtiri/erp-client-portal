@@ -7,8 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { InvoicesService } from '../../core/services/invoices.service';
-import { Facture } from '../../core/models/mock-data';
+import { InvoicesService } from '../../Core/services/invoices.service';
+import { Facture } from '../../Core/models/mock-data';
 
 const LOCALE = 'fr-FR';
 registerLocaleData(localeFr, LOCALE);

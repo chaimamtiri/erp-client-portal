@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { SidebarComponent, NavItem } from '../../shared/components/sidebar/sidebar.component';
 import { TopbarComponent } from '../../shared/components/topbar/topbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { ThemeService } from '../../core/services/theme.service';
+import { ThemeService } from '../../Core/services/theme.service';
 import { ChatbotComponent } from '../../shared/components/chatbot/chatbot.component';
 
 @Component({
@@ -41,9 +41,9 @@ export class MainLayoutComponent {
   protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
     { label: 'Catalogue', icon: 'inventory_2', route: '/products' },
-    { 
-      label: 'Achats', 
-      icon: 'shopping_cart', 
+    {
+      label: 'Achats',
+      icon: 'shopping_cart',
       children: [
         { label: 'Commandes', icon: 'receipt_long', route: '/orders' },
         { label: 'Factures', icon: 'description', route: '/invoices' },
