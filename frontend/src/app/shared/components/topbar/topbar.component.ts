@@ -5,11 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../../Core/services/auth.service';
 import { ThemeService } from '../../../Core/services/theme.service';
 import { NotificationService } from '../../../Core/services/notification.service';
 import { ProfileService } from '../../../Core/services/profile.service';
 import { CartService } from '../../../Core/services/cart.service';
-
 @Component({
   selector: 'app-topbar',
   imports: [DatePipe, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, RouterLink],
@@ -119,7 +119,7 @@ import { CartService } from '../../../Core/services/cart.service';
                 </a>
               </div>
               <div class="profile-panel__footer">
-                <button class="logout-btn">
+                <button class="logout-btn" (click)="logout()">
                   <mat-icon>logout</mat-icon>
                   <span>Se déconnecter</span>
                 </button>
@@ -256,11 +256,13 @@ import { CartService } from '../../../Core/services/cart.service';
 export class TopbarComponent {
   title = input.required<string>();
 
+
   protected readonly theme: ThemeService = inject(ThemeService);
   protected readonly notificationService: NotificationService = inject(NotificationService);
   protected readonly profile: ProfileService = inject(ProfileService);
   protected readonly cartService: CartService = inject(CartService);
   private readonly router: Router = inject(Router);
+  private readonly authService: AuthService = inject(AuthService);
 
   cartCount = computed(() => this.cartService.getCartCount());
 
@@ -307,5 +309,11 @@ export class TopbarComponent {
 
   markAsRead(index: number): void {
     this.notificationService.markAsRead(index);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.closeAllDropdowns();
+    this.router.navigate(['/']);
   }
 }
