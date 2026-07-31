@@ -1,15 +1,290 @@
-<app-breadcrumb [items]="['Accueil', 'Factures', 'Détail']" />
-    <mat-card class="invoice-card">
-      <h2>Facture INV-2048</h2>
-      <p>Émise le 05 juillet 2026</p>
-      <div class="invoice-card__body">
-        <div>
-          <h3>Client</h3>
-          <p>Acme SAS</p>
+<app-breadcrumb [items]="['Accueil', 'Achats', 'Factures', invoice() ? invoice()!.numero : 'Détail']" />
+
+<div class="detail-container">
+  <!-- Top Navigation & Actions Bar (visible on screen only) -->
+  <div class="screen-action-bar top-bar">
+    <button mat-stroked-button (click)="goBack()" class="btn-back">
+      <mat-icon>arrow_back</mat-icon>
+      Retour à la liste des achats
+    </button>
+    <div class="spacer"></div>
+    <div class="action-buttons-group">
+      <button mat-flat-button color="primary" (click)="sendEmail()">
+        <mat-icon>email</mat-icon>
+        Envoyer par e-mail
+      </button>
+      <button mat-stroked-button (click)="downloadPDF()">
+        <mat-icon>download</mat-icon>
+        Télécharger en PDF
+      </button>
+      <button mat-flat-button color="accent" (click)="printInvoice()">
+        <mat-icon>print</mat-icon>
+        Imprimer
+      </button>
+    </div>
+  </div>
+
+  @if (invoice()) {
+    <!-- The Printable Invoice Sheet -->
+    <div class="invoice-sheet" id="invoice-sheet">
+      
+      <!-- Top Header: Logo + Invoice ID -->
+      <div class="invoice-header">
+        <div class="vendor-logo-area">
+          <div class="logo-circle">
+            <mat-icon>auto_awesome</mat-icon>
+          </div>
+          <div class="logo-text">
+            <span class="company-name">ERP Solutions Europe</span>
+            <span class="company-tagline">Logiciels & Intégration Professionnels</span>
+          </div>
         </div>
-        <div>
-          <h3>Montant</h3>
-          <p>€2,450.00</p>
+
+        <div class="invoice-meta">
+          <span class="invoice-title-label">FACTURE D'ACHAT</span>
+          <span class="invoice-number">{{ invoice()!.numero }}</span>
+          
+          <div class="status-badge-container">
+            <span [class]="'status-badge ' + statusClass()">
+              @if (invoice()!.est_solder) {
+                <mat-icon class="badge-icon">check_circle</mat-icon>
+              } @else if (invoice()!.statusLibelle === 'En retard') {
+                <mat-icon class="badge-icon">error</mat-icon>
+              } @else {
+                <mat-icon class="badge-icon">schedule</mat-icon>
+              }
+              {{ invoice()!.statusLibelle || (invoice()!.est_solder ? 'Payée' : 'En attente') }}
+            </span>
+          </div>
         </div>
       </div>
+
+      <mat-divider class="header-divider"></mat-divider>
+
+      <!-- Parties Block (Supplier & Customer) -->
+      <div class="invoice-parties-grid">
+        <div class="party-box supplier">
+          <span class="party-label">Émetteur / Fournisseur</span>
+          <h4 class="party-name">ERP Solutions Europe SAS</h4>
+          <p class="party-detail">45 Avenue de la Technologie</p>
+          <p class="party-detail">75008 Paris, France</p>
+          <p class="party-detail"><strong>TVA :</strong> FR 89 123456789</p>
+          <p class="party-detail"><strong>Siret :</strong> 123 456 789 00012</p>
+          <p class="party-detail"><strong>Contact :</strong> billing@erpsolutions.eu | +33 1 47 20 00 01</p>
+        </div>
+
+        <div class="party-box customer">
+          <span class="party-label">Destinataire / Client</span>
+          <div class="customer-info-header">
+            <div class="client-mini-logo">
+              <mat-icon>business</mat-icon>
+            </div>
+            <h4 class="party-name">{{ invoice()!.customer || 'Acme SAS' }}</h4>
+          </div>
+          <p class="party-detail">Claire Martin (Responsable achats)</p>
+          <p class="party-detail">12 Rue de l'Innovation</p>
+          <p class="party-detail">69002 Lyon, France</p>
+          <p class="party-detail"><strong>TVA :</strong> FR 42 987654321</p>
+          <p class="party-detail"><strong>E-mail :</strong> claire.martin@acme.com</p>
+        </div>
+      </div>
+
+      <!-- Invoice Dates block -->
+      <div class="invoice-dates-bar">
+        <div class="date-item">
+          <span class="date-label">Date d'émission</span>
+          <span class="date-value">{{ formatDate(invoice()!.date_facture) }}</span>
+        </div>
+        <div class="date-item">
+          <span class="date-label">Date d'échéance</span>
+          <span class="date-value">{{ formatDate(dueDate()) }}</span>
+        </div>
+        <div class="date-item">
+          <span class="date-label">Conditions</span>
+          <span class="date-value">Règlement à 30 jours</span>
+        </div>
+        <div class="date-item">
+          <span class="date-label">Devise</span>
+          <span class="date-value">EUR (€)</span>
+        </div>
+      </div>
+
+      <!-- Product / Services Table -->
+      <div class="invoice-table-wrapper">
+        <table class="invoice-items-table">
+          <thead>
+            <tr>
+              <th>Description / Référence</th>
+              <th class="text-center">Quantité</th>
+              <th class="text-right">Prix Unitaire HT</th>
+              <th class="text-center">Taux TVA</th>
+              <th class="text-right">Total HT</th>
+              <th class="text-right">Total TTC</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (line of invoiceLines(); track line.id) {
+              <tr>
+                <td class="col-desc">
+                  <div class="item-name">{{ line.designation }}</div>
+                  <div class="item-ref">Réf: {{ line.reference }}</div>
+                </td>
+                <td class="col-qty text-center">{{ line.quantite }}</td>
+                <td class="col-price text-right">{{ line.prix_unitaire_ht | currency: 'EUR':'symbol':'1.2-2' }}</td>
+                <td class="col-tva text-center">{{ line.tva_rate }}%</td>
+                <td class="col-total-ht text-right">{{ line.total_ht | currency: 'EUR':'symbol':'1.2-2' }}</td>
+                <td class="col-total-ttc text-right">{{ line.total_ttc | currency: 'EUR':'symbol':'1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Totals & Payment Row -->
+      <div class="invoice-footer-grid">
+        <!-- Left: Payment details & notes -->
+        <div class="payment-instructions">
+          
+          @if (paymentInfo()?.confirmed) {
+            <!-- Facture Acquittée Stamp/Block -->
+            <div class="paid-stamp-card">
+              <div class="stamp-header">
+                <mat-icon>check_circle</mat-icon>
+                <span>Facture Acquittée</span>
+              </div>
+              <div class="stamp-body">
+                <p class="stamp-desc">Cette facture d'achat a été réglée en totalité auprès du fournisseur.</p>
+                <div class="stamp-info-grid">
+                  <div class="stamp-row">
+                    <span class="stamp-label">Mode :</span>
+                    <span class="stamp-value">{{ paymentInfo()!.method }}</span>
+                  </div>
+                  <div class="stamp-row">
+                    <span class="stamp-label">Date :</span>
+                    <span class="stamp-value">{{ formatDate(paymentInfo()!.date) }}</span>
+                  </div>
+                  <div class="stamp-row">
+                    <span class="stamp-label">Transaction :</span>
+                    <span class="stamp-value code-font">{{ paymentInfo()!.reference }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          } @else {
+            <div class="instructions-section">
+              <span class="section-label">Informations de règlement</span>
+              
+              @if (invoice()!.montant_regle > 0) {
+                <p class="instruction-text warning-text">
+                  Un acompte de <strong>{{ invoice()!.montant_regle | currency: 'EUR':'symbol':'1.2-2' }}</strong> a été réglé le {{ formatDate(paymentInfo()?.date) }}. Le solde restant de <strong>{{ invoice()!.solde_du | currency: 'EUR':'symbol':'1.2-2' }}</strong> est en attente de règlement.
+                </p>
+              } @else {
+                <p class="instruction-text">
+                  Merci de régler cette facture d'achat par virement bancaire sur le compte ci-dessous en mentionnant le numéro de facture <strong>{{ invoice()!.numero }}</strong> en référence.
+                </p>
+              }
+              
+              <div class="bank-details-card">
+                <div class="bank-row">
+                  <span class="bank-label">Mode:</span>
+                  <span class="bank-value">{{ paymentInfo()?.method }}</span>
+                </div>
+                <div class="bank-row">
+                  <span class="bank-label">Banque:</span>
+                  <span class="bank-value">Société Générale Paris</span>
+                </div>
+                <div class="bank-row">
+                  <span class="bank-label">IBAN:</span>
+                  <span class="bank-value code-font">FR76 3000 6000 0123 4567 8901 234</span>
+                </div>
+                <div class="bank-row">
+                  <span class="bank-label">BIC/SWIFT:</span>
+                  <span class="bank-value code-font">ERPSFR2PXXX</span>
+                </div>
+              </div>
+            </div>
+          }
+
+          <div class="instructions-section">
+            <span class="section-label">Notes légales & Conditions d'échéance</span>
+            <p class="legal-text">
+              Conformément à l'article L. 441-6 du code de commerce, des pénalités de retard sont exigibles le jour suivant la date de règlement figurant sur la facture au taux annuel de 10%. Indemnité forfaitaire légale pour frais de recouvrement en cas de retard de paiement : 40 €.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Summary amounts -->
+        <div class="financial-summary">
+          <div class="summary-row">
+            <span class="summary-label">Sous-total HT</span>
+            <span class="summary-value">{{ invoice()!.total_ht | currency: 'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+          
+          <!-- Ventilation de la TVA dynamique -->
+          @for (vat of vatBreakdown(); track vat.rate) {
+            <div class="summary-row tva-detail">
+              <span class="summary-label">TVA {{ vat.rate | number:'1.0-1' }}% (sur {{ vat.ht | currency: 'EUR':'symbol':'1.2-2' }})</span>
+              <span class="summary-value">{{ vat.tva | currency: 'EUR':'symbol':'1.2-2' }}</span>
+            </div>
+          }
+
+          <div class="summary-row remise-detail">
+            <span class="summary-label">Remises / Réductions</span>
+            <span class="summary-value">0,00 €</span>
+          </div>
+
+          <mat-divider class="summary-divider"></mat-divider>
+
+          <div class="summary-row total-ttc-row">
+            <span class="summary-label">Montant Total TTC</span>
+            <span class="summary-value">{{ invoice()!.total_ttc | currency: 'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <div class="summary-row payment-made-row">
+            <span class="summary-label">Montant Réglé</span>
+            <span class="summary-value text-success">-{{ invoice()!.montant_regle | currency: 'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <div class="summary-row rest-due-row" [class.overdue]="invoice()!.statusLibelle === 'En retard'" [class.pending]="invoice()!.statusLibelle === 'En attente'">
+            <span class="summary-label">Reste à payer</span>
+            <span class="summary-value">{{ invoice()!.solde_du | currency: 'EUR':'symbol':'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Actions Bar (visible on screen only) -->
+    <div class="screen-action-bar bottom-bar">
+      <button mat-stroked-button (click)="goBack()" class="btn-back">
+        <mat-icon>arrow_back</mat-icon>
+        Retour à la liste des achats
+      </button>
+      <div class="spacer"></div>
+      <div class="action-buttons-group">
+        <button mat-flat-button color="primary" (click)="sendEmail()">
+          <mat-icon>email</mat-icon>
+          Envoyer par e-mail
+        </button>
+        <button mat-stroked-button (click)="downloadPDF()">
+          <mat-icon>download</mat-icon>
+          Télécharger en PDF
+        </button>
+        <button mat-flat-button color="accent" (click)="printInvoice()">
+          <mat-icon>print</mat-icon>
+          Imprimer la facture
+        </button>
+      </div>
+    </div>
+  } @else {
+    <!-- Empty state/Error -->
+    <mat-card class="error-card">
+      <mat-icon class="error-icon">receipt</mat-icon>
+      <h3>Facture non trouvée</h3>
+      <p>La facture demandée n'existe pas ou vous n'avez pas l'autorisation d'y accéder.</p>
+      <button mat-flat-button color="primary" (click)="goBack()">
+        Retour à la liste des achats
+      </button>
     </mat-card>
+  }
+</div>

@@ -1,6 +1,21 @@
 :host { display: block; }
-.invoices-card { border-radius: 20px; padding: 1rem; }
-.invoices-card__header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.invoices-card { border-radius: 20px; padding: 1.5rem; background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); }
+.invoices-card__header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
 .invoices-table { width: 100%; }
-mat-chip { font-size: 0.8rem; }
+.invoice-row { transition: background-color 150ms ease; }
+.invoice-row:hover { background-color: rgba(15, 23, 42, 0.02); }
+.invoice-link { color: #2563eb; font-weight: 600; text-decoration: none; transition: color 150ms ease; }
+.invoice-link:hover { color: #1d4ed8; text-decoration: underline; }
+mat-chip { font-size: 0.8rem; border: none; }
 mat-chip.paid { background: #dcfce7; color: #15803d; }
+mat-chip.unpaid { background: #fee2e2; color: #dc2626; }
+mat-chip.pending { background: #eff6ff; color: #1e40af; }
+
+/* Dark Theme Support */
+.dark-theme .invoices-card { background: #1e293b; border: 1px solid #334155; box-shadow: none; color: #f8fafc; }
+.dark-theme .invoice-row:hover { background-color: rgba(255, 255, 255, 0.02); }
+.dark-theme .invoice-link { color: #60a5fa; }
+.dark-theme .invoice-link:hover { color: #93c5fd; }
+.dark-theme .invoices-card__header p { color: #94a3b8; }
+.dark-theme .invoices-card__header h2 { color: #f8fafc; }
+

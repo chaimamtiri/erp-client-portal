@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule, DOCUMENT, formatDate, registerLocaleData } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import localeFr from '@angular/common/locales/fr';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,17 +16,22 @@ registerLocaleData(localeFr, LOCALE);
 
 @Component({
   selector: 'app-invoices',
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatTableModule, MatChipsModule, BreadcrumbComponent],
+  imports: [CommonModule, RouterModule, MatCardModule, MatIconModule, MatButtonModule, MatTableModule, MatChipsModule, BreadcrumbComponent],
   templateUrl: './invoices.component.html',
   styleUrl: './invoices.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoicesComponent {
   protected readonly invoicesService: InvoicesService = inject(InvoicesService);
+  private readonly router: Router = inject(Router);
   private readonly document: Document = inject(DOCUMENT);
 
   protected readonly displayedColumns = ['numero', 'customer', 'total_ttc', 'date_facture', 'est_solder', 'actions'];
   protected readonly dataSource = this.invoicesService.invoices;
+
+  protected viewDetail(invoiceId: number): void {
+    this.router.navigate(['/invoices/detail'], { queryParams: { invoiceId } });
+  }
 
   /** Génère un récapitulatif de facture téléchargeable à partir des données de la facture. */
   protected downloadInvoice(invoice: Facture): void {
