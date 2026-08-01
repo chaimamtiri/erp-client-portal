@@ -55,6 +55,12 @@
     "TITLE": "لوحة القيادة",
     "WELCOME": "مرحباً بك في بوابة العملاء (ERP). تتبع الأداء والطلبات والمدفوعات ببضع نقرات.",
     "VIEW_ORDERS": "عرض الطلبات",
+    "STATS": {
+      "REVENUE": "الإيرادات",
+      "ORDERS": "الطلبات",
+      "INVOICES": "الفواتير",
+      "TICKETS": "التذاكر"
+    },
     "LATEST_ORDERS": {
       "TITLE": "أحدث الطلبات",
       "SUBTITLE": "تتبع في الوقت الفعلي"
@@ -265,6 +271,12 @@
       "UPDATE_BUTTON": "تحديث كلمة المرور",
       "SUCCESS_MESSAGE": "تم تحديث كلمة المرور بنجاح (محاكاة)."
     }
+  },
+  "FOOTER": {
+    "COPYRIGHT": "© 2026 ErpClient · نموذج بوابة العملاء",
+    "SUPPORT": "الدعم",
+    "SECURITY": "الأمان",
+    "DOCUMENTATION": "التوثيق"
   },
   "LANGUAGE": {
     "SWITCHER_ARIA": "اختر لغة الواجهة",

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatCurrency, formatDate } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
@@ -19,4 +19,12 @@ export class PaymentsComponent {
 
   protected readonly displayedColumns = ['numero', 'reference', 'montant_regle', 'date_paiement', 'est_encaisser'];
   protected readonly dataSource = this.paymentsService.payments;
+
+  protected formatAmount(amount: number): string {
+    return formatCurrency(amount, 'fr-FR', '€', 'EUR', '1.2-2');
+  }
+
+  protected formatPaymentDate(value: Date): string {
+    return formatDate(value, 'dd/MM/yyyy', 'fr-FR');
+  }
 }

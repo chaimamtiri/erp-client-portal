@@ -1,7 +1,11 @@
 import 'zone.js';
+import { registerLocaleData } from '@angular/common';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
+import localeAr from '@angular/common/locales/ar';
+
+registerLocaleData(localeAr, 'ar');
 
 // Ensure Material icon fonts load even if index.html hasn't been reloaded
 (function injectMaterialIconLinks(){

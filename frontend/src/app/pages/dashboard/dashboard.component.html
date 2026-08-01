@@ -24,7 +24,7 @@
             <span>{{ order.numero }}</span>
             <span>{{ order.clientNom }}</span>
             <span>€{{ order.totalTTC }}</span>
-            <span>{{ order.statusLibelle }}</span>
+            <span>{{ statusKey(order.statusLibelle ?? '') | translate }}</span>
           </div>
         </mat-list-item>
       }
@@ -37,7 +37,7 @@
         <mat-list-item>
           <div class="row-item">
             <span>{{ invoice.numero }}</span>
-            <span>{{ invoice.total_ttc | currency: 'EUR':'symbol':'1.2-2' }}</span>
+            <span>{{ formatInvoiceAmount(invoice.total_ttc) }}</span>
             <span>{{ invoice.est_solder ? ('COMMON.STATUS.PAID' | translate) : ('COMMON.STATUS.PENDING' | translate) }}</span>
           </div>
         </mat-list-item>
@@ -63,7 +63,7 @@
         <mat-list-item>
           <div class="delivery-item">
             <strong>{{ delivery.numero }}</strong>
-            <span>{{ delivery.date_livraison | date: 'dd/MM/yyyy' }}</span>
+            <span>{{ formatDeliveryDate(delivery.date_livraison) }}</span>
           </div>
         </mat-list-item>
       }

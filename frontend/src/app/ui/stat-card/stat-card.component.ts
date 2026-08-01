@@ -1,10 +1,11 @@
 ﻿import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-stat-card',
-  imports: [MatCardModule, MatIconModule],
+  imports: [MatCardModule, MatIconModule, TranslatePipe],
   templateUrl: './stat-card.component.html',
   styleUrls: ['./stat-card.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

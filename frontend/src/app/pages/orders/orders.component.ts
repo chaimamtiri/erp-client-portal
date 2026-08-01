@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule, formatDate, registerLocaleData } from '@angular/common';
+import { CommonModule, formatCurrency, formatDate } from '@angular/common';
+import { CommonModule, formatCurrency, formatDate, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -214,6 +215,26 @@ export class OrdersComponent {
 
   private formatDay(date: Date): string {
     return formatDate(date, 'd MMMM y', this.currentLocale());
+  }
+
+  protected formatOrderDate(date: Date): string {
+    return formatDate(date, 'dd/MM/yyyy', this.currentLocale());
+  }
+
+  protected formatMoney(amount: number): string {
+    return formatCurrency(amount, this.currentLocale(), '€', 'EUR', '1.2-2');
+  }
+
+  protected formatBalanceDue(order: Commande): string {
+    return `${this.translate.instant('ORDERS.TIMELINE.BALANCE_DUE')}: ${this.formatMoney(order.solde_du)}`;
+  }
+
+  protected formatLineTotal(amount: number): string {
+    return this.formatMoney(amount);
+  }
+
+  protected formatLineQuantity(unitPrice: number, quantity: number): string {
+    return `${quantity} × ${this.formatMoney(unitPrice)}`;
   }
 
   private currentLocale(): string {

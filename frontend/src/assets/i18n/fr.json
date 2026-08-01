@@ -55,6 +55,12 @@
     "TITLE": "Tableau de bord",
     "WELCOME": "Bienvenue dans votre espace client ERP. Suivez les performances, les commandes et les paiements en quelques clics.",
     "VIEW_ORDERS": "Voir les commandes",
+    "STATS": {
+      "REVENUE": "Revenus",
+      "ORDERS": "Commandes",
+      "INVOICES": "Factures",
+      "TICKETS": "Tickets"
+    },
     "LATEST_ORDERS": {
       "TITLE": "Dernières commandes",
       "SUBTITLE": "Suivi en temps réel"
@@ -265,6 +271,12 @@
       "UPDATE_BUTTON": "Mettre à jour le mot de passe",
       "SUCCESS_MESSAGE": "Mot de passe mis à jour avec succès (simulation)."
     }
+  },
+  "FOOTER": {
+    "COPYRIGHT": "© 2026 ErpClient · Prototype de portail client",
+    "SUPPORT": "Support",
+    "SECURITY": "Sécurité",
+    "DOCUMENTATION": "Documentation"
   },
   "LANGUAGE": {
     "SWITCHER_ARIA": "Choisir la langue de l'interface",

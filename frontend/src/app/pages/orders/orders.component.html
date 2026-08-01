@@ -11,7 +11,7 @@
   <div class="orders-filters">
     <mat-form-field class="filter-field">
       <mat-label>{{ 'ORDERS.FILTERS.SEARCH' | translate }}</mat-label>
-      <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" [placeholder]="'ORDERS.FILTERS.SEARCH' | translate">
+      <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" placeholder="Search orders" title="Search orders" [placeholder]="'ORDERS.FILTERS.SEARCH' | translate">
     </mat-form-field>
     <mat-form-field class="filter-field">
       <mat-label>{{ 'ORDERS.FILTERS.VALIDATION' | translate }}</mat-label>
@@ -57,11 +57,11 @@
     </ng-container>
     <ng-container matColumnDef="date_commande">
       <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.DATE' | translate }}</th>
-      <td mat-cell *matCellDef="let element">{{ element.date_commande | date: 'dd/MM/yyyy' }}</td>
+      <td mat-cell *matCellDef="let element">{{ formatOrderDate(element.date_commande) }}</td>
     </ng-container>
     <ng-container matColumnDef="total_ttc">
       <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.TOTAL' | translate }}</th>
-      <td mat-cell *matCellDef="let element">{{ element.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</td>
+      <td mat-cell *matCellDef="let element">{{ formatMoney(element.total_ttc) }}</td>
     </ng-container>
     <ng-container matColumnDef="est_valider">
       <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.VALIDATION' | translate }}</th>
@@ -75,7 +75,7 @@
       <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.PAYMENT' | translate }}</th>
       <td mat-cell *matCellDef="let element">
         <mat-chip [class.paid]="element.est_solder">
-          {{ element.est_solder ? ('COMMON.STATUS.PAID' | translate) : (('ORDERS.TIMELINE.BALANCE_DUE' | translate) + ': ' + (element.solde_du | currency: 'EUR': 'symbol': '1.2-2')) }}
+          {{ element.est_solder ? ('COMMON.STATUS.PAID' | translate) : formatBalanceDue(element) }}
         </mat-chip>
       </td>
     </ng-container>
@@ -114,7 +114,7 @@
               </div>
               <div class="info-item">
                 <span class="info-label">{{ 'ORDERS.COLUMNS.DATE' | translate }}</span>
-                <span class="info-value">{{ order.date_commande | date: 'dd/MM/yyyy' }}</span>
+                <span class="info-value">{{ formatOrderDate(order.date_commande) }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">{{ 'ORDERS.TIMELINE.ITEMS' | translate }}</span>
@@ -122,7 +122,7 @@
               </div>
               <div class="info-item">
                 <span class="info-label">{{ 'ORDERS.COLUMNS.STATUS' | translate }}</span>
-                <mat-chip class="info-chip" [class.validated]="order.est_valider">{{ statusKey(order.statusLibelle) | translate }}</mat-chip>
+                <mat-chip class="info-chip" [class.validated]="order.est_valider">{{ statusKey(order.statusLibelle ?? '') | translate }}</mat-chip>
               </div>
             </div>
           </section>
@@ -171,19 +171,19 @@
                       <strong class="item-card__name">{{ item.designation }}</strong>
                       <span class="item-card__ref">{{ 'ORDERS.TIMELINE.REF' | translate }} {{ item.reference }}</span>
                       <span class="item-card__meta">
-                        {{ item.quantite }} × {{ item.prix_unitaire_ht | currency: 'EUR': 'symbol': '1.2-2' }}
+                        {{ formatLineQuantity(item.prix_unitaire_ht, item.quantite) }}
                       </span>
                     </div>
                     <div class="item-card__total">
                       <span class="item-card__total-label">{{ 'ORDERS.TIMELINE.SUBTOTAL' | translate }}</span>
-                      <span class="item-card__total-value">{{ item.total_ht | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                      <span class="item-card__total-value">{{ formatLineTotal(item.total_ht) }}</span>
                     </div>
                   </div>
                 }
               </div>
               <div class="items-footer">
                 <span>{{ 'ORDERS.TIMELINE.TOTAL_ITEMS' | translate }} ({{ itemsCount() }})</span>
-                <strong>{{ itemsSubtotal() | currency: 'EUR': 'symbol': '1.2-2' }}</strong>
+                <strong>{{ formatMoney(itemsSubtotal()) }}</strong>
               </div>
             }
           </section>
@@ -238,24 +238,24 @@
             <div class="finance-card">
               <div class="finance-row">
                 <span>{{ 'ORDERS.TIMELINE.SUBTOTAL_HT' | translate }}</span>
-                <span>{{ order.total_ht | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span>{{ formatMoney(order.total_ht) }}</span>
               </div>
               <div class="finance-row">
                 <span>{{ 'ORDERS.TIMELINE.TAX' | translate }}</span>
-                <span>{{ order.total_tva | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span>{{ formatMoney(order.total_tva) }}</span>
               </div>
               <mat-divider />
               <div class="finance-row finance-row--total">
                 <span>{{ 'ORDERS.COLUMNS.TOTAL' | translate }}</span>
-                <span>{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span>{{ formatMoney(order.total_ttc) }}</span>
               </div>
               <div class="finance-row">
                 <span>{{ 'ORDERS.TIMELINE.AMOUNT_PAID' | translate }}</span>
-                <span class="finance-paid">{{ order.montant_regle | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span class="finance-paid">{{ formatMoney(order.montant_regle) }}</span>
               </div>
               <div class="finance-row">
                 <span>{{ 'ORDERS.TIMELINE.BALANCE_DUE' | translate }}</span>
-                <span [class.finance-due]="!order.est_solder">{{ order.solde_du | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span [class.finance-due]="!order.est_solder">{{ formatMoney(order.solde_du) }}</span>
               </div>
             </div>
           </section>

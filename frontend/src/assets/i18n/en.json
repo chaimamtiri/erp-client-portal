@@ -55,6 +55,12 @@
     "TITLE": "Dashboard",
     "WELCOME": "Welcome to your ERP client portal. Track performance, orders, and payments in just a few clicks.",
     "VIEW_ORDERS": "View orders",
+    "STATS": {
+      "REVENUE": "Revenue",
+      "ORDERS": "Orders",
+      "INVOICES": "Invoices",
+      "TICKETS": "Tickets"
+    },
     "LATEST_ORDERS": {
       "TITLE": "Latest orders",
       "SUBTITLE": "Real-time tracking"
@@ -265,6 +271,12 @@
       "UPDATE_BUTTON": "Update password",
       "SUCCESS_MESSAGE": "Password updated successfully (simulation)."
     }
+  },
+  "FOOTER": {
+    "COPYRIGHT": "© 2026 ErpClient · Client portal prototype",
+    "SUPPORT": "Support",
+    "SECURITY": "Security",
+    "DOCUMENTATION": "Documentation"
   },
   "LANGUAGE": {
     "SWITCHER_ARIA": "Select interface language",

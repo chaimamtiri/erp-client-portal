@@ -12,11 +12,11 @@
         </ng-container>
         <ng-container matColumnDef="montant_regle">
           <th mat-header-cell *matHeaderCellDef>{{ 'PAYMENTS.COLUMNS.AMOUNT' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.montant_regle | currency: 'EUR':'symbol':'1.2-2' }}</td>
+          <td mat-cell *matCellDef="let element">{{ formatAmount(element.montant_regle) }}</td>
         </ng-container>
         <ng-container matColumnDef="date_paiement">
           <th mat-header-cell *matHeaderCellDef>{{ 'PAYMENTS.COLUMNS.DATE' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.date_paiement | date: 'dd/MM/yyyy' }}</td>
+          <td mat-cell *matCellDef="let element">{{ formatPaymentDate(element.date_paiement) }}</td>
         </ng-container>
         <ng-container matColumnDef="est_encaisser">
           <th mat-header-cell *matHeaderCellDef>{{ 'PAYMENTS.COLUMNS.STATUS' | translate }}</th>

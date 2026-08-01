@@ -285,10 +285,10 @@ export interface ActivityItem {
 // ---------------------------------------------------------------------------
 
 export const stats: StatItem[] = [
-  { title: 'Revenus', value: '€184.2k', change: '+12.4%', icon: 'payments', tone: 'accent' },
-  { title: 'Commandes', value: '1,248', change: '+8.1%', icon: 'shopping_bag', tone: 'success' },
-  { title: 'Factures', value: '324', change: '-2.3%', icon: 'receipt_long', tone: 'warning' },
-  { title: 'Tickets', value: '19', change: '+4.5%', icon: 'support_agent', tone: 'neutral' }
+  { title: 'DASHBOARD.STATS.REVENUE', value: '€184.2k', change: '+12.4%', icon: 'payments', tone: 'accent' },
+  { title: 'DASHBOARD.STATS.ORDERS', value: '1,248', change: '+8.1%', icon: 'shopping_bag', tone: 'success' },
+  { title: 'DASHBOARD.STATS.INVOICES', value: '324', change: '-2.3%', icon: 'receipt_long', tone: 'warning' },
+  { title: 'DASHBOARD.STATS.TICKETS', value: '19', change: '+4.5%', icon: 'support_agent', tone: 'neutral' }
 ];
 
 export const products: Article[] = [
@@ -307,7 +307,7 @@ export const products: Article[] = [
     tva_id: 1,
     famille_article_id: 1,
     stock_disponible: 99,
-    
+
     // aliases
     name: 'ERP Pro Suite',
     price: 980,
@@ -330,7 +330,7 @@ export const products: Article[] = [
     tva_id: 1,
     famille_article_id: 2,
     stock_disponible: 3,
-    
+
     // aliases
     name: 'Terminal Mobile',
     price: 640,
@@ -353,7 +353,7 @@ export const products: Article[] = [
     tva_id: 1,
     famille_article_id: 1,
     stock_disponible: 150,
-    
+
     // aliases
     name: 'Pack Analytics',
     price: 320,
@@ -376,7 +376,7 @@ export const products: Article[] = [
     tva_id: 1,
     famille_article_id: 1,
     stock_disponible: 200,
-    
+
     // aliases
     name: 'Assistant IA',
     price: 540,
@@ -400,7 +400,7 @@ export const orders: Commande[] = [
     solde_du: 0,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     dateCommande: new Date('2026-07-05'),
     totalTTC: 2450,
@@ -426,7 +426,7 @@ export const orders: Commande[] = [
     solde_du: 430,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     dateCommande: new Date('2026-07-04'),
     totalTTC: 860,
@@ -452,7 +452,7 @@ export const orders: Commande[] = [
     solde_du: 1320,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     dateCommande: new Date('2026-07-03'),
     totalTTC: 1320,
@@ -506,7 +506,7 @@ export const invoices: Facture[] = [
     solde_du: 0,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     customer: 'Acme SAS',
     amount: '€2,450',
@@ -527,7 +527,7 @@ export const invoices: Facture[] = [
     solde_du: 430,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     customer: 'Acme SAS',
     amount: '€860',
@@ -548,7 +548,7 @@ export const invoices: Facture[] = [
     solde_du: 1320,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     customer: 'Acme SAS',
     amount: '€1,320',
@@ -568,7 +568,7 @@ export const payments: Reglement[] = [
     est_encaisser: true,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     method: 'Carte bancaire',
     amount: '€1,250',
@@ -584,7 +584,7 @@ export const payments: Reglement[] = [
     est_encaisser: false,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     method: 'Virement',
     amount: '€2,400',
@@ -600,7 +600,7 @@ export const payments: Reglement[] = [
     est_encaisser: true,
     est_supprime: false,
     client_id: 1,
-    
+
     // aliases
     method: 'PayPal',
     amount: '€540',
@@ -625,7 +625,7 @@ export const deliveries: BonLivraison[] = [
     societe_livraison: 'Acme SAS',
     transporteur: 'DHL Express',
     numero_suivi: 'DHL-827361',
-    
+
     // aliases
     order: 'ORD-1024',
     eta: 'Aujourd’hui, 16:00',
@@ -647,7 +647,7 @@ export const deliveries: BonLivraison[] = [
     societe_livraison: 'Acme SAS',
     transporteur: 'FedEx',
     numero_suivi: 'FDX-998811',
-    
+
     // aliases
     order: 'ORD-1025',
     eta: 'Demain, 10:30',
@@ -664,7 +664,7 @@ export const documents: DocumentItem[] = [
     nom: 'Contrat ERP 2026.pdf',
     est_attache_email: true,
     est_supprime: false,
-    
+
     // aliases
     name: 'Contrat ERP 2026.pdf',
     type: 'Contrat',
@@ -678,7 +678,7 @@ export const documents: DocumentItem[] = [
     nom: 'Facture_2048.pdf',
     est_attache_email: false,
     est_supprime: false,
-    
+
     // aliases
     name: 'Facture_2048.pdf',
     type: 'Facture',
@@ -692,7 +692,7 @@ export const documents: DocumentItem[] = [
     nom: 'Guide d’intégration.docx',
     est_attache_email: false,
     est_supprime: false,
-    
+
     // aliases
     name: 'Guide d’intégration.docx',
     type: 'Guide',
@@ -713,7 +713,7 @@ export const tickets: Ticket[] = [
     priorite: 'haute',
     status: 'ouvert',
     est_supprime: false,
-    
+
     // aliases
     title: 'Accès au portail',
     category: 'Compte',
@@ -731,7 +731,7 @@ export const tickets: Ticket[] = [
     priorite: 'normale',
     status: 'en_cours',
     est_supprime: false,
-    
+
     // aliases
     title: 'Erreur de synchronisation',
     category: 'Technique',
@@ -750,7 +750,7 @@ export const notifications: NotificationItem[] = [
     lien: '/invoices',
     est_lu: false,
     date_creation: new Date('2026-07-12T06:32:00'),
-    
+
     // aliases
     title: 'Paiement reçu',
     detail: 'Le paiement de la facture INV-2048 a bien été traité.',
@@ -766,7 +766,7 @@ export const notifications: NotificationItem[] = [
     lien: '/deliveries',
     est_lu: true,
     date_creation: new Date('2026-07-12T05:42:00'),
-    
+
     // aliases
     title: 'Livraison prévue',
     detail: 'Votre commande ORD-1024 arrive aujourd’hui avant 16:00.',
@@ -782,7 +782,7 @@ export const notifications: NotificationItem[] = [
     lien: '/settings',
     est_lu: true,
     date_creation: new Date('2026-07-11T06:42:00'),
-    
+
     // aliases
     title: 'Nouvelle mise à jour',
     detail: 'Le portail a été mis à jour avec de nouveaux modules.',
@@ -807,7 +807,7 @@ export const addresses: Adresse[] = [
     est_default: true,
     est_livraison: false,
     est_supprime: false,
-    
+
     // aliases
     title: 'Adresse principale',
     line: '12 Rue de l’Innovation',
@@ -823,7 +823,7 @@ export const addresses: Adresse[] = [
     est_default: false,
     est_livraison: true,
     est_supprime: false,
-    
+
     // aliases
     title: 'Adresse de livraison',
     line: '8 Avenue des Forges',
