@@ -7,13 +7,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { products } from '../../Core/models/mock-data';
 import { CartService } from '../../Core/services/cart.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-products',
-  imports: [MatCardModule, MatButtonModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule, BreadcrumbComponent],
+  imports: [MatCardModule, MatButtonModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatIconModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

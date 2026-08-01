@@ -3,12 +3,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { CartService } from '../../Core/services/cart.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cart',
-  imports: [MatCardModule, MatButtonModule, MatIconModule, BreadcrumbComponent],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

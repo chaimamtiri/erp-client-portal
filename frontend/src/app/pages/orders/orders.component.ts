@@ -13,9 +13,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { orders, orderLines, orderTracking, deliveries, Commande, LigneCommande, BonLivraison, EtapeCommande } from '../../Core/models/mock-data';
 import { CartService } from '../../Core/services/cart.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 type StepStatus = 'done' | 'active' | 'pending' | 'canceled';
 
@@ -63,7 +65,7 @@ registerLocaleData(localeFr, LOCALE);
 
 @Component({
   selector: 'app-orders',
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatTableModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatDialogModule, FormsModule, BreadcrumbComponent],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatTableModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatDialogModule, FormsModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -72,6 +74,7 @@ export class OrdersComponent {
   private readonly cartService: CartService = inject(CartService);
   private readonly router: Router = inject(Router);
   private readonly dialog: MatDialog = inject(MatDialog);
+  private readonly translate: TranslateService = inject(TranslateService);
 
   protected readonly displayedColumns = ['numero', 'clientNom', 'date_commande', 'total_ttc', 'est_valider', 'est_solder', 'statusLibelle'];
 
@@ -204,13 +207,20 @@ export class OrdersComponent {
       icon: definition.icon,
       description: description ?? definition.fallback,
       dateLabel: date ? this.formatDay(date) : '',
-      timeLabel: date ? formatDate(date, 'HH:mm', LOCALE) : '',
+      timeLabel: date ? formatDate(date, 'HH:mm', this.currentLocale()) : '',
       status
     };
   }
 
   private formatDay(date: Date): string {
-    return formatDate(date, 'd MMMM y', LOCALE);
+    return formatDate(date, 'd MMMM y', this.currentLocale());
+  }
+
+  private currentLocale(): string {
+    const lang = this.translate.currentLang();
+    if (lang === 'en') return 'en-US';
+    if (lang === 'ar') return 'ar';
+    return LOCALE;
   }
 
   /** Étapes déjà franchies, dérivées des champs métier de la commande. */
@@ -236,5 +246,24 @@ export class OrdersComponent {
         est_supprime: false
       };
     });
+  }
+
+  protected statusKey(status: string): string {
+    const map: Record<string, string> = {
+      'confirmée': 'COMMON.STATUS.CONFIRMED',
+      'confirm': 'COMMON.STATUS.CONFIRMED',
+      'en cours': 'COMMON.STATUS.IN_PROGRESS',
+      'in progress': 'COMMON.STATUS.IN_PROGRESS',
+      'expédiée': 'COMMON.STATUS.SHIPPED',
+      'shipped': 'COMMON.STATUS.SHIPPED',
+      'annulée': 'COMMON.STATUS.CANCELED',
+      'canceled': 'COMMON.STATUS.CANCELED',
+      'payée': 'COMMON.STATUS.PAID',
+      'paid': 'COMMON.STATUS.PAID',
+      'en attente': 'COMMON.STATUS.PENDING',
+      'pending': 'COMMON.STATUS.PENDING'
+    };
+
+    return map[(status || '').toLowerCase()] ?? status;
   }
 }

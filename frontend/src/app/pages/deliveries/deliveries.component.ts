@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { DeliveriesService } from '../../Core/services/deliveries.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-deliveries',
-  imports: [CommonModule, MatCardModule, MatTableModule, MatChipsModule, BreadcrumbComponent],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatChipsModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './deliveries.component.html',
   styleUrl: './deliveries.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

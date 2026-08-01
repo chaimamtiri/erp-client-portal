@@ -1,36 +1,36 @@
-<app-breadcrumb [items]="['Accueil', 'Livraisons']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.LIVRAISONS']" />
     <mat-card class="deliveries-card">
-      <h2>Bons de livraison</h2>
+      <h2>{{ 'DELIVERIES.TITLE' | translate }}</h2>
       <table mat-table [dataSource]="dataSource()" class="deliveries-table">
         <ng-container matColumnDef="numero">
-          <th mat-header-cell *matHeaderCellDef>N° BL</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERIES.COLUMNS.NUMBER' | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.numero }}</td>
         </ng-container>
         <ng-container matColumnDef="order">
-          <th mat-header-cell *matHeaderCellDef>Commande</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERIES.COLUMNS.ORDER' | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.order }}</td>
         </ng-container>
         <ng-container matColumnDef="date_livraison">
-          <th mat-header-cell *matHeaderCellDef>Date livraison</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERIES.COLUMNS.DATE' | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.date_livraison | date: 'dd/MM/yyyy' }}</td>
         </ng-container>
         <ng-container matColumnDef="transporteur">
-          <th mat-header-cell *matHeaderCellDef>Transporteur</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERIES.COLUMNS.CARRIER' | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.transporteur }}</td>
         </ng-container>
         <ng-container matColumnDef="numero_suivi">
-          <th mat-header-cell *matHeaderCellDef>N° Suivi</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERIES.COLUMNS.TRACKING' | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.numero_suivi }}</td>
         </ng-container>
         <ng-container matColumnDef="adresse_livraison">
-          <th mat-header-cell *matHeaderCellDef>Adresse</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERIES.COLUMNS.ADDRESS' | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.adresse_livraison }}</td>
         </ng-container>
         <ng-container matColumnDef="est_valider">
-          <th mat-header-cell *matHeaderCellDef>Statut</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'DELIVERIES.COLUMNS.STATUS' | translate }}</th>
           <td mat-cell *matCellDef="let element">
             <mat-chip [class.delivered]="element.est_valider">
-              {{ element.est_valider ? 'Validé' : 'En préparation' }}
+              {{ element.est_valider ? ('COMMON.STATUS.VALIDATED' | translate) : ('COMMON.STATUS.IN_PREPARATION' | translate) }}
             </mat-chip>
           </td>
         </ng-container>

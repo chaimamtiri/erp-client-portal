@@ -6,16 +6,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { InvoicesService } from '../../Core/services/invoices.service';
 import { Facture } from '../../Core/models/mock-data';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 const LOCALE = 'fr-FR';
 registerLocaleData(localeFr, LOCALE);
 
 @Component({
   selector: 'app-invoices',
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatTableModule, MatChipsModule, BreadcrumbComponent],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatTableModule, MatChipsModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './invoices.component.html',
   styleUrl: './invoices.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +25,7 @@ registerLocaleData(localeFr, LOCALE);
 export class InvoicesComponent {
   protected readonly invoicesService: InvoicesService = inject(InvoicesService);
   private readonly document: Document = inject(DOCUMENT);
+  private readonly translate: TranslateService = inject(TranslateService);
 
   protected readonly displayedColumns = ['numero', 'customer', 'total_ttc', 'date_facture', 'est_solder', 'actions'];
   protected readonly dataSource = this.invoicesService.invoices;
@@ -32,7 +35,7 @@ export class InvoicesComponent {
     const content = [
       `Facture - ${invoice.numero}`,
       `Client : ${invoice.customer ?? ''}`,
-      `Date : ${formatDate(invoice.date_facture, 'd MMMM y', LOCALE)}`,
+      `Date : ${formatDate(invoice.date_facture, 'd MMMM y', this.currentLocale())}`,
       '',
       `Total HT : ${invoice.total_ht} EUR`,
       `TVA : ${invoice.total_tva} EUR`,
@@ -47,5 +50,12 @@ export class InvoicesComponent {
     link.download = `facture-${invoice.numero}.txt`;
     link.click();
     URL.revokeObjectURL(url);
+  }
+
+  private currentLocale(): string {
+    const lang = this.translate.currentLang();
+    if (lang === 'en') return 'en-US';
+    if (lang === 'ar') return 'ar';
+    return LOCALE;
   }
 }

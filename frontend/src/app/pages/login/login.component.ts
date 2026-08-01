@@ -1,10 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { LanguageService } from '../../Core/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -12,6 +17,9 @@ import { Router, RouterLink } from '@angular/router';
 export class LoginComponent {
   private readonly fb: FormBuilder = inject(FormBuilder);
   private readonly router: Router = inject(Router);
+  protected readonly languageService: LanguageService = inject(LanguageService);
+
+  currentLanguage = signal(this.languageService.currentLanguage());
 
   showPassword = signal(false);
   formSubmitted = false;
@@ -32,6 +40,11 @@ export class LoginComponent {
 
   togglePasswordVisibility(): void {
     this.showPassword.update(show => !show);
+  }
+
+  setLanguage(languageCode: 'fr' | 'en' | 'ar'): void {
+    this.languageService.setLanguage(languageCode);
+    this.currentLanguage.set(languageCode);
   }
 
   isFieldInvalid(fieldName: string): boolean {

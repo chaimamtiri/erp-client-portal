@@ -1,0 +1,10 @@
+﻿<mat-card class="stat-card">
+  <div class="stat-card__header">
+    <div class="stat-card__icon" [class]="tone()">
+      <mat-icon>{{ icon() }}</mat-icon>
+    </div>
+    <span class="stat-card__change" [class]="tone()">{{ change() }}</span>
+  </div>
+  <div class="stat-card__value">{{ value() }}</div>
+  <div class="stat-card__title">{{ title() }}</div>
+</mat-card>

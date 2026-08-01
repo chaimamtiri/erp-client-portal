@@ -1,0 +1,346 @@
+{
+  "BREADCRUMB": {
+    "ACCUEIL": "Home",
+    "PANIER": "Cart",
+    "DASHBOARD": "Dashboard",
+    "LIVRAISONS": "Deliveries",
+    "DOCUMENTS": "Documents",
+    "FACTURES": "Invoices",
+    "DETAIL": "Details",
+    "COMMANDES": "Orders",
+    "PAIEMENTS": "Payments",
+    "CATALOGUE": "Catalog",
+    "PROFIL_ADRESSES": "Profile & Addresses",
+    "PARAMETRES": "Settings",
+    "SUPPORT_TICKET": "Support Ticket",
+    "SUPPORT": "Support"
+  },
+  "COMMON": {
+    "ACTIONS": {
+      "VIEW_ALL": "View all",
+      "CONSULT": "Consult",
+      "VIEW": "View",
+      "ADD": "Add",
+      "EDIT": "Edit",
+      "DELETE": "Delete",
+      "SAVE": "Save",
+      "CANCEL": "Cancel",
+      "RESET": "Reset"
+    },
+    "STATUS": {
+      "PAID": "Paid",
+      "PENDING": "Pending",
+      "VALIDATED": "Validated",
+      "IN_PREPARATION": "In preparation",
+      "CONFIRMED": "Confirmed",
+      "IN_PROGRESS": "In progress",
+      "SHIPPED": "Shipped",
+      "CANCELED": "Canceled",
+      "CASHED": "Cashed"
+    }
+  },
+  "CART": {
+    "TITLE": "Your Cart",
+    "EMPTY": "Your cart is empty",
+    "SUMMARY": {
+      "TITLE": "Summary",
+      "SUBTOTAL": "Subtotal",
+      "SHIPPING": "Shipping",
+      "TOTAL": "Total"
+    },
+    "PLACE_ORDER": "Place Order"
+  },
+  "DASHBOARD": {
+    "OVERVIEW": "Overview",
+    "TITLE": "Dashboard",
+    "WELCOME": "Welcome to your ERP client portal. Track performance, orders, and payments in just a few clicks.",
+    "VIEW_ORDERS": "View orders",
+    "LATEST_ORDERS": {
+      "TITLE": "Latest orders",
+      "SUBTITLE": "Real-time tracking"
+    },
+    "LATEST_INVOICES": {
+      "TITLE": "Latest invoices",
+      "SUBTITLE": "Payment status"
+    },
+    "ACCOUNT_BALANCE": {
+      "TITLE": "Account balance",
+      "SUBTITLE": "Availability",
+      "IMMEDIATE": "Available immediately",
+      "TRANSFER": "Transfer",
+      "CARD": "Card",
+      "PAYPAL": "PayPal"
+    },
+    "UPCOMING_DELIVERIES": {
+      "TITLE": "Upcoming deliveries",
+      "SUBTITLE": "Weekly planning"
+    }
+  },
+  "DELIVERIES": {
+    "TITLE": "Delivery notes",
+    "COLUMNS": {
+      "NUMBER": "Delivery No.",
+      "ORDER": "Order",
+      "DATE": "Delivery Date",
+      "CARRIER": "Carrier",
+      "TRACKING": "Tracking No.",
+      "ADDRESS": "Address",
+      "STATUS": "Status"
+    }
+  },
+  "DOCUMENTS": {
+    "TITLE": "Documents"
+  },
+  "INVOICES": {
+    "TITLE": "Invoices",
+    "DESCRIPTION": "View your invoices and their status.",
+    "ISSUED_ON": "Issued on",
+    "CLIENT": "Client",
+    "AMOUNT": "Amount",
+    "BALANCE_DUE": "Balance due:",
+    "COLUMNS": {
+      "NUMBER": "Invoice No.",
+      "CUSTOMER": "Customer",
+      "TOTAL_TTC": "Total (Incl. Tax)",
+      "DATE": "Date",
+      "STATUS": "Status",
+      "DOWNLOAD": "Download Invoice"
+    }
+  },
+  "LOGIN": {
+    "SECURE_BADGE": "ERP CLIENT PORTAL | SECURE",
+    "PANEL_TITLE": "Real-time tracking",
+    "PANEL_DESC": "Instantly access your orders, invoices, deliveries, and key documents from a single space.",
+    "WELCOME": "Welcome",
+    "DESCRIPTION": "Log in to your ERP client area for full access.",
+    "EMAIL_PLACEHOLDER": "Email",
+    "PASSWORD_PLACEHOLDER": "Password",
+    "PASSWORD_TOGGLE_ARIA": "Show/Hide password",
+    "ERRORS": {
+      "EMAIL_REQUIRED": "Email address is required.",
+      "EMAIL_INVALID": "Please enter a valid email address.",
+      "PASSWORD_REQUIRED": "Password is required.",
+      "PASSWORD_MINLENGTH": "Password must be at least 6 characters long."
+    },
+    "SUBMIT": "Log in",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "VIEW_PROTOTYPE": "View prototype"
+  },
+  "NOTIFICATIONS": {
+    "TITLE": "Notification Center",
+    "DESCRIPTION": "Manage your alerts for orders, billing, and portal news.",
+    "MARK_ALL_READ": "Mark all as read",
+    "CLEAR_ALL": "Clear all",
+    "MARK_READ": "Mark as read",
+    "MARK_UNREAD": "Mark as unread",
+    "EMPTY": {
+      "TITLE": "No notifications",
+      "DESCRIPTION": "You're up to date! All read or cleared notifications will no longer appear here."
+    }
+  },
+  "ORDERS": {
+    "TITLE": "Orders",
+    "DESCRIPTION": "Order history and delivery tracking.",
+    "NEW_ORDER": "New order",
+    "FILTERS": {
+      "SEARCH": "Search...",
+      "VALIDATION": "Validation",
+      "PAYMENT": "Payment",
+      "STATUS": "Status",
+      "ALL": "All",
+      "EMPTY_RESULTS": "No orders match your filtering criteria."
+    },
+    "COLUMNS": {
+      "NUMBER": "Order No.",
+      "CLIENT": "Client",
+      "DATE": "Order Date",
+      "TOTAL": "Total (Incl. Tax)",
+      "VALIDATION": "Validation",
+      "PAYMENT": "Payment",
+      "STATUS": "Status"
+    },
+    "TIMELINE": {
+      "TITLE": "Order tracking",
+      "GENERAL_INFO": "General information",
+      "ITEMS": "Items",
+      "ORDERED_ITEMS": "Ordered items",
+      "EMPTY_ITEMS": "No items are attached to this order.",
+      "REF": "Ref.",
+      "SUBTOTAL": "Subtotal",
+      "TOTAL_ITEMS": "Total items",
+      "DELIVERY_INFO": "Delivery information",
+      "CARRIER": "Carrier",
+      "TRACKING_NO": "Tracking No.",
+      "ADDRESS": "Delivery address",
+      "ETA": "Estimated delivery",
+      "EMPTY_DELIVERY": "No delivery note is associated with this order yet.",
+      "FINANCIAL_SUMMARY": "Financial summary",
+      "SUBTOTAL_HT": "Subtotal (Excl. Tax)",
+      "TAX": "Tax",
+      "AMOUNT_PAID": "Amount paid",
+      "BALANCE_DUE": "Balance due",
+      "SELECT_PROMPT": "Select an order to view its history."
+    }
+  },
+  "PAYMENTS": {
+    "TITLE": "Payments",
+    "COLUMNS": {
+      "NUMBER": "Payment No.",
+      "METHOD": "Method",
+      "AMOUNT": "Amount",
+      "DATE": "Date",
+      "STATUS": "Status"
+    }
+  },
+  "CATALOG": {
+    "TITLE": "Product Catalog",
+    "DESCRIPTION": "Search, filter, and add products to your cart.",
+    "SEARCH_PLACEHOLDER": "Search for a product...",
+    "CATEGORIES": {
+      "ALL": "All categories",
+      "SOFTWARE": "Software",
+      "HARDWARE": "Hardware",
+      "SERVICES": "Services"
+    },
+    "FILTERS": {
+      "PRICE": "Price",
+      "NAME": "Name",
+      "RATING": "Rating"
+    },
+    "EMPTY": {
+      "TITLE": "No products found",
+      "DESCRIPTION": "Try modifying your search or filter criteria."
+    },
+    "IN_STOCK": "in stock",
+    "ADD_TO_CART": "Add"
+  },
+  "PROFILE": {
+    "TABS": {
+      "MY_PROFILE": "My Profile",
+      "MY_ADDRESSES": "My Addresses"
+    },
+    "INFO": {
+      "FULL_NAME": "Full name",
+      "EMAIL": "Email address",
+      "PHONE": "Phone",
+      "COMPANY": "Company",
+      "ROLE": "Role / Function",
+      "EDIT_BUTTON": "Edit my information"
+    },
+    "ADDRESSES": {
+      "ADD_TITLE": "Add an address",
+      "EDIT_TITLE": "Edit address",
+      "COMPANY_LABEL": "Title / Company (e.g. Main Office)",
+      "LINE_LABEL": "Address line",
+      "CITY_LABEL": "City & Zip Code",
+      "SET_DEFAULT": "Set as default address",
+      "HEADER_TITLE": "Your saved addresses",
+      "HEADER_DESC": "Manage your shipping and billing addresses associated with your account.",
+      "EMPTY": "No saved addresses.",
+      "DEFAULT_BADGE": "Default"
+    }
+  },
+  "SETTINGS": {
+    "APP_PREFERENCES": {
+      "TITLE": "Application Preferences",
+      "DESCRIPTION": "Manage the appearance of your portal and your language preferences.",
+      "DARK_MODE": "Dark Mode",
+      "DARK_MODE_DESC": "Enable dark mode display to rest your eyes.",
+      "LANGUAGE": "Portal Language",
+      "LANGUAGE_DESC": "Select the interface display language."
+    },
+    "EMAIL_NOTIFICATIONS": {
+      "TITLE": "Email Notification Preferences",
+      "DESCRIPTION": "Choose the alerts you wish to receive by email.",
+      "NEW_ORDERS": "New purchase orders",
+      "NEW_ORDERS_DESC": "Receive a confirmation email when an order is validated.",
+      "BILLING_PAYMENTS": "Billing & Payments",
+      "BILLING_PAYMENTS_DESC": "Be notified by email when an invoice is issued or a payment is received."
+    },
+    "SECURITY": {
+      "TITLE": "Account Security",
+      "DESCRIPTION": "Update your password to secure your access.",
+      "CURRENT_PASSWORD": "Current password",
+      "NEW_PASSWORD": "New password",
+      "UPDATE_BUTTON": "Update password",
+      "SUCCESS_MESSAGE": "Password updated successfully (simulation)."
+    }
+  },
+  "LANGUAGE": {
+    "SWITCHER_ARIA": "Select interface language",
+    "FRENCH": "French",
+    "ENGLISH": "English",
+    "ARABIC": "Arabic"
+  },
+  "SUPPORT": {
+    "TITLE": "Support Tickets",
+    "DESCRIPTION": "Track the status of your requests.",
+    "NEW_TICKET": "New ticket",
+    "HIGH_PRIORITY": "High priority",
+    "ACCESS_ISSUE": "Portal access",
+    "STATUS": {
+      "OPEN": "Open",
+      "IN_PROGRESS": "In progress",
+      "RESOLVED": "Resolved",
+      "CLOSED": "Closed"
+    },
+    "PRIORITY": {
+      "LOW": "Low",
+      "NORMAL": "Normal",
+      "HIGH": "High",
+      "URGENT": "Urgent"
+    }
+  },
+  "SIDEBAR": {
+    "BRAND_SUBTITLE": "Client portal",
+    "OPEN": "Open sidebar",
+    "COLLAPSE": "Collapse sidebar",
+    "NAV_ARIA": "Main navigation",
+    "DASHBOARD": "Dashboard",
+    "ORDERS": "Orders",
+    "CART": "Cart",
+    "CATALOG": "Catalog",
+    "DELIVERIES": "Deliveries",
+    "INVOICES": "Invoices",
+    "PAYMENTS": "Payments",
+    "DOCUMENTS": "Documents",
+    "NOTIFICATIONS": "Notifications",
+    "PROFILE": "Profile",
+    "SETTINGS": "Settings",
+    "SUPPORT": "Support"
+  },
+  "TOPBAR": {
+    "TITLE": "ERP Client Portal",
+    "EYEBROW": "ERP client portal",
+    "SEARCH_PLACEHOLDER": "Global search...",
+    "NOTIFICATIONS": "Notifications",
+    "MARK_ALL_READ": "Mark all as read",
+    "NO_NOTIFICATIONS": "No notifications",
+    "VIEW_ALL_NOTIFICATIONS": "View all notifications",
+    "CART": "Cart",
+    "PROFILE_MENU": "Profile menu",
+    "MY_PROFILE_ADDRESSES": "My Profile & Addresses",
+    "SETTINGS": "Settings",
+    "ALERT_CENTER": "Alert center",
+    "LOGOUT": "Log out"
+  },
+  "ACTIVITY": {
+    "BREADCRUMB": "Activity",
+    "TITLE": "Activity Log"
+  },
+  "ORDER_DETAIL": {
+    "TITLE": "Order",
+    "CUSTOMER_INFO": "Customer information",
+    "ADDRESS": "Address",
+    "NOT_FOUND": "Order not found"
+  },
+  "INVOICE_DETAIL": {
+    "TITLE": "Invoice",
+    "NOT_FOUND": "Invoice not found"
+  },
+  "TICKET_DETAIL": {
+    "TITLE": "Ticket TKT-118",
+    "SUBTITLE": "Portal access • High priority",
+    "DESCRIPTION": "An access update is required for user Claire Martin."
+  }
+}

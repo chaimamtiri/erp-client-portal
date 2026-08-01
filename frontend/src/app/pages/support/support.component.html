@@ -1,11 +1,11 @@
-<app-breadcrumb [items]="['Accueil', 'Support Ticket']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.SUPPORT_TICKET']" />
     <mat-card class="support-card">
       <div class="support-card__header">
         <div>
-          <h2>Tickets support</h2>
-          <p>Suivez l'état de vos requêtes.</p>
+          <h2>{{ 'SUPPORT.TITLE' | translate }}</h2>
+          <p>{{ 'SUPPORT.DESCRIPTION' | translate }}</p>
         </div>
-        <button mat-flat-button color="primary">Nouveau ticket</button>
+        <button mat-flat-button color="primary">{{ 'SUPPORT.NEW_TICKET' | translate }}</button>
       </div>
       <div class="ticket-list">
         @for (ticket of ticketList(); track ticket.id) {
@@ -15,8 +15,8 @@
               <p>{{ ticket.categorie }} • {{ ticket.numero }}</p>
             </div>
             <div class="ticket-item__chips">
-              <mat-chip [class]="'prio-' + ticket.priorite">{{ ticket.priorite }}</mat-chip>
-              <mat-chip [class]="'status-' + ticket.status">{{ statusLabel(ticket.status) }}</mat-chip>
+              <mat-chip [class]="'prio-' + ticket.priorite">{{ priorityKey(ticket.priorite) | translate }}</mat-chip>
+              <mat-chip [class]="'status-' + ticket.status">{{ statusLabel(ticket.status) | translate }}</mat-chip>
             </div>
           </div>
         }

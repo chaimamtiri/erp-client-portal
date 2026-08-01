@@ -1,4 +1,27 @@
 <div class="login-shell">
+  <div class="login-language-switcher">
+    <button
+      mat-stroked-button
+      type="button"
+      class="login-language-switcher__trigger"
+      [matMenuTriggerFor]="languageMenu"
+      [attr.aria-label]="'LANGUAGE.SWITCHER_ARIA' | translate"
+    >
+      <mat-icon>language</mat-icon>
+      <span class="login-language-switcher__code">{{ currentLanguage().toUpperCase() }}</span>
+      <mat-icon class="login-language-switcher__chevron">expand_more</mat-icon>
+    </button>
+
+    <mat-menu #languageMenu="matMenu" class="login-language-switcher__menu">
+      @for (language of languageService.languages; track language.code) {
+        <button mat-menu-item type="button" (click)="setLanguage(language.code)" [class.is-active]="currentLanguage() === language.code">
+          <span class="login-language-switcher__option-code">{{ language.code.toUpperCase() }}</span>
+          <span class="login-language-switcher__option-label">{{ language.labelKey | translate }}</span>
+        </button>
+      }
+    </mat-menu>
+  </div>
+
   <div class="login-card">
     <!-- Partie gauche (Bleu) -->
     <div class="login-card__illustration">
@@ -7,7 +30,7 @@
         <svg class="badge-shield-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
         </svg>
-        <span>PORTAIL CLIENT ERP | SÉCURISÉ</span>
+        <span>{{ 'LOGIN.SECURE_BADGE' | translate }}</span>
       </div>
 
       <!-- Encart semi-transparent avec icône et textes au centre -->
@@ -19,7 +42,7 @@
                 <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.5" />
                 <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
               </radialGradient>
-              
+
               <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
                 <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05" />
@@ -81,8 +104,8 @@
         </div>
 
         <div class="illustration__panel">
-          <h2>Suivi en temps réel</h2>
-          <p>Accédez instantanément à vos commandes, factures, livraisons et documents clés depuis un espace unique.</p>
+          <h2>{{ 'LOGIN.PANEL_TITLE' | translate }}</h2>
+          <p>{{ 'LOGIN.PANEL_DESC' | translate }}</p>
         </div>
       </div>
     </div>
@@ -90,14 +113,15 @@
     <!-- Partie droite (Blanc) -->
     <div class="login-card__form">
       <div class="form-header">
-        <h1>Bienvenue</h1>
-        <p class="form-description">Connectez-vous à votre espace client ERP pour un accès complet.</p>
+        <h1>{{ 'LOGIN.WELCOME' | translate }}</h1>
+        <p class="form-description">{{ 'LOGIN.DESCRIPTION' | translate }}</p>
       </div>
 
       <!-- Formulaire réactif Angular -->
       <form class="form-body" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <!-- Champ E-mail -->
         <div class="form-group">
+          <label class="sr-only" for="email">{{ 'LOGIN.EMAIL_PLACEHOLDER' | translate }}</label>
           <div class="input-container" [class.input-error]="isFieldInvalid('email')">
             <div class="input-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -105,14 +129,14 @@
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
               </svg>
             </div>
-            <input type="email" id="email" formControlName="email" class="form-input" placeholder="E-mail" required />
+            <input type="email" id="email" formControlName="email" class="form-input" [placeholder]="'LOGIN.EMAIL_PLACEHOLDER' | translate" required />
           </div>
           @if (isFieldInvalid('email')) {
             <span class="error-message">
               @if (loginForm.get('email')?.errors?.['required']) {
-                L'adresse e-mail est requise.
+                {{ 'LOGIN.ERRORS.EMAIL_REQUIRED' | translate }}
               } @else if (loginForm.get('email')?.errors?.['email']) {
-                Veuillez saisir une adresse e-mail valide.
+                {{ 'LOGIN.ERRORS.EMAIL_INVALID' | translate }}
               }
             </span>
           }
@@ -120,6 +144,7 @@
 
         <!-- Champ Mot de passe -->
         <div class="form-group">
+          <label class="sr-only" for="password">{{ 'LOGIN.PASSWORD_PLACEHOLDER' | translate }}</label>
           <div class="input-container" [class.input-error]="isFieldInvalid('password')">
             <div class="input-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -127,9 +152,9 @@
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
             </div>
-            <input [type]="showPassword() ? 'text' : 'password'" id="password" formControlName="password" class="form-input" placeholder="Mot de passe" required />
-            
-            <button type="button" class="password-toggle" (click)="togglePasswordVisibility()" aria-label="Afficher/Masquer le mot de passe">
+            <input [type]="showPassword() ? 'text' : 'password'" id="password" formControlName="password" class="form-input" [placeholder]="'LOGIN.PASSWORD_PLACEHOLDER' | translate" required />
+
+            <button type="button" class="password-toggle" (click)="togglePasswordVisibility()" [attr.aria-label]="'LOGIN.PASSWORD_TOGGLE_ARIA' | translate">
               @if (showPassword()) {
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
@@ -148,9 +173,9 @@
           @if (isFieldInvalid('password')) {
             <span class="error-message">
               @if (loginForm.get('password')?.errors?.['required']) {
-                Le mot de passe est requis.
+                {{ 'LOGIN.ERRORS.PASSWORD_REQUIRED' | translate }}
               } @else if (loginForm.get('password')?.errors?.['minlength']) {
-                Le mot de passe doit comporter au moins 6 caractères.
+                {{ 'LOGIN.ERRORS.PASSWORD_MINLENGTH' | translate }}
               }
             </span>
           }
@@ -158,7 +183,7 @@
 
         <!-- Bouton de connexion -->
         <button type="submit" class="submit-btn" [disabled]="loginForm.invalid">
-          <span>Connexion</span>
+          <span>{{ 'LOGIN.SUBMIT' | translate }}</span>
           <svg class="btn-arrow-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
@@ -169,8 +194,8 @@
       <!-- Liens du bas -->
       <div class="form-footer">
         <div class="footer-links">
-          <a routerLink="/" class="forgot-link">Mot de passe oublié ?</a>
-          <a routerLink="/dashboard" class="prototype-btn">Voir le prototype</a>
+          <a routerLink="/" class="forgot-link">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
+          <a routerLink="/dashboard" class="prototype-btn">{{ 'LOGIN.VIEW_PROTOTYPE' | translate }}</a>
         </div>
       </div>
     </div>

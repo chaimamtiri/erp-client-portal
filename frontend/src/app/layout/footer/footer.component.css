@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  margin-top: 1.5rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}

@@ -1,96 +1,96 @@
-<app-breadcrumb [items]="['Accueil', 'Paramètres']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.PARAMETRES']" />
 
-    <div class="settings-layout">
-      <!-- General Settings Card -->
-      <mat-card class="settings-card">
-        <div class="settings-card__header">
-          <mat-icon>settings</mat-icon>
-          <div>
-            <h2>Préférences de l'application</h2>
-            <p>Gérez l'apparence de votre portail et vos préférences linguistiques.</p>
-          </div>
-        </div>
-        <div class="settings-card__body">
-          <div class="setting-row">
-            <div class="setting-info">
-              <strong>Mode Sombre</strong>
-              <p>Activer l'affichage en mode sombre pour reposer vos yeux.</p>
-            </div>
-            <mat-slide-toggle [checked]="theme.darkMode()" (change)="theme.toggleTheme()"></mat-slide-toggle>
-          </div>
-
-          <div class="setting-row">
-            <div class="setting-info">
-              <strong>Langue du portail</strong>
-              <p>Sélectionnez la langue d'affichage de l'interface.</p>
-            </div>
-            <mat-form-field appearance="outline" class="select-field">
-              <mat-select [formControl]="languageControl">
-                <mat-option value="fr">Français (FR)</mat-option>
-                <mat-option value="en">English (EN)</mat-option>
-                <mat-option value="es">Español (ES)</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-      </mat-card>
-
-      <!-- Email Notifications Preferences -->
-      <mat-card class="settings-card">
-        <div class="settings-card__header">
-          <mat-icon>mail</mat-icon>
-          <div>
-            <h2>Préférences de notification email</h2>
-            <p>Choisissez les alertes que vous souhaitez recevoir par e-mail.</p>
-          </div>
-        </div>
-        <div class="settings-card__body">
-          <div class="setting-row">
-            <div class="setting-info">
-              <strong>Nouveaux bons de commande</strong>
-              <p>Recevoir un email de confirmation lorsqu'une commande est validée.</p>
-            </div>
-            <mat-slide-toggle [formControl]="emailOrderControl"></mat-slide-toggle>
-          </div>
-
-          <div class="setting-row">
-            <div class="setting-info">
-              <strong>Facturation & Paiements</strong>
-              <p>Être notifié par mail lors de l'émission d'une facture ou de la réception d'un paiement.</p>
-            </div>
-            <mat-slide-toggle [formControl]="emailInvoiceControl"></mat-slide-toggle>
-          </div>
-        </div>
-      </mat-card>
-
-      <!-- Security Card -->
-      <mat-card class="settings-card">
-        <div class="settings-card__header">
-          <mat-icon>security</mat-icon>
-          <div>
-            <h2>Sécurité du compte</h2>
-            <p>Mettez à jour votre mot de passe pour sécuriser vos accès.</p>
-          </div>
-        </div>
-        <div class="settings-card__body">
-          <form [formGroup]="securityForm" (submit)="savePassword()" class="security-form">
-            <div class="form-grid">
-              <mat-form-field appearance="outline">
-                <mat-label>Mot de passe actuel</mat-label>
-                <input matInput formControlName="currentPassword" type="password" />
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Nouveau mot de passe</mat-label>
-                <input matInput formControlName="newPassword" type="password" />
-              </mat-form-field>
-            </div>
-            <div class="action-row">
-              <button mat-flat-button color="primary" type="submit" [disabled]="securityForm.invalid">
-                Mettre à jour le mot de passe
-              </button>
-            </div>
-          </form>
-        </div>
-      </mat-card>
+<div class="settings-layout">
+  <!-- General Settings Card -->
+  <mat-card class="settings-card">
+    <div class="settings-card__header">
+      <mat-icon>settings</mat-icon>
+      <div>
+        <h2>{{ 'SETTINGS.APP_PREFERENCES.TITLE' | translate }}</h2>
+        <p>{{ 'SETTINGS.APP_PREFERENCES.DESCRIPTION' | translate }}</p>
+      </div>
     </div>
+    <div class="settings-card__body">
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>{{ 'SETTINGS.APP_PREFERENCES.DARK_MODE' | translate }}</strong>
+          <p>{{ 'SETTINGS.APP_PREFERENCES.DARK_MODE_DESC' | translate }}</p>
+        </div>
+        <mat-slide-toggle [checked]="theme.darkMode()" (change)="theme.toggleTheme()"></mat-slide-toggle>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>{{ 'SETTINGS.APP_PREFERENCES.LANGUAGE' | translate }}</strong>
+          <p>{{ 'SETTINGS.APP_PREFERENCES.LANGUAGE_DESC' | translate }}</p>
+        </div>
+        <mat-form-field appearance="outline" class="select-field">
+          <mat-select [formControl]="languageControl">
+            @for (language of languageService.languages; track language.code) {
+              <mat-option [value]="language.code">{{ language.labelKey | translate }} ({{ language.code.toUpperCase() }})</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Email Notifications Preferences -->
+  <mat-card class="settings-card">
+    <div class="settings-card__header">
+      <mat-icon>mail</mat-icon>
+      <div>
+        <h2>{{ 'SETTINGS.EMAIL_NOTIFICATIONS.TITLE' | translate }}</h2>
+        <p>{{ 'SETTINGS.EMAIL_NOTIFICATIONS.DESCRIPTION' | translate }}</p>
+      </div>
+    </div>
+    <div class="settings-card__body">
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>{{ 'SETTINGS.EMAIL_NOTIFICATIONS.NEW_ORDERS' | translate }}</strong>
+          <p>{{ 'SETTINGS.EMAIL_NOTIFICATIONS.NEW_ORDERS_DESC' | translate }}</p>
+        </div>
+        <mat-slide-toggle [formControl]="emailOrderControl"></mat-slide-toggle>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>{{ 'SETTINGS.EMAIL_NOTIFICATIONS.BILLING_PAYMENTS' | translate }}</strong>
+          <p>{{ 'SETTINGS.EMAIL_NOTIFICATIONS.BILLING_PAYMENTS_DESC' | translate }}</p>
+        </div>
+        <mat-slide-toggle [formControl]="emailInvoiceControl"></mat-slide-toggle>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Security Card -->
+  <mat-card class="settings-card">
+    <div class="settings-card__header">
+      <mat-icon>security</mat-icon>
+      <div>
+        <h2>{{ 'SETTINGS.SECURITY.TITLE' | translate }}</h2>
+        <p>{{ 'SETTINGS.SECURITY.DESCRIPTION' | translate }}</p>
+      </div>
+    </div>
+    <div class="settings-card__body">
+      <form [formGroup]="securityForm" (submit)="savePassword()" class="security-form">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'SETTINGS.SECURITY.CURRENT_PASSWORD' | translate }}</mat-label>
+            <input matInput formControlName="currentPassword" type="password" placeholder="Current password" title="Current password" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'SETTINGS.SECURITY.NEW_PASSWORD' | translate }}</mat-label>
+            <input matInput formControlName="newPassword" type="password" placeholder="New password" title="New password" />
+          </mat-form-field>
+        </div>
+        <div class="action-row">
+          <button mat-flat-button color="primary" type="submit" [disabled]="securityForm.invalid">
+            {{ 'SETTINGS.SECURITY.UPDATE_BUTTON' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

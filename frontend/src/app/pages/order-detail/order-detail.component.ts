@@ -2,12 +2,14 @@ import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/cor
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { CartService } from '../../Core/services/cart.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-order-detail',
-  imports: [MatCardModule, MatIconModule, BreadcrumbComponent],
+  imports: [MatCardModule, MatIconModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './order-detail.component.html',
   styleUrl: './order-detail.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -15,6 +17,7 @@ import { CartService } from '../../Core/services/cart.service';
 export class OrderDetailComponent implements OnInit {
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
   private readonly cartService: CartService = inject(CartService);
+  private readonly translate: TranslateService = inject(TranslateService);
 
   order: any;
 
@@ -27,7 +30,8 @@ export class OrderDetailComponent implements OnInit {
   }
 
   formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('fr-FR', {
+    const locale = this.translate.currentLang() === 'ar' ? 'ar' : this.translate.currentLang() === 'en' ? 'en-US' : 'fr-FR';
+    return new Date(date).toLocaleDateString(locale, {
       day: 'numeric',
       month: 'long',
       year: 'numeric'

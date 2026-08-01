@@ -1,0 +1,15 @@
+<div class="main-layout">
+  <app-sidebar [items]="navItems" />
+
+  <div class="main-layout__content">
+    <app-topbar title="TOPBAR.TITLE" />
+
+    <main class="main-layout__page">
+      <router-outlet />
+    </main>
+
+    <app-footer />
+  </div>
+
+  <app-chatbot />
+</div>

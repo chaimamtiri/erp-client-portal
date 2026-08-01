@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { SupportService } from '../../Core/services/support.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-support',
-  imports: [MatCardModule, MatButtonModule, MatChipsModule, BreadcrumbComponent],
+  imports: [MatCardModule, MatButtonModule, MatChipsModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './support.component.html',
   styleUrl: './support.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,6 +19,23 @@ export class SupportComponent {
   protected readonly ticketList = this.supportService.tickets;
 
   statusLabel(status: string): string {
-    return this.supportService.getStatusLabel(status);
+    const map: Record<string, string> = {
+      ouvert: 'SUPPORT.STATUS.OPEN',
+      en_cours: 'SUPPORT.STATUS.IN_PROGRESS',
+      resolu: 'SUPPORT.STATUS.RESOLVED',
+      ferme: 'SUPPORT.STATUS.CLOSED'
+    };
+    return map[status] ?? this.supportService.getStatusLabel(status);
+  }
+
+  priorityKey(priority: string): string {
+    const map: Record<string, string> = {
+      basse: 'SUPPORT.PRIORITY.LOW',
+      normale: 'SUPPORT.PRIORITY.NORMAL',
+      haute: 'SUPPORT.PRIORITY.HIGH',
+      urgente: 'SUPPORT.PRIORITY.URGENT'
+    };
+
+    return map[priority] ?? priority;
   }
 }

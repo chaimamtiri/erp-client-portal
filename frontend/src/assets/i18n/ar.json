@@ -1,0 +1,346 @@
+{
+  "BREADCRUMB": {
+    "ACCUEIL": "الرئيسية",
+    "PANIER": "السلة",
+    "DASHBOARD": "لوحة القيادة",
+    "LIVRAISONS": "التوصيلات",
+    "DOCUMENTS": "المستندات",
+    "FACTURES": "الفواتير",
+    "DETAIL": "التفاصيل",
+    "COMMANDES": "الطلبات",
+    "PAIEMENTS": "المدفوعات",
+    "CATALOGUE": "الكتالوج",
+    "PROFIL_ADRESSES": "الملف الشخصي والعناوين",
+    "PARAMETRES": "الإعدادات",
+    "SUPPORT_TICKET": "تذكرة الدعم",
+    "SUPPORT": "الدعم"
+  },
+  "COMMON": {
+    "ACTIONS": {
+      "VIEW_ALL": "عرض الكل",
+      "CONSULT": "استشارة",
+      "VIEW": "عرض",
+      "ADD": "إضافة",
+      "EDIT": "تعديل",
+      "DELETE": "حذف",
+      "SAVE": "حفظ",
+      "CANCEL": "إلغاء",
+      "RESET": "إعادة تعيين"
+    },
+    "STATUS": {
+      "PAID": "مدفوعة",
+      "PENDING": "قيد الانتظار",
+      "VALIDATED": "تم التحقق",
+      "IN_PREPARATION": "قيد التحضير",
+      "CONFIRMED": "مؤكدة",
+      "IN_PROGRESS": "قيد المعالجة",
+      "SHIPPED": "تم الشحن",
+      "CANCELED": "ملغاة",
+      "CASHED": "تم التحصيل"
+    }
+  },
+  "CART": {
+    "TITLE": "سلة التسوق الخاصة بك",
+    "EMPTY": "سلتك فارغة",
+    "SUMMARY": {
+      "TITLE": "ملخص",
+      "SUBTOTAL": "المجموع الفرعي",
+      "SHIPPING": "الشحن",
+      "TOTAL": "المجموع"
+    },
+    "PLACE_ORDER": "إتمام الطلب"
+  },
+  "DASHBOARD": {
+    "OVERVIEW": "نظرة عامة",
+    "TITLE": "لوحة القيادة",
+    "WELCOME": "مرحباً بك في بوابة العملاء (ERP). تتبع الأداء والطلبات والمدفوعات ببضع نقرات.",
+    "VIEW_ORDERS": "عرض الطلبات",
+    "LATEST_ORDERS": {
+      "TITLE": "أحدث الطلبات",
+      "SUBTITLE": "تتبع في الوقت الفعلي"
+    },
+    "LATEST_INVOICES": {
+      "TITLE": "أحدث الفواتير",
+      "SUBTITLE": "حالة الدفع"
+    },
+    "ACCOUNT_BALANCE": {
+      "TITLE": "رصيد الحساب",
+      "SUBTITLE": "التوافر",
+      "IMMEDIATE": "متاح فوراً",
+      "TRANSFER": "تحويل",
+      "CARD": "بطاقة",
+      "PAYPAL": "باي بال"
+    },
+    "UPCOMING_DELIVERIES": {
+      "TITLE": "التوصيلات القادمة",
+      "SUBTITLE": "تخطيط الأسبوع"
+    }
+  },
+  "DELIVERIES": {
+    "TITLE": "مذكرات التسليم",
+    "COLUMNS": {
+      "NUMBER": "رقم التسليم",
+      "ORDER": "الطلب",
+      "DATE": "تاريخ التسليم",
+      "CARRIER": "شركة النقل",
+      "TRACKING": "رقم التتبع",
+      "ADDRESS": "العنوان",
+      "STATUS": "الحالة"
+    }
+  },
+  "DOCUMENTS": {
+    "TITLE": "المستندات"
+  },
+  "INVOICES": {
+    "TITLE": "الفواتير",
+    "DESCRIPTION": "عرض فواتيرك وحالتها.",
+    "ISSUED_ON": "صُدرت في",
+    "CLIENT": "العميل",
+    "AMOUNT": "المبلغ",
+    "BALANCE_DUE": "الرصيد المستحق:",
+    "COLUMNS": {
+      "NUMBER": "رقم الفاتورة",
+      "CUSTOMER": "العميل",
+      "TOTAL_TTC": "المجموع (شامل الضريبة)",
+      "DATE": "التاريخ",
+      "STATUS": "الحالة",
+      "DOWNLOAD": "تحميل الفاتورة"
+    }
+  },
+  "LOGIN": {
+    "SECURE_BADGE": "بوابة العملاء ERP | آمنة",
+    "PANEL_TITLE": "تتبع في الوقت الفعلي",
+    "PANEL_DESC": "الوصول الفوري إلى طلباتك وفواتيرك وعمليات التسليم والمستندات الرئيسية من مكان واحد.",
+    "WELCOME": "مرحباً",
+    "DESCRIPTION": "سجل الدخول إلى منطقة عملاء ERP الخاصة بك للوصول الكامل.",
+    "EMAIL_PLACEHOLDER": "البريد الإلكتروني",
+    "PASSWORD_PLACEHOLDER": "كلمة المرور",
+    "PASSWORD_TOGGLE_ARIA": "إظهار/إخفاء كلمة المرور",
+    "ERRORS": {
+      "EMAIL_REQUIRED": "البريد الإلكتروني مطلوب.",
+      "EMAIL_INVALID": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+      "PASSWORD_REQUIRED": "كلمة المرور مطلوبة.",
+      "PASSWORD_MINLENGTH": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل."
+    },
+    "SUBMIT": "تسجيل الدخول",
+    "FORGOT_PASSWORD": "هل نسيت كلمة المرور؟",
+    "VIEW_PROTOTYPE": "عرض النموذج الأولي"
+  },
+  "NOTIFICATIONS": {
+    "TITLE": "مركز الإشعارات",
+    "DESCRIPTION": "إدارة التنبيهات الخاصة بالطلبات والفواتير وأخبار البوابة.",
+    "MARK_ALL_READ": "تحديد الكل كمقروء",
+    "CLEAR_ALL": "مسح الكل",
+    "MARK_READ": "تحديد كمقروء",
+    "MARK_UNREAD": "تحديد كغير مقروء",
+    "EMPTY": {
+      "TITLE": "لا توجد إشعارات",
+      "DESCRIPTION": "أنت على اطلاع دائم! جميع الإشعارات المقروءة أو المحذوفة لن تظهر هنا بعد الآن."
+    }
+  },
+  "ORDERS": {
+    "TITLE": "الطلبات",
+    "DESCRIPTION": "سجل الطلبات وتتبع التسليم.",
+    "NEW_ORDER": "طلب جديد",
+    "FILTERS": {
+      "SEARCH": "بحث...",
+      "VALIDATION": "التحقق",
+      "PAYMENT": "الدفع",
+      "STATUS": "الحالة",
+      "ALL": "الكل",
+      "EMPTY_RESULTS": "لا توجد طلبات تطابق معايير التصفية الخاصة بك."
+    },
+    "COLUMNS": {
+      "NUMBER": "رقم الطلب",
+      "CLIENT": "العميل",
+      "DATE": "تاريخ الطلب",
+      "TOTAL": "المبلغ (شامل الضريبة)",
+      "VALIDATION": "التحقق",
+      "PAYMENT": "الدفع",
+      "STATUS": "الحالة"
+    },
+    "TIMELINE": {
+      "TITLE": "تتبع الطلب",
+      "GENERAL_INFO": "معلومات عامة",
+      "ITEMS": "العناصر",
+      "ORDERED_ITEMS": "العناصر المطلوبة",
+      "EMPTY_ITEMS": "لا توجد عناصر مرتبطة بهذا الطلب.",
+      "REF": "مرجع",
+      "SUBTOTAL": "المجموع الفرعي",
+      "TOTAL_ITEMS": "إجمالي العناصر",
+      "DELIVERY_INFO": "معلومات التسليم",
+      "CARRIER": "شركة النقل",
+      "TRACKING_NO": "رقم التتبع",
+      "ADDRESS": "عنوان التسليم",
+      "ETA": "الوقت المتوقع للتسليم",
+      "EMPTY_DELIVERY": "لا توجد مذكرة تسليم مرتبطة بهذا الطلب حتى الآن.",
+      "FINANCIAL_SUMMARY": "الملخص المالي",
+      "SUBTOTAL_HT": "المجموع الفرعي (غير شامل الضريبة)",
+      "TAX": "الضريبة",
+      "AMOUNT_PAID": "المبلغ المدفوع",
+      "BALANCE_DUE": "الرصيد المستحق",
+      "SELECT_PROMPT": "حدد طلباً لعرض سجله."
+    }
+  },
+  "PAYMENTS": {
+    "TITLE": "المدفوعات",
+    "COLUMNS": {
+      "NUMBER": "رقم الدفع",
+      "METHOD": "الطريقة",
+      "AMOUNT": "المبلغ",
+      "DATE": "التاريخ",
+      "STATUS": "الحالة"
+    }
+  },
+  "CATALOG": {
+    "TITLE": "كتالوج المنتجات",
+    "DESCRIPTION": "ابحث وقم بتصفية وإضافة المنتجات إلى سلتك.",
+    "SEARCH_PLACEHOLDER": "البحث عن منتج...",
+    "CATEGORIES": {
+      "ALL": "جميع الفئات",
+      "SOFTWARE": "البرمجيات",
+      "HARDWARE": "الأجهزة",
+      "SERVICES": "الخدمات"
+    },
+    "FILTERS": {
+      "PRICE": "السعر",
+      "NAME": "الاسم",
+      "RATING": "التقييم"
+    },
+    "EMPTY": {
+      "TITLE": "لم يتم العثور على منتجات",
+      "DESCRIPTION": "حاول تعديل معايير البحث أو التصفية الخاصة بك."
+    },
+    "IN_STOCK": "في المخزن",
+    "ADD_TO_CART": "إضافة"
+  },
+  "PROFILE": {
+    "TABS": {
+      "MY_PROFILE": "ملفي الشخصي",
+      "MY_ADDRESSES": "عناويني"
+    },
+    "INFO": {
+      "FULL_NAME": "الاسم الكامل",
+      "EMAIL": "عنوان البريد الإلكتروني",
+      "PHONE": "الهاتف",
+      "COMPANY": "الشركة",
+      "ROLE": "الدور / الوظيفة",
+      "EDIT_BUTTON": "تعديل معلوماتي"
+    },
+    "ADDRESSES": {
+      "ADD_TITLE": "إضافة عنوان",
+      "EDIT_TITLE": "تعديل العنوان",
+      "COMPANY_LABEL": "العنوان / الشركة (مثل: المكتب الرئيسي)",
+      "LINE_LABEL": "سطر العنوان",
+      "CITY_LABEL": "المدينة والرمز البريدي",
+      "SET_DEFAULT": "تعيين كعنوان افتراضي",
+      "HEADER_TITLE": "عناوينك المحفوظة",
+      "HEADER_DESC": "إدارة عناوين الشحن والفواتير المرتبطة بحسابك.",
+      "EMPTY": "لا توجد عناوين محفوظة.",
+      "DEFAULT_BADGE": "افتراضي"
+    }
+  },
+  "SETTINGS": {
+    "APP_PREFERENCES": {
+      "TITLE": "تفضيلات التطبيق",
+      "DESCRIPTION": "إدارة مظهر البوابة وتفضيلات اللغة الخاصة بك.",
+      "DARK_MODE": "الوضع الداكن",
+      "DARK_MODE_DESC": "قم بتمكين الوضع الداكن لإراحة عينيك.",
+      "LANGUAGE": "لغة البوابة",
+      "LANGUAGE_DESC": "حدد لغة عرض الواجهة."
+    },
+    "EMAIL_NOTIFICATIONS": {
+      "TITLE": "تفضيلات إشعارات البريد الإلكتروني",
+      "DESCRIPTION": "اختر التنبيهات التي ترغب في تلقيها عبر البريد الإلكتروني.",
+      "NEW_ORDERS": "طلبات الشراء الجديدة",
+      "NEW_ORDERS_DESC": "تلقي بريد إلكتروني للتأكيد عند التحقق من الطلب.",
+      "BILLING_PAYMENTS": "الفواتير والمدفوعات",
+      "BILLING_PAYMENTS_DESC": "تلقي إشعار عبر البريد الإلكتروني عند إصدار فاتورة أو استلام دفعة."
+    },
+    "SECURITY": {
+      "TITLE": "أمان الحساب",
+      "DESCRIPTION": "قم بتحديث كلمة المرور لتأمين وصولك.",
+      "CURRENT_PASSWORD": "كلمة المرور الحالية",
+      "NEW_PASSWORD": "كلمة المرور الجديدة",
+      "UPDATE_BUTTON": "تحديث كلمة المرور",
+      "SUCCESS_MESSAGE": "تم تحديث كلمة المرور بنجاح (محاكاة)."
+    }
+  },
+  "LANGUAGE": {
+    "SWITCHER_ARIA": "اختر لغة الواجهة",
+    "FRENCH": "الفرنسية",
+    "ENGLISH": "الإنجليزية",
+    "ARABIC": "العربية"
+  },
+  "SUPPORT": {
+    "TITLE": "تذاكر الدعم",
+    "DESCRIPTION": "تتبع حالة طلباتك.",
+    "NEW_TICKET": "تذكرة جديدة",
+    "HIGH_PRIORITY": "أولوية عالية",
+    "ACCESS_ISSUE": "الوصول إلى البوابة",
+    "STATUS": {
+      "OPEN": "مفتوح",
+      "IN_PROGRESS": "قيد المعالجة",
+      "RESOLVED": "تم الحل",
+      "CLOSED": "مغلق"
+    },
+    "PRIORITY": {
+      "LOW": "منخفضة",
+      "NORMAL": "عادية",
+      "HIGH": "مرتفعة",
+      "URGENT": "عاجلة"
+    }
+  },
+  "SIDEBAR": {
+    "BRAND_SUBTITLE": "بوابة العملاء",
+    "OPEN": "فتح الشريط الجانبي",
+    "COLLAPSE": "طي الشريط الجانبي",
+    "NAV_ARIA": "التنقل الرئيسي",
+    "DASHBOARD": "لوحة القيادة",
+    "ORDERS": "الطلبات",
+    "CART": "السلة",
+    "CATALOG": "الكتالوج",
+    "DELIVERIES": "التوصيلات",
+    "INVOICES": "الفواتير",
+    "PAYMENTS": "المدفوعات",
+    "DOCUMENTS": "المستندات",
+    "NOTIFICATIONS": "الإشعارات",
+    "PROFILE": "الملف الشخصي",
+    "SETTINGS": "الإعدادات",
+    "SUPPORT": "الدعم"
+  },
+  "TOPBAR": {
+    "TITLE": "بوابة عميل ERP",
+    "EYEBROW": "بوابة العملاء ERP",
+    "SEARCH_PLACEHOLDER": "بحث عام...",
+    "NOTIFICATIONS": "الإشعارات",
+    "MARK_ALL_READ": "تحديد الكل كمقروء",
+    "NO_NOTIFICATIONS": "لا توجد إشعارات",
+    "VIEW_ALL_NOTIFICATIONS": "عرض جميع الإشعارات",
+    "CART": "السلة",
+    "PROFILE_MENU": "قائمة الملف الشخصي",
+    "MY_PROFILE_ADDRESSES": "ملفي الشخصي وعناويني",
+    "SETTINGS": "الإعدادات",
+    "ALERT_CENTER": "مركز التنبيهات",
+    "LOGOUT": "تسجيل الخروج"
+  },
+  "ACTIVITY": {
+    "BREADCRUMB": "النشاط",
+    "TITLE": "سجل النشاط"
+  },
+  "ORDER_DETAIL": {
+    "TITLE": "الطلب",
+    "CUSTOMER_INFO": "معلومات العميل",
+    "ADDRESS": "العنوان",
+    "NOT_FOUND": "لم يتم العثور على الطلب"
+  },
+  "INVOICE_DETAIL": {
+    "TITLE": "الفاتورة",
+    "NOT_FOUND": "لم يتم العثور على الفاتورة"
+  },
+  "TICKET_DETAIL": {
+    "TITLE": "تذكرة TKT-118",
+    "SUBTITLE": "الوصول إلى البوابة • أولوية عالية",
+    "DESCRIPTION": "يلزم تحديث صلاحية الوصول للمستخدم Claire Martin."
+  }
+}

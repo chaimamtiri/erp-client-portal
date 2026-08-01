@@ -4,12 +4,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { SupportService } from '../../Core/services/support.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-ticket-detail',
-  imports: [MatCardModule, MatIconModule, MatButtonModule, MatChipsModule, BreadcrumbComponent],
+  imports: [MatCardModule, MatIconModule, MatButtonModule, MatChipsModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './ticket-detail.component.html',
   styleUrl: './ticket-detail.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
