@@ -2,13 +2,14 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 import { stats, orders, invoices, deliveries } from '../models/mock-data';
+import { ApiConfigService } from './api-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = '/api/dashboard';
+  private readonly apiConfig = inject(ApiConfigService);
 
   private statsData = signal(stats);
   private ordersData = signal(orders);
@@ -21,19 +22,19 @@ export class DashboardService {
   readonly latestDeliveries = computed(() => this.deliveriesData().slice(0, 3));
 
   loadDashboardData(): void {
-    this.http.get<any[]>(`${this.apiUrl}/stats`)
+    this.http.get<any[]>(this.apiConfig.getApiUrl('/dashboard/stats'))
       .pipe(catchError(() => of(stats)))
       .subscribe(data => this.statsData.set(data));
 
-    this.http.get<any[]>(`${this.apiUrl}/orders/latest`)
+    this.http.get<any[]>(this.apiConfig.getApiUrl('/dashboard/orders/latest'))
       .pipe(catchError(() => of(orders)))
       .subscribe(data => this.ordersData.set(data));
 
-    this.http.get<any[]>(`${this.apiUrl}/invoices/latest`)
+    this.http.get<any[]>(this.apiConfig.getApiUrl('/dashboard/invoices/latest'))
       .pipe(catchError(() => of(invoices)))
       .subscribe(data => this.invoicesData.set(data));
 
-    this.http.get<any[]>(`${this.apiUrl}/deliveries/latest`)
+    this.http.get<any[]>(this.apiConfig.getApiUrl('/dashboard/deliveries/latest'))
       .pipe(catchError(() => of(deliveries)))
       .subscribe(data => this.deliveriesData.set(data));
   }

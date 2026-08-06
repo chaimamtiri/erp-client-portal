@@ -181,6 +181,10 @@
           }
         </div>
 
+        @if (loginError()) {
+          <p class="error-message">{{ loginError() }}</p>
+        }
+
         <!-- Bouton de connexion -->
         <button type="submit" class="submit-btn" [disabled]="loginForm.invalid">
           <span>{{ 'LOGIN.SUBMIT' | translate }}</span>
@@ -195,7 +199,7 @@
       <div class="form-footer">
         <div class="footer-links">
           <a routerLink="/" class="forgot-link">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
-          <a routerLink="/dashboard" class="prototype-btn">{{ 'LOGIN.VIEW_PROTOTYPE' | translate }}</a>
+          <button type="button" class="prototype-btn" (click)="openPrototype()">{{ 'LOGIN.VIEW_PROTOTYPE' | translate }}</button>
         </div>
       </div>
     </div>

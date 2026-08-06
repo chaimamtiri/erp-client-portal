@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { LanguageService } from '../../Core/services/language.service';
+import { AuthService } from '../../Core/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -17,12 +18,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class LoginComponent {
   private readonly fb: FormBuilder = inject(FormBuilder);
   private readonly router: Router = inject(Router);
+  private readonly authService: AuthService = inject(AuthService);
   protected readonly languageService: LanguageService = inject(LanguageService);
 
   currentLanguage = signal(this.languageService.currentLanguage());
 
   showPassword = signal(false);
   formSubmitted = false;
+  loginError = signal('');
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -54,12 +57,21 @@ export class LoginComponent {
 
   onSubmit(): void {
     this.formSubmitted = true;
+    this.loginError.set('');
+
     if (this.loginForm.valid) {
-      console.log('Connexion réussie ! Saisie :', this.loginForm.value);
-      // Simulation d'une redirection après connexion réussie
-      this.router.navigateByUrl('/dashboard');
+      const { email, password } = this.loginForm.value;
+
+      this.authService.login({ email, password }).subscribe({
+        next: () => this.router.navigateByUrl('/dashboard'),
+        error: () => this.loginError.set('Identifiants invalides ou service indisponible.')
+      });
     } else {
       this.loginForm.markAllAsTouched();
     }
+  }
+
+  openPrototype(): void {
+    this.router.navigate(['/dashboard'], { queryParams: { preview: true } });
   }
 }

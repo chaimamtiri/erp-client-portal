@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule, formatCurrency, formatDate } from '@angular/common';
 import { CommonModule, formatCurrency, formatDate, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { MatButtonModule } from '@angular/material/button';
