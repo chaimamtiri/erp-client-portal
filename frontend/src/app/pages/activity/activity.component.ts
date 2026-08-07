@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { ActivityService } from '../../Core/services/activity.service';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
+import { ActivityService } from '../../core/services/activity.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-activity',
-  imports: [MatCardModule, BreadcrumbComponent],
+  standalone: true,
+  imports: [MatCardModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './activity.component.html',
   styleUrl: './activity.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -15,4 +17,3 @@ export class ActivityComponent {
 
   protected readonly activityList = this.activityService.activity;
 }
-

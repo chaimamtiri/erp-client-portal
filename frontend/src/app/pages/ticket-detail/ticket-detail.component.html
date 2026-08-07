@@ -1,8 +1,8 @@
-<app-breadcrumb [items]="['Accueil', 'Support', 'Détail']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.SUPPORT', 'BREADCRUMB.DETAIL']" />
     <mat-card class="ticket-card">
-      <h2>Ticket TKT-118</h2>
-      <p>Accès au portail • Priorité élevée</p>
+      <h2>{{ 'TICKET_DETAIL.TITLE' | translate }}</h2>
+      <p>{{ 'TICKET_DETAIL.SUBTITLE' | translate }}</p>
       <div class="ticket-card__body">
-        <p>Une mise à jour d’accès est nécessaire pour l’utilisateur Claire Martin.</p>
+        <p>{{ 'TICKET_DETAIL.DESCRIPTION' | translate }}</p>
       </div>
     </mat-card>

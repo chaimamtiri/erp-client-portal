@@ -1,0 +1,15 @@
+<mat-card class="section-card">
+  <div class="section-card__header">
+    <div>
+      <div class="section-card__title">{{ title() }}</div>
+      <div class="section-card__subtitle">{{ subtitle() }}</div>
+    </div>
+    @if (actionLabel()) {
+      <a [routerLink]="actionLink()" class="section-card__action">
+        {{ actionLabel() }}
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+    }
+  </div>
+  <ng-content />
+</mat-card>

@@ -1,87 +1,87 @@
-<app-breadcrumb [items]="['Accueil', 'Commandes']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.COMMANDES']" />
 <mat-card class="orders-card">
   <div class="orders-card__header">
     <div>
-      <h2>Commandes</h2>
-      <p>Historique des commandes et suivi de livraison.</p>
+      <h2>{{ 'ORDERS.TITLE' | translate }}</h2>
+      <p>{{ 'ORDERS.DESCRIPTION' | translate }}</p>
     </div>
-    <button mat-flat-button color="primary" (click)="goToProducts()">Nouvelle commande</button>
+    <button mat-flat-button color="primary" (click)="goToProducts()">{{ 'ORDERS.NEW_ORDER' | translate }}</button>
   </div>
 
   <div class="orders-filters">
     <mat-form-field class="filter-field">
-      <mat-label>Rechercher</mat-label>
-      <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" placeholder="N° commande, client...">
+      <mat-label>{{ 'ORDERS.FILTERS.SEARCH' | translate }}</mat-label>
+      <input matInput [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" placeholder="Search orders" title="Search orders" [placeholder]="'ORDERS.FILTERS.SEARCH' | translate">
     </mat-form-field>
     <mat-form-field class="filter-field">
-      <mat-label>Validation</mat-label>
+      <mat-label>{{ 'ORDERS.FILTERS.VALIDATION' | translate }}</mat-label>
       <mat-select [ngModel]="validationFilter()" (ngModelChange)="validationFilter.set($event)">
-        <mat-option [value]="true">Validée</mat-option>
-        <mat-option [value]="false">En attente</mat-option>
+        <mat-option [value]="true">{{ 'COMMON.STATUS.VALIDATED' | translate }}</mat-option>
+        <mat-option [value]="false">{{ 'COMMON.STATUS.PENDING' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field class="filter-field">
-      <mat-label>Paiement</mat-label>
+      <mat-label>{{ 'ORDERS.FILTERS.PAYMENT' | translate }}</mat-label>
       <mat-select [ngModel]="paymentFilter()" (ngModelChange)="paymentFilter.set($event)">
-        <mat-option value="">Tous</mat-option>
-        <mat-option [value]="true">Soldée</mat-option>
-        <mat-option [value]="false">Solde dû</mat-option>
+        <mat-option value="">{{ 'ORDERS.FILTERS.ALL' | translate }}</mat-option>
+        <mat-option [value]="true">{{ 'COMMON.STATUS.PAID' | translate }}</mat-option>
+        <mat-option [value]="false">{{ 'ORDERS.TIMELINE.BALANCE_DUE' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field class="filter-field">
-      <mat-label>Statut</mat-label>
+      <mat-label>{{ 'ORDERS.FILTERS.STATUS' | translate }}</mat-label>
       <mat-select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
-        <mat-option value="">Tous</mat-option>
-        <mat-option value="Confirmée">Confirmée</mat-option>
-        <mat-option value="En cours">En cours</mat-option>
-        <mat-option value="Expédiée">Expédiée</mat-option>
-        <mat-option value="Annulée">Annulée</mat-option>
+        <mat-option value="">{{ 'ORDERS.FILTERS.ALL' | translate }}</mat-option>
+        <mat-option value="Confirmée">{{ 'COMMON.STATUS.CONFIRMED' | translate }}</mat-option>
+        <mat-option value="En cours">{{ 'COMMON.STATUS.IN_PROGRESS' | translate }}</mat-option>
+        <mat-option value="Expédiée">{{ 'COMMON.STATUS.SHIPPED' | translate }}</mat-option>
+        <mat-option value="Annulée">{{ 'COMMON.STATUS.CANCELED' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
   @if (filteredOrders().length === 0) {
     <div class="filter-results">
-      <p>Aucune commande ne correspond à vos critères de filtrage.</p>
+      <p>{{ 'ORDERS.FILTERS.EMPTY_RESULTS' | translate }}</p>
     </div>
   }
 
   <table mat-table [dataSource]="filteredOrders()" class="orders-table">
     <ng-container matColumnDef="numero">
-      <th mat-header-cell *matHeaderCellDef>N° Commande</th>
+      <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.NUMBER' | translate }}</th>
       <td mat-cell *matCellDef="let element">{{ element.numero }}</td>
     </ng-container>
     <ng-container matColumnDef="clientNom">
-      <th mat-header-cell *matHeaderCellDef>Client</th>
+      <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.CLIENT' | translate }}</th>
       <td mat-cell *matCellDef="let element">{{ element.clientNom }}</td>
     </ng-container>
     <ng-container matColumnDef="date_commande">
-      <th mat-header-cell *matHeaderCellDef>Date Commande</th>
-      <td mat-cell *matCellDef="let element">{{ element.date_commande | date: 'dd/MM/yyyy' }}</td>
+      <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.DATE' | translate }}</th>
+      <td mat-cell *matCellDef="let element">{{ formatOrderDate(element.date_commande) }}</td>
     </ng-container>
     <ng-container matColumnDef="total_ttc">
-      <th mat-header-cell *matHeaderCellDef>Montant TTC</th>
-      <td mat-cell *matCellDef="let element">{{ element.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</td>
+      <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.TOTAL' | translate }}</th>
+      <td mat-cell *matCellDef="let element">{{ formatMoney(element.total_ttc) }}</td>
     </ng-container>
     <ng-container matColumnDef="est_valider">
-      <th mat-header-cell *matHeaderCellDef>Validation</th>
+      <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.VALIDATION' | translate }}</th>
       <td mat-cell *matCellDef="let element">
         <mat-chip [class.validated]="element.est_valider">
-          {{ element.est_valider ? 'Validée' : 'En attente' }}
+          {{ element.est_valider ? ('COMMON.STATUS.VALIDATED' | translate) : ('COMMON.STATUS.PENDING' | translate) }}
         </mat-chip>
       </td>
     </ng-container>
     <ng-container matColumnDef="est_solder">
-      <th mat-header-cell *matHeaderCellDef>Paiement</th>
+      <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.PAYMENT' | translate }}</th>
       <td mat-cell *matCellDef="let element">
         <mat-chip [class.paid]="element.est_solder">
-          {{ element.est_solder ? 'Soldée' : 'Solde: ' + (element.solde_du | currency: 'EUR': 'symbol': '1.2-2') }}
+          {{ element.est_solder ? ('COMMON.STATUS.PAID' | translate) : formatBalanceDue(element) }}
         </mat-chip>
       </td>
     </ng-container>
     <ng-container matColumnDef="statusLibelle">
-      <th mat-header-cell *matHeaderCellDef>Statut</th>
-      <td mat-cell *matCellDef="let element">{{ element.statusLibelle }}</td>
+      <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.COLUMNS.STATUS' | translate }}</th>
+      <td mat-cell *matCellDef="let element">{{ statusKey(element.statusLibelle) | translate }}</td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row
@@ -96,39 +96,39 @@
       <div class="order-dialog">
         <div class="dialog-header">
           <div class="dialog-header__title">
-            <span class="dialog-header__eyebrow">Suivi de commande</span>
+            <span class="dialog-header__eyebrow">{{ 'ORDERS.TIMELINE.TITLE' | translate }}</span>
             <h3>{{ order.numero }}</h3>
           </div>
-          <button mat-icon-button class="dialog-close" (click)="closeTimeline()" aria-label="Fermer">
+          <button mat-icon-button class="dialog-close" (click)="closeTimeline()" [attr.aria-label]="'COMMON.ACTIONS.CANCEL' | translate">
             <mat-icon>close</mat-icon>
           </button>
         </div>
 
         <div class="dialog-body">
           <section class="dialog-section">
-            <h4 class="section-title"><mat-icon>receipt_long</mat-icon>Informations générales</h4>
+            <h4 class="section-title"><mat-icon>receipt_long</mat-icon>{{ 'ORDERS.TIMELINE.GENERAL_INFO' | translate }}</h4>
             <div class="info-grid">
               <div class="info-item">
-                <span class="info-label">Client</span>
+                <span class="info-label">{{ 'ORDERS.COLUMNS.CLIENT' | translate }}</span>
                 <span class="info-value">{{ order.clientNom }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">Date de commande</span>
-                <span class="info-value">{{ order.date_commande | date: 'dd/MM/yyyy' }}</span>
+                <span class="info-label">{{ 'ORDERS.COLUMNS.DATE' | translate }}</span>
+                <span class="info-value">{{ formatOrderDate(order.date_commande) }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">Articles</span>
-                <span class="info-value">{{ itemsCount() }} article(s)</span>
+                <span class="info-label">{{ 'ORDERS.TIMELINE.ITEMS' | translate }}</span>
+                <span class="info-value">{{ itemsCount() }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">Statut</span>
-                <mat-chip class="info-chip" [class.validated]="order.est_valider">{{ order.statusLibelle }}</mat-chip>
+                <span class="info-label">{{ 'ORDERS.COLUMNS.STATUS' | translate }}</span>
+                <mat-chip class="info-chip" [class.validated]="order.est_valider">{{ statusKey(order.statusLibelle ?? '') | translate }}</mat-chip>
               </div>
             </div>
           </section>
 
           <section class="dialog-section">
-            <h4 class="section-title"><mat-icon>timeline</mat-icon>Suivi de la commande</h4>
+            <h4 class="section-title"><mat-icon>timeline</mat-icon>{{ 'ORDERS.TIMELINE.TITLE' | translate }}</h4>
             <div class="timeline timeline--horizontal">
               @for (step of timelineSteps(); track step.key; let last = $last) {
                 <div class="timeline-row" [class]="step.status">
@@ -153,9 +153,9 @@
           </section>
 
           <section class="dialog-section">
-            <h4 class="section-title"><mat-icon>inventory_2</mat-icon>Articles commandés</h4>
+            <h4 class="section-title"><mat-icon>inventory_2</mat-icon>{{ 'ORDERS.TIMELINE.ORDERED_ITEMS' | translate }}</h4>
             @if (orderItems().length === 0) {
-              <p class="empty-hint">Aucun article n'est rattaché à cette commande.</p>
+              <p class="empty-hint">{{ 'ORDERS.TIMELINE.EMPTY_ITEMS' | translate }}</p>
             } @else {
               <div class="items-list">
                 @for (item of orderItems(); track item.id) {
@@ -169,93 +169,93 @@
                     </div>
                     <div class="item-card__info">
                       <strong class="item-card__name">{{ item.designation }}</strong>
-                      <span class="item-card__ref">Réf. {{ item.reference }}</span>
+                      <span class="item-card__ref">{{ 'ORDERS.TIMELINE.REF' | translate }} {{ item.reference }}</span>
                       <span class="item-card__meta">
-                        {{ item.quantite }} × {{ item.prix_unitaire_ht | currency: 'EUR': 'symbol': '1.2-2' }}
+                        {{ formatLineQuantity(item.prix_unitaire_ht, item.quantite) }}
                       </span>
                     </div>
                     <div class="item-card__total">
-                      <span class="item-card__total-label">Sous-total</span>
-                      <span class="item-card__total-value">{{ item.total_ht | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                      <span class="item-card__total-label">{{ 'ORDERS.TIMELINE.SUBTOTAL' | translate }}</span>
+                      <span class="item-card__total-value">{{ formatLineTotal(item.total_ht) }}</span>
                     </div>
                   </div>
                 }
               </div>
               <div class="items-footer">
-                <span>Total articles ({{ itemsCount() }})</span>
-                <strong>{{ itemsSubtotal() | currency: 'EUR': 'symbol': '1.2-2' }}</strong>
+                <span>{{ 'ORDERS.TIMELINE.TOTAL_ITEMS' | translate }} ({{ itemsCount() }})</span>
+                <strong>{{ formatMoney(itemsSubtotal()) }}</strong>
               </div>
             }
           </section>
 
           <section class="dialog-section">
-            <h4 class="section-title"><mat-icon>local_shipping</mat-icon>Informations de livraison</h4>
+            <h4 class="section-title"><mat-icon>local_shipping</mat-icon>{{ 'ORDERS.TIMELINE.DELIVERY_INFO' | translate }}</h4>
             @if (delivery(); as shipment) {
               <div class="delivery-card">
                 <div class="delivery-item">
                   <mat-icon class="delivery-icon">local_shipping</mat-icon>
                   <div>
-                    <span class="info-label">Transporteur</span>
+                    <span class="info-label">{{ 'ORDERS.TIMELINE.CARRIER' | translate }}</span>
                     <span class="info-value">{{ shipment.transporteur }}</span>
                   </div>
                 </div>
                 <div class="delivery-item">
                   <mat-icon class="delivery-icon">qr_code_2</mat-icon>
                   <div>
-                    <span class="info-label">N° de suivi</span>
+                    <span class="info-label">{{ 'ORDERS.TIMELINE.TRACKING_NO' | translate }}</span>
                     <span class="info-value">{{ shipment.numero_suivi }}</span>
                   </div>
                 </div>
                 <div class="delivery-item">
                   <mat-icon class="delivery-icon">location_on</mat-icon>
                   <div>
-                    <span class="info-label">Adresse de livraison</span>
+                    <span class="info-label">{{ 'ORDERS.TIMELINE.ADDRESS' | translate }}</span>
                     <span class="info-value">{{ shipment.adresse_livraison }}</span>
                   </div>
                 </div>
                 <div class="delivery-item">
                   <mat-icon class="delivery-icon">schedule</mat-icon>
                   <div>
-                    <span class="info-label">Estimation de livraison</span>
+                    <span class="info-label">{{ 'ORDERS.TIMELINE.ETA' | translate }}</span>
                     <span class="info-value">{{ shipment.eta }}</span>
                   </div>
                 </div>
                 <div class="delivery-item">
                   <mat-icon class="delivery-icon">flag</mat-icon>
                   <div>
-                    <span class="info-label">Statut de livraison</span>
+                    <span class="info-label">{{ 'DELIVERIES.COLUMNS.STATUS' | translate }}</span>
                     <mat-chip class="info-chip">{{ shipment.status }}</mat-chip>
                   </div>
                 </div>
               </div>
             } @else {
-              <p class="empty-hint">Aucun bon de livraison n'est encore associé à cette commande.</p>
+              <p class="empty-hint">{{ 'ORDERS.TIMELINE.EMPTY_DELIVERY' | translate }}</p>
             }
           </section>
 
           <section class="dialog-section">
-            <h4 class="section-title"><mat-icon>payments</mat-icon>Résumé financier</h4>
+            <h4 class="section-title"><mat-icon>payments</mat-icon>{{ 'ORDERS.TIMELINE.FINANCIAL_SUMMARY' | translate }}</h4>
             <div class="finance-card">
               <div class="finance-row">
-                <span>Sous-total HT</span>
-                <span>{{ order.total_ht | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span>{{ 'ORDERS.TIMELINE.SUBTOTAL_HT' | translate }}</span>
+                <span>{{ formatMoney(order.total_ht) }}</span>
               </div>
               <div class="finance-row">
-                <span>TVA</span>
-                <span>{{ order.total_tva | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span>{{ 'ORDERS.TIMELINE.TAX' | translate }}</span>
+                <span>{{ formatMoney(order.total_tva) }}</span>
               </div>
               <mat-divider />
               <div class="finance-row finance-row--total">
-                <span>Total TTC</span>
-                <span>{{ order.total_ttc | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span>{{ 'ORDERS.COLUMNS.TOTAL' | translate }}</span>
+                <span>{{ formatMoney(order.total_ttc) }}</span>
               </div>
               <div class="finance-row">
-                <span>Montant réglé</span>
-                <span class="finance-paid">{{ order.montant_regle | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span>{{ 'ORDERS.TIMELINE.AMOUNT_PAID' | translate }}</span>
+                <span class="finance-paid">{{ formatMoney(order.montant_regle) }}</span>
               </div>
               <div class="finance-row">
-                <span>Solde dû</span>
-                <span [class.finance-due]="!order.est_solder">{{ order.solde_du | currency: 'EUR': 'symbol': '1.2-2' }}</span>
+                <span>{{ 'ORDERS.TIMELINE.BALANCE_DUE' | translate }}</span>
+                <span [class.finance-due]="!order.est_solder">{{ formatMoney(order.solde_du) }}</span>
               </div>
             </div>
           </section>
@@ -263,7 +263,7 @@
       </div>
     } @else {
       <div class="order-dialog order-dialog--empty">
-        <p>Sélectionnez une commande pour voir son historique.</p>
+        <p>{{ 'ORDERS.TIMELINE.SELECT_PROMPT' | translate }}</p>
       </div>
     }
   </ng-template>

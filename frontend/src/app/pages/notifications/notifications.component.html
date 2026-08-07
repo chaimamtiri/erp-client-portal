@@ -1,22 +1,22 @@
-<app-breadcrumb [items]="['Accueil', 'Notifications']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'SIDEBAR.NOTIFICATIONS']" />
 
 <mat-card class="notifications-card">
   <div class="notifications-header">
     <div>
-      <h2>Centre de notifications</h2>
-      <p>Gérez vos alertes de commandes, facturations et nouveautés du portail.</p>
+      <h2>{{ 'NOTIFICATIONS.TITLE' | translate }}</h2>
+      <p>{{ 'NOTIFICATIONS.DESCRIPTION' | translate }}</p>
     </div>
     <div class="action-buttons">
       @if (notificationService.unreadCount() > 0) {
         <button mat-stroked-button color="primary" (click)="notificationService.markAllAsRead()">
           <mat-icon>done_all</mat-icon>
-          Tout marquer comme lu
+          {{ 'NOTIFICATIONS.MARK_ALL_READ' | translate }}
         </button>
       }
       @if (notificationService.notifications().length > 0) {
         <button mat-stroked-button color="warn" (click)="notificationService.clearAll()">
           <mat-icon>delete_sweep</mat-icon>
-          Tout vider
+          {{ 'NOTIFICATIONS.CLEAR_ALL' | translate }}
         </button>
       }
     </div>
@@ -38,9 +38,9 @@
 
           <div class="actions-row">
             <button mat-button class="action-btn" (click)="toggleRead(idx)">
-              {{ notification.est_lu ? 'Marquer comme non lu' : 'Marquer comme lu' }}
+              {{ notification.est_lu ? ('NOTIFICATIONS.MARK_UNREAD' | translate) : ('NOTIFICATIONS.MARK_READ' | translate) }}
             </button>
-            <button mat-icon-button color="warn" class="delete-btn" (click)="deleteNotif(idx)" aria-label="Supprimer">
+            <button mat-icon-button color="warn" class="delete-btn" (click)="deleteNotif(idx)" [attr.aria-label]="'COMMON.ACTIONS.DELETE' | translate">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -49,8 +49,8 @@
     } @empty {
       <div class="empty-state">
         <mat-icon>notifications_off</mat-icon>
-        <h3>Aucune notification</h3>
-        <p>Vous êtes à jour ! Toutes les notifications lues ou effacées n'apparaissent plus ici.</p>
+        <h3>{{ 'NOTIFICATIONS.EMPTY.TITLE' | translate }}</h3>
+        <p>{{ 'NOTIFICATIONS.EMPTY.DESCRIPTION' | translate }}</p>
       </div>
     }
   </div>

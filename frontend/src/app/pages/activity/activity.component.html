@@ -1,6 +1,6 @@
-<app-breadcrumb [items]="['Accueil', 'Activité']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'ACTIVITY.BREADCRUMB']" />
 <mat-card class="activity-card">
-  <h2>Journal d’activité</h2>
+  <h2>{{ 'ACTIVITY.TITLE' | translate }}</h2>
   <div class="activity-list">
     @for (item of activityList(); track item.title) {
       <div class="activity-item">

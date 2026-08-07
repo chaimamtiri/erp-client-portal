@@ -1,0 +1,10 @@
+﻿<nav class="breadcrumb" aria-label="Breadcrumb">
+  @for (item of items(); track item; let last = $last; let idx = $index) {
+    <span class="breadcrumb__item">
+      <a [routerLink]="idx === 0 ? '/dashboard' : '/'">{{ item | translate }}</a>
+      @if (!last) {
+        <mat-icon>chevron_right</mat-icon>
+      }
+    </span>
+  }
+</nav>

@@ -7,12 +7,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { ProfileService, UserProfile } from '../../Core/services/profile.service';
-import { Adresse } from '../../Core/models/mock-data';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
+import { ProfileService, UserProfile } from '../../core/services/profile.service';
+import { Adresse } from '../../core/models/mock-data';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatCardModule,
@@ -21,7 +23,8 @@ import { Adresse } from '../../Core/models/mock-data';
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    TranslatePipe
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',

@@ -5,13 +5,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AuthService } from '../../../Core/services/auth.service';
-import { ThemeService } from '../../../Core/services/theme.service';
-import { NotificationService } from '../../../Core/services/notification.service';
-import { ProfileService } from '../../../Core/services/profile.service';
-import { CartService } from '../../../Core/services/cart.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { ThemeService } from '../../../core/services/theme.service';
+import { NotificationService } from '../../../core/services/notification.service';
+import { ProfileService } from '../../../core/services/profile.service';
+import { CartService } from '../../../core/services/cart.service';
 @Component({
   selector: 'app-topbar',
+  standalone: true,
   imports: [DatePipe, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, RouterLink],
   template: `
     <header class="topbar">

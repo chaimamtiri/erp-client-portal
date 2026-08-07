@@ -1,15 +1,21 @@
-<app-breadcrumb [items]="['Accueil', 'Factures', 'Détail']" />
-    <mat-card class="invoice-card">
-      <h2>Facture INV-2048</h2>
-      <p>Émise le 05 juillet 2026</p>
-      <div class="invoice-card__body">
-        <div>
-          <h3>Client</h3>
-          <p>Acme SAS</p>
-        </div>
-        <div>
-          <h3>Montant</h3>
-          <p>€2,450.00</p>
-        </div>
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.FACTURES', 'BREADCRUMB.DETAIL']" />
+@if (invoice) {
+  <mat-card class="invoice-card">
+    <h2>{{ 'INVOICE_DETAIL.TITLE' | translate }} {{ invoice.numero }}</h2>
+    <p>{{ 'INVOICES.ISSUED_ON' | translate }} {{ formatDate(invoice.date_facture) }}</p>
+    <div class="invoice-card__body">
+      <div>
+        <h3>{{ 'INVOICES.CLIENT' | translate }}</h3>
+        <p>{{ invoice.customer }}</p>
       </div>
-    </mat-card>
+      <div>
+        <h3>{{ 'INVOICES.AMOUNT' | translate }}</h3>
+        <p>{{ invoice.total_ttc | currency: 'EUR':'symbol':'1.2-2' }}</p>
+      </div>
+    </div>
+  </mat-card>
+} @else {
+  <mat-card class="invoice-card">
+    <p>{{ 'INVOICE_DETAIL.NOT_FOUND' | translate }}</p>
+  </mat-card>
+}

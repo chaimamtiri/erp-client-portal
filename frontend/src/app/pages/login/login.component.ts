@@ -1,28 +1,29 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { passwordStrengthValidator } from '../../shared/validators/password.validator';
-import { AuthService } from '../../Core/services/auth.service';
+import { LanguageService } from '../../core/services/language.service';
+import { AuthService } from '../../core/services/auth.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, TranslatePipe],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  
+  styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  private readonly fb = inject(FormBuilder);
-  private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
+  private readonly fb: FormBuilder = inject(FormBuilder);
+  private readonly router: Router = inject(Router);
+  private readonly authService: AuthService = inject(AuthService);
+  protected readonly languageService: LanguageService = inject(LanguageService);
 
-  ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/dashboard']);
-    }
-  }
-
+  currentLanguage = signal(this.languageService.currentLanguage());
   mode = signal<'login' | 'register'>('login');
   showPassword = signal(false);
   showConfirmPassword = signal(false);
@@ -46,7 +47,12 @@ export class LoginComponent implements OnInit {
     }
   });
 
-  // Getters simples pour faciliter l'accès dans le template HTML
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
   get name(): AbstractControl | null {
     return this.loginForm.get('name');
   }
@@ -98,6 +104,11 @@ export class LoginComponent implements OnInit {
     this.loginForm.updateValueAndValidity();
   }
 
+  setLanguage(languageCode: 'fr' | 'en' | 'ar'): void {
+    this.languageService.setLanguage(languageCode);
+    this.currentLanguage.set(languageCode);
+  }
+
   isFieldInvalid(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
     const isMismatch = fieldName === 'confirmPassword' && this.loginForm.errors?.['passwordMismatch'];
@@ -114,9 +125,8 @@ export class LoginComponent implements OnInit {
 
       if (this.mode() === 'login') {
         this.authService.login(email, password).subscribe({
-          next: (res) => {
+          next: () => {
             this.isLoading.set(false);
-            console.log('Connexion réussie ! Saisie :', res);
             this.router.navigate(['/dashboard']);
           },
           error: (err) => {
@@ -130,10 +140,8 @@ export class LoginComponent implements OnInit {
         });
       } else {
         this.authService.register(name, email, password).subscribe({
-          next: (res) => {
+          next: () => {
             this.isLoading.set(false);
-            console.log('Inscription réussie ! Saisie :', res);
-            // Simulation d'une connexion automatique après inscription
             this.router.navigate(['/dashboard']);
           },
           error: (err) => {
@@ -150,5 +158,8 @@ export class LoginComponent implements OnInit {
       this.loginForm.markAllAsTouched();
     }
   }
-}
 
+  openPrototype(): void {
+    this.router.navigate(['/dashboard'], { queryParams: { preview: true } });
+  }
+}

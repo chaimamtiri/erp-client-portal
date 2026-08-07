@@ -1,21 +1,21 @@
-<app-breadcrumb [items]="['Accueil', 'Commandes', 'Détail']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.COMMANDES', 'BREADCRUMB.DETAIL']" />
     @if (order) {
       <mat-card class="detail-card">
       <div class="detail-card__header">
         <div>
-          <h2>Commande {{ order.numero }}</h2>
+          <h2>{{ 'ORDER_DETAIL.TITLE' | translate }} {{ order.numero }}</h2>
           <p>{{ order.statusLibelle }} • {{ formatDate(order.date_commande) }}</p>
         </div>
         <span class="pill">{{ order.statusLibelle }}</span>
       </div>
       <div class="detail-grid">
         <div>
-          <h3>Informations client</h3>
+          <h3>{{ 'ORDER_DETAIL.CUSTOMER_INFO' | translate }}</h3>
           <p>Claire Martin</p>
           <p>claire@acme.com</p>
         </div>
         <div>
-          <h3>Adresse</h3>
+          <h3>{{ 'ORDER_DETAIL.ADDRESS' | translate }}</h3>
           <p>12 Rue de l’Innovation</p>
           <p>69002 Lyon</p>
         </div>
@@ -27,13 +27,13 @@
             <span>€{{ (item.prix_vente_ht || 0) * item.quantity }}</span>
           </div>
         }
-        <div class="items-list__row"><span>Sous-total</span><span>€{{ order.total_ht }}</span></div>
-        <div class="items-list__row"><span>TVA</span><span>€{{ order.total_tva }}</span></div>
-        <div class="items-list__row total"><span>Total</span><span>€{{ order.total_ttc }}</span></div>
+        <div class="items-list__row"><span>{{ 'ORDERS.TIMELINE.SUBTOTAL_HT' | translate }}</span><span>€{{ order.total_ht }}</span></div>
+        <div class="items-list__row"><span>{{ 'ORDERS.TIMELINE.TAX' | translate }}</span><span>€{{ order.total_tva }}</span></div>
+        <div class="items-list__row total"><span>{{ 'CART.SUMMARY.TOTAL' | translate }}</span><span>€{{ order.total_ttc }}</span></div>
       </div>
     </mat-card>
     } @else {
       <mat-card class="detail-card">
-        <p>Commande non trouvée</p>
+        <p>{{ 'ORDER_DETAIL.NOT_FOUND' | translate }}</p>
       </mat-card>
     }

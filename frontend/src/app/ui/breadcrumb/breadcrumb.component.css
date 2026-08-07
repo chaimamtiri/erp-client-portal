@@ -1,0 +1,4 @@
+﻿:host { display: block; margin-bottom: 1rem; }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 0.25rem; align-items: center; color: #64748b; }
+.breadcrumb__item { display: inline-flex; align-items: center; gap: 0.25rem; }
+.breadcrumb__item a { text-decoration: none; color: inherit; font-weight: 600; }

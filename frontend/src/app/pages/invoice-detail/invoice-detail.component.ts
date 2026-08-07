@@ -1,14 +1,18 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
-import { InvoicesService } from '../../Core/services/invoices.service';
+import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
+import { InvoicesService } from '../../core/services/invoices.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-invoice-detail',
-  imports: [MatCardModule, MatIconModule, MatButtonModule, BreadcrumbComponent],
+  standalone: true,
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, BreadcrumbComponent, TranslatePipe],
   templateUrl: './invoice-detail.component.html',
   styleUrl: './invoice-detail.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -16,6 +20,7 @@ import { InvoicesService } from '../../Core/services/invoices.service';
 export class InvoiceDetailComponent implements OnInit {
   protected readonly invoicesService: InvoicesService = inject(InvoicesService);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly translate: TranslateService = inject(TranslateService);
 
   invoice: any;
 
@@ -27,7 +32,10 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('fr-FR');
+    const currentLang = this.translate.currentLang;
+    const lang = typeof currentLang === 'function' ? currentLang() : currentLang;
+    const locale = lang === 'ar' ? 'ar' : lang === 'en' ? 'en-US' : 'fr-FR';
+    return new Date(date).toLocaleDateString(locale);
   }
 
   downloadInvoice(): void {

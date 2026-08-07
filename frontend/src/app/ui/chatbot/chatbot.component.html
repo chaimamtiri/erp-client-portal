@@ -1,0 +1,83 @@
+﻿<div class="chatbot-container">
+  <!-- Floating Action Button -->
+  <button class="chat-fab" (click)="toggleChat()" aria-label="Ouvrir l'assistant de chat">
+    <mat-icon>smart_toy</mat-icon>
+    <span class="chat-badge"></span>
+  </button>
+
+  <!-- Chat Popup Window -->
+  @if (isOpen()) {
+    <div class="chat-window">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <div class="chat-header__info">
+          <div class="chat-avatar">
+            <mat-icon>smart_toy</mat-icon>
+          </div>
+          <div>
+            <h3>Assistant Client</h3>
+            <span class="status-indicator">
+              <span class="status-dot"></span>
+              En ligne
+            </span>
+          </div>
+        </div>
+        <button mat-icon-button (click)="toggleChat()" aria-label="Fermer le chat">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- Chat Messages Body -->
+      <div class="chat-messages" #messageContainer>
+        @for (msg of messages(); track msg.time + msg.text) {
+          <div class="message-wrapper" [class.user]="msg.sender === 'user'">
+            <div class="message-bubble" [class.user]="msg.sender === 'user'">
+              @if (msg.isHtml) {
+                <div [innerHTML]="msg.text"></div>
+              } @else {
+                <p>{{ msg.text }}</p>
+              }
+            </div>
+            <span class="message-time">{{ msg.time }}</span>
+          </div>
+        }
+
+        @if (isTyping()) {
+          <div class="message-wrapper">
+            <div class="message-bubble typing-bubble">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Suggestions Chips -->
+      <div class="chat-suggestions">
+        <button class="suggestion-chip" (click)="selectSuggestion('📦 Suivre mes commandes')">
+          📦 Suivre mes commandes
+        </button>
+        <button class="suggestion-chip" (click)="selectSuggestion('📄 Télécharger ma dernière facture')">
+          📄 Télécharger facture
+        </button>
+        <button class="suggestion-chip" (click)="selectSuggestion('🏠 Modifier mes adresses')">
+          🏠 Modifier mes adresses
+        </button>
+      </div>
+
+      <!-- Chat Input Footer -->
+      <form class="chat-input-form" (submit)="sendMessage(); $event.preventDefault()">
+        <input
+          type="text"
+          [formControl]="messageInput"
+          placeholder="Écrivez votre message..."
+          aria-label="Message à envoyer"
+        />
+        <button type="submit" mat-icon-button color="primary" [disabled]="!messageInput.value?.trim()" aria-label="Envoyer">
+          <mat-icon>send</mat-icon>
+        </button>
+      </form>
+    </div>
+  }
+</div>

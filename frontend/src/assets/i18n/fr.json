@@ -1,0 +1,358 @@
+{
+  "BREADCRUMB": {
+    "ACCUEIL": "Accueil",
+    "PANIER": "Panier",
+    "DASHBOARD": "Dashboard",
+    "LIVRAISONS": "Livraisons",
+    "DOCUMENTS": "Documents",
+    "FACTURES": "Factures",
+    "DETAIL": "Détail",
+    "COMMANDES": "Commandes",
+    "PAIEMENTS": "Paiements",
+    "CATALOGUE": "Catalogue",
+    "PROFIL_ADRESSES": "Profil & Adresses",
+    "PARAMETRES": "Paramètres",
+    "SUPPORT_TICKET": "Support Ticket",
+    "SUPPORT": "Support"
+  },
+  "COMMON": {
+    "ACTIONS": {
+      "VIEW_ALL": "Voir tout",
+      "CONSULT": "Consulter",
+      "VIEW": "Voir",
+      "ADD": "Ajouter",
+      "EDIT": "Modifier",
+      "DELETE": "Supprimer",
+      "SAVE": "Enregistrer",
+      "CANCEL": "Annuler",
+      "RESET": "Réinitialiser"
+    },
+    "STATUS": {
+      "PAID": "Payée",
+      "PENDING": "En attente",
+      "VALIDATED": "Validé",
+      "IN_PREPARATION": "En préparation",
+      "CONFIRMED": "Confirmée",
+      "IN_PROGRESS": "En cours",
+      "SHIPPED": "Expédiée",
+      "CANCELED": "Annulée",
+      "CASHED": "Encaissé"
+    }
+  },
+  "CART": {
+    "TITLE": "Votre panier",
+    "EMPTY": "Votre panier est vide",
+    "SUMMARY": {
+      "TITLE": "Résumé",
+      "SUBTOTAL": "Sous-total",
+      "SHIPPING": "Livraison",
+      "TOTAL": "Total"
+    },
+    "PLACE_ORDER": "Passer la commande"
+  },
+  "DASHBOARD": {
+    "OVERVIEW": "Vue d’ensemble",
+    "TITLE": "Tableau de bord",
+    "WELCOME": "Bienvenue dans votre espace client ERP. Suivez les performances, les commandes et les paiements en quelques clics.",
+    "VIEW_ORDERS": "Voir les commandes",
+    "STATS": {
+      "REVENUE": "Revenus",
+      "ORDERS": "Commandes",
+      "INVOICES": "Factures",
+      "TICKETS": "Tickets"
+    },
+    "LATEST_ORDERS": {
+      "TITLE": "Dernières commandes",
+      "SUBTITLE": "Suivi en temps réel"
+    },
+    "LATEST_INVOICES": {
+      "TITLE": "Dernières factures",
+      "SUBTITLE": "État de paiement"
+    },
+    "ACCOUNT_BALANCE": {
+      "TITLE": "Solde du compte",
+      "SUBTITLE": "Disponibilité",
+      "IMMEDIATE": "Disponible immédiatement",
+      "TRANSFER": "Virement",
+      "CARD": "Carte",
+      "PAYPAL": "PayPal"
+    },
+    "UPCOMING_DELIVERIES": {
+      "TITLE": "Livraisons à venir",
+      "SUBTITLE": "Planning de la semaine"
+    }
+  },
+  "DELIVERIES": {
+    "TITLE": "Bons de livraison",
+    "COLUMNS": {
+      "NUMBER": "N° BL",
+      "ORDER": "Commande",
+      "DATE": "Date livraison",
+      "CARRIER": "Transporteur",
+      "TRACKING": "N° Suivi",
+      "ADDRESS": "Adresse",
+      "STATUS": "Statut"
+    }
+  },
+  "DOCUMENTS": {
+    "TITLE": "Documents"
+  },
+  "INVOICES": {
+    "TITLE": "Factures",
+    "DESCRIPTION": "Consultez vos factures et leur statut.",
+    "ISSUED_ON": "Émise le",
+    "CLIENT": "Client",
+    "AMOUNT": "Montant",
+    "BALANCE_DUE": "Solde dû:",
+    "COLUMNS": {
+      "NUMBER": "N° Facture",
+      "CUSTOMER": "Client",
+      "TOTAL_TTC": "Montant TTC",
+      "DATE": "Date",
+      "STATUS": "Statut",
+      "DOWNLOAD": "Télécharger la facture"
+    }
+  },
+  "LOGIN": {
+    "SECURE_BADGE": "PORTAIL CLIENT ERP | SÉCURISÉ",
+    "PANEL_TITLE": "Suivi en temps réel",
+    "PANEL_DESC": "Accédez instantanément à vos commandes, factures, livraisons et documents clés depuis un espace unique.",
+    "WELCOME": "Bienvenue",
+    "DESCRIPTION": "Connectez-vous à votre espace client ERP pour un accès complet.",
+    "EMAIL_PLACEHOLDER": "E-mail",
+    "PASSWORD_PLACEHOLDER": "Mot de passe",
+    "PASSWORD_TOGGLE_ARIA": "Afficher/Masquer le mot de passe",
+    "ERRORS": {
+      "EMAIL_REQUIRED": "L'adresse e-mail est requise.",
+      "EMAIL_INVALID": "Veuillez saisir une adresse e-mail valide.",
+      "PASSWORD_REQUIRED": "Le mot de passe est requis.",
+      "PASSWORD_MINLENGTH": "Le mot de passe doit comporter au moins 6 caractères."
+    },
+    "SUBMIT": "Connexion",
+    "FORGOT_PASSWORD": "Mot de passe oublié ?",
+    "VIEW_PROTOTYPE": "Voir le prototype"
+  },
+  "NOTIFICATIONS": {
+    "TITLE": "Centre de notifications",
+    "DESCRIPTION": "Gérez vos alertes de commandes, facturations et nouveautés du portail.",
+    "MARK_ALL_READ": "Tout marquer comme lu",
+    "CLEAR_ALL": "Tout vider",
+    "MARK_READ": "Marquer comme lu",
+    "MARK_UNREAD": "Marquer comme non lu",
+    "EMPTY": {
+      "TITLE": "Aucune notification",
+      "DESCRIPTION": "Vous êtes à jour ! Toutes les notifications lues ou effacées n'apparaissent plus ici."
+    }
+  },
+  "ORDERS": {
+    "TITLE": "Commandes",
+    "DESCRIPTION": "Historique des commandes et suivi de livraison.",
+    "NEW_ORDER": "Nouvelle commande",
+    "FILTERS": {
+      "SEARCH": "Rechercher...",
+      "VALIDATION": "Validation",
+      "PAYMENT": "Paiement",
+      "STATUS": "Statut",
+      "ALL": "Tous",
+      "EMPTY_RESULTS": "Aucune commande ne correspond à vos critères de filtrage."
+    },
+    "COLUMNS": {
+      "NUMBER": "N° Commande",
+      "CLIENT": "Client",
+      "DATE": "Date Commande",
+      "TOTAL": "Montant TTC",
+      "VALIDATION": "Validation",
+      "PAYMENT": "Paiement",
+      "STATUS": "Statut"
+    },
+    "TIMELINE": {
+      "TITLE": "Suivi de commande",
+      "GENERAL_INFO": "Informations générales",
+      "ITEMS": "Articles",
+      "ORDERED_ITEMS": "Articles commandés",
+      "EMPTY_ITEMS": "Aucun article n'est rattaché à cette commande.",
+      "REF": "Réf.",
+      "SUBTOTAL": "Sous-total",
+      "TOTAL_ITEMS": "Total articles",
+      "DELIVERY_INFO": "Informations de livraison",
+      "CARRIER": "Transporteur",
+      "TRACKING_NO": "N° de suivi",
+      "ADDRESS": "Adresse de livraison",
+      "ETA": "Estimation de livraison",
+      "EMPTY_DELIVERY": "Aucun bon de livraison n'est encore associé à cette commande.",
+      "FINANCIAL_SUMMARY": "Résumé financier",
+      "SUBTOTAL_HT": "Sous-total HT",
+      "TAX": "TVA",
+      "AMOUNT_PAID": "Montant réglé",
+      "BALANCE_DUE": "Solde dû",
+      "SELECT_PROMPT": "Sélectionnez une commande pour voir son historique."
+    }
+  },
+  "PAYMENTS": {
+    "TITLE": "Paiements",
+    "COLUMNS": {
+      "NUMBER": "N° Règlement",
+      "METHOD": "Moyen",
+      "AMOUNT": "Montant",
+      "DATE": "Date",
+      "STATUS": "Statut"
+    }
+  },
+  "CATALOG": {
+    "TITLE": "Catalogue produits",
+    "DESCRIPTION": "Recherchez, filtrez et ajoutez des produits à votre panier.",
+    "SEARCH_PLACEHOLDER": "Rechercher un produit...",
+    "CATEGORIES": {
+      "ALL": "Toutes les catégories",
+      "SOFTWARE": "Logiciels",
+      "HARDWARE": "Matériel",
+      "SERVICES": "Services"
+    },
+    "FILTERS": {
+      "PRICE": "Prix",
+      "NAME": "Nom",
+      "RATING": "Note"
+    },
+    "EMPTY": {
+      "TITLE": "Aucun produit trouvé",
+      "DESCRIPTION": "Essayez de modifier vos critères de recherche ou de filtre."
+    },
+    "IN_STOCK": "en stock",
+    "ADD_TO_CART": "Ajouter"
+  },
+  "PROFILE": {
+    "TABS": {
+      "MY_PROFILE": "Mon Profil",
+      "MY_ADDRESSES": "Mes Adresses"
+    },
+    "INFO": {
+      "FULL_NAME": "Nom complet",
+      "EMAIL": "Adresse e-mail",
+      "PHONE": "Téléphone",
+      "COMPANY": "Entreprise",
+      "ROLE": "Rôle / Fonction",
+      "EDIT_BUTTON": "Modifier mes informations"
+    },
+    "ADDRESSES": {
+      "ADD_TITLE": "Ajouter une adresse",
+      "EDIT_TITLE": "Modifier l’adresse",
+      "COMPANY_LABEL": "Intitulé / Société (ex: Bureau principal)",
+      "LINE_LABEL": "Ligne d'adresse",
+      "CITY_LABEL": "Ville & Code Postal (complément)",
+      "SET_DEFAULT": "Définir comme adresse par défaut",
+      "HEADER_TITLE": "Vos adresses enregistrées",
+      "HEADER_DESC": "Gérez vos adresses de livraison et de facturation associées à votre compte.",
+      "EMPTY": "Aucune adresse enregistrée.",
+      "DEFAULT_BADGE": "Par défaut"
+    }
+  },
+  "SETTINGS": {
+    "APP_PREFERENCES": {
+      "TITLE": "Préférences de l'application",
+      "DESCRIPTION": "Gérez l'apparence de votre portail et vos préférences linguistiques.",
+      "DARK_MODE": "Mode Sombre",
+      "DARK_MODE_DESC": "Activer l'affichage en mode sombre pour reposer vos yeux.",
+      "LANGUAGE": "Langue du portail",
+      "LANGUAGE_DESC": "Sélectionnez la langue d'affichage de l'interface."
+    },
+    "EMAIL_NOTIFICATIONS": {
+      "TITLE": "Préférences de notification email",
+      "DESCRIPTION": "Choisissez les alertes que vous souhaitez recevoir par e-mail.",
+      "NEW_ORDERS": "Nouveaux bons de commande",
+      "NEW_ORDERS_DESC": "Recevoir un email de confirmation lorsqu'une commande est validée.",
+      "BILLING_PAYMENTS": "Facturation & Paiements",
+      "BILLING_PAYMENTS_DESC": "Être notifié par mail lors de l'émission d'une facture ou de la réception d'un paiement."
+    },
+    "SECURITY": {
+      "TITLE": "Sécurité du compte",
+      "DESCRIPTION": "Mettez à jour votre mot de passe pour sécuriser vos accès.",
+      "CURRENT_PASSWORD": "Mot de passe actuel",
+      "NEW_PASSWORD": "Nouveau mot de passe",
+      "UPDATE_BUTTON": "Mettre à jour le mot de passe",
+      "SUCCESS_MESSAGE": "Mot de passe mis à jour avec succès (simulation)."
+    }
+  },
+  "FOOTER": {
+    "COPYRIGHT": "© 2026 ErpClient · Prototype de portail client",
+    "SUPPORT": "Support",
+    "SECURITY": "Sécurité",
+    "DOCUMENTATION": "Documentation"
+  },
+  "LANGUAGE": {
+    "SWITCHER_ARIA": "Choisir la langue de l'interface",
+    "FRENCH": "Français",
+    "ENGLISH": "Anglais",
+    "ARABIC": "Arabe"
+  },
+  "SUPPORT": {
+    "TITLE": "Tickets support",
+    "DESCRIPTION": "Suivez l'état de vos requêtes.",
+    "NEW_TICKET": "Nouveau ticket",
+    "HIGH_PRIORITY": "Priorité élevée",
+    "ACCESS_ISSUE": "Accès au portail",
+    "STATUS": {
+      "OPEN": "Ouvert",
+      "IN_PROGRESS": "En cours",
+      "RESOLVED": "Résolu",
+      "CLOSED": "Fermé"
+    },
+    "PRIORITY": {
+      "LOW": "Basse",
+      "NORMAL": "Normale",
+      "HIGH": "Haute",
+      "URGENT": "Urgente"
+    }
+  },
+  "SIDEBAR": {
+    "BRAND_SUBTITLE": "Portail client",
+    "OPEN": "Ouvrir la barre latérale",
+    "COLLAPSE": "Réduire la barre latérale",
+    "NAV_ARIA": "Navigation principale",
+    "DASHBOARD": "Dashboard",
+    "ORDERS": "Commandes",
+    "CART": "Panier",
+    "CATALOG": "Catalogue",
+    "DELIVERIES": "Livraisons",
+    "INVOICES": "Factures",
+    "PAYMENTS": "Paiements",
+    "DOCUMENTS": "Documents",
+    "NOTIFICATIONS": "Notifications",
+    "PROFILE": "Profil",
+    "SETTINGS": "Paramètres",
+    "SUPPORT": "Support"
+  },
+  "TOPBAR": {
+    "TITLE": "Portail Client ERP",
+    "EYEBROW": "Portail client ERP",
+    "SEARCH_PLACEHOLDER": "Recherche globale...",
+    "NOTIFICATIONS": "Notifications",
+    "MARK_ALL_READ": "Tout marquer comme lu",
+    "NO_NOTIFICATIONS": "Aucune notification",
+    "VIEW_ALL_NOTIFICATIONS": "Voir toutes les notifications",
+    "CART": "Panier",
+    "PROFILE_MENU": "Menu profil",
+    "MY_PROFILE_ADDRESSES": "Mon Profil & Adresses",
+    "SETTINGS": "Paramètres",
+    "ALERT_CENTER": "Centre d'alertes",
+    "LOGOUT": "Se déconnecter"
+  },
+  "ACTIVITY": {
+    "BREADCRUMB": "Activité",
+    "TITLE": "Journal d'activité"
+  },
+  "ORDER_DETAIL": {
+    "TITLE": "Commande",
+    "CUSTOMER_INFO": "Informations client",
+    "ADDRESS": "Adresse",
+    "NOT_FOUND": "Commande non trouvée"
+  },
+  "INVOICE_DETAIL": {
+    "TITLE": "Facture",
+    "NOT_FOUND": "Facture non trouvée"
+  },
+  "TICKET_DETAIL": {
+    "TITLE": "Ticket TKT-118",
+    "SUBTITLE": "Accès au portail • Priorité élevée",
+    "DESCRIPTION": "Une mise à jour d'accès est nécessaire pour l'utilisateur Claire Martin."
+  }
+}

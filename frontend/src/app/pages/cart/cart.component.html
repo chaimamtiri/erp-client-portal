@@ -1,9 +1,9 @@
-<app-breadcrumb [items]="['Accueil', 'Panier']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.PANIER']" />
 <div class="cart-grid">
   <mat-card class="cart-list">
-    <h2>Votre panier</h2>
+    <h2>{{ 'CART.TITLE' | translate }}</h2>
     @if (cartItems().length === 0) {
-      <p class="empty-cart">Votre panier est vide</p>
+      <p class="empty-cart">{{ 'CART.EMPTY' | translate }}</p>
     } @else {
       @for (item of cartItems(); track item.id) {
         <div class="cart-item">
@@ -30,10 +30,10 @@
     }
   </mat-card>
   <mat-card class="summary-card">
-    <h3>Résumé</h3>
-    <div class="summary-row"><span>Sous-total</span><span>€{{ subtotal() }}</span></div>
-    <div class="summary-row"><span>Livraison</span><span>€{{ shippingCost() }}</span></div>
-    <div class="summary-row total"><span>Total</span><span>€{{ total() }}</span></div>
-    <button mat-flat-button color="primary" [disabled]="cartItems().length === 0" (click)="placeOrder()">Passer la commande</button>
+    <h3>{{ 'CART.SUMMARY.TITLE' | translate }}</h3>
+    <div class="summary-row"><span>{{ 'CART.SUMMARY.SUBTOTAL' | translate }}</span><span>€{{ subtotal() }}</span></div>
+    <div class="summary-row"><span>{{ 'CART.SUMMARY.SHIPPING' | translate }}</span><span>€{{ shippingCost() }}</span></div>
+    <div class="summary-row total"><span>{{ 'CART.SUMMARY.TOTAL' | translate }}</span><span>€{{ total() }}</span></div>
+    <button mat-flat-button color="primary" [disabled]="cartItems().length === 0" (click)="placeOrder()">{{ 'CART.PLACE_ORDER' | translate }}</button>
   </mat-card>
 </div>

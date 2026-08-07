@@ -1,6 +1,6 @@
-<app-breadcrumb [items]="['Accueil', 'Documents']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.DOCUMENTS']" />
     <mat-card class="documents-card">
-      <h2>Documents</h2>
+  <h2>{{ 'DOCUMENTS.TITLE' | translate }}</h2>
       <div class="documents-list">
         @for (document of documentList(); track document.name) {
           <div class="document-item">

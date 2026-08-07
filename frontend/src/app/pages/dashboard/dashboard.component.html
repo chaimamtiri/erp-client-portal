@@ -1,12 +1,12 @@
-<app-breadcrumb [items]="['Accueil', 'Dashboard']" />
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.DASHBOARD']" />
 
 <div class="dashboard-hero">
   <div>
-    <p class="eyebrow">Vue d’ensemble</p>
-    <h2>Tableau de bord</h2>
-    <p>Bienvenue dans votre espace client ERP. Suivez les performances, les commandes et les paiements en quelques clics.</p>
+    <p class="eyebrow">{{ 'DASHBOARD.OVERVIEW' | translate }}</p>
+    <h2>{{ 'DASHBOARD.TITLE' | translate }}</h2>
+    <p>{{ 'DASHBOARD.WELCOME' | translate }}</p>
   </div>
-  <button mat-flat-button color="primary">Voir les commandes</button>
+  <button mat-flat-button color="primary">{{ 'DASHBOARD.VIEW_ORDERS' | translate }}</button>
 </div>
 
 <section class="stats-grid">
@@ -16,7 +16,7 @@
 </section>
 
 <section class="content-grid">
-  <app-section-card title="Dernières commandes" subtitle="Suivi en temps réel" actionLabel="Voir tout" actionLink="/orders" class="full-width">
+  <app-section-card [title]="'DASHBOARD.LATEST_ORDERS.TITLE' | translate" [subtitle]="'DASHBOARD.LATEST_ORDERS.SUBTITLE' | translate" [actionLabel]="'COMMON.ACTIONS.VIEW_ALL' | translate" actionLink="/orders" class="full-width">
     <mat-list>
       @for (order of latestOrders(); track order.id) {
         <mat-list-item>
@@ -24,46 +24,46 @@
             <span>{{ order.numero }}</span>
             <span>{{ order.clientNom }}</span>
             <span>€{{ order.totalTTC }}</span>
-            <span>{{ order.statusLibelle }}</span>
+            <span>{{ statusKey(order.statusLibelle ?? '') | translate }}</span>
           </div>
         </mat-list-item>
       }
     </mat-list>
   </app-section-card>
 
-  <app-section-card title="Dernières factures" subtitle="État de paiement" actionLabel="Consulter" actionLink="/invoices">
+  <app-section-card [title]="'DASHBOARD.LATEST_INVOICES.TITLE' | translate" [subtitle]="'DASHBOARD.LATEST_INVOICES.SUBTITLE' | translate" [actionLabel]="'COMMON.ACTIONS.CONSULT' | translate" actionLink="/invoices">
     <mat-list>
       @for (invoice of latestInvoices(); track invoice.id) {
         <mat-list-item>
           <div class="row-item">
             <span>{{ invoice.numero }}</span>
-            <span>{{ invoice.total_ttc | currency: 'EUR':'symbol':'1.2-2' }}</span>
-            <span>{{ invoice.est_solder ? 'Payée' : 'En attente' }}</span>
+            <span>{{ formatInvoiceAmount(invoice.total_ttc) }}</span>
+            <span>{{ invoice.est_solder ? ('COMMON.STATUS.PAID' | translate) : ('COMMON.STATUS.PENDING' | translate) }}</span>
           </div>
         </mat-list-item>
       }
     </mat-list>
   </app-section-card>
 
-  <app-section-card title="Solde du compte" subtitle="Disponibilité" actionLabel="Paiements" actionLink="/payments">
+  <app-section-card [title]="'DASHBOARD.ACCOUNT_BALANCE.TITLE' | translate" [subtitle]="'DASHBOARD.ACCOUNT_BALANCE.SUBTITLE' | translate" [actionLabel]="'BREADCRUMB.PAIEMENTS' | translate" actionLink="/payments">
     <div class="balance-card">
       <div class="balance-card__amount">€48 250.00</div>
-      <div class="balance-card__meta">Disponible immédiatement</div>
+      <div class="balance-card__meta">{{ 'DASHBOARD.ACCOUNT_BALANCE.IMMEDIATE' | translate }}</div>
       <div class="balance-card__chips">
-        <span>Virement</span>
-        <span>Carte</span>
-        <span>PayPal</span>
+        <span>{{ 'DASHBOARD.ACCOUNT_BALANCE.TRANSFER' | translate }}</span>
+        <span>{{ 'DASHBOARD.ACCOUNT_BALANCE.CARD' | translate }}</span>
+        <span>{{ 'DASHBOARD.ACCOUNT_BALANCE.PAYPAL' | translate }}</span>
       </div>
     </div>
   </app-section-card>
 
-  <app-section-card title="Livraisons à venir" subtitle="Planning de la semaine" actionLabel="Voir" actionLink="/deliveries">
+  <app-section-card [title]="'DASHBOARD.UPCOMING_DELIVERIES.TITLE' | translate" [subtitle]="'DASHBOARD.UPCOMING_DELIVERIES.SUBTITLE' | translate" [actionLabel]="'COMMON.ACTIONS.VIEW' | translate" actionLink="/deliveries">
     <mat-list>
       @for (delivery of deliveryList(); track delivery.id) {
         <mat-list-item>
           <div class="delivery-item">
             <strong>{{ delivery.numero }}</strong>
-            <span>{{ delivery.date_livraison | date: 'dd/MM/yyyy' }}</span>
+            <span>{{ formatDeliveryDate(delivery.date_livraison) }}</span>
           </div>
         </mat-list-item>
       }
