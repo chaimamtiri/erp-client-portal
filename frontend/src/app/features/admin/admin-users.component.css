@@ -1,0 +1,27 @@
+.admin-users-shell {
+  padding: 24px;
+}
+
+.admin-card {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.admin-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.feedback {
+  margin-top: 16px;
+  font-weight: 600;
+}
+
+.feedback.success {
+  color: #0b7a0b;
+}
+
+.feedback.error {
+  color: #b00020;
+}

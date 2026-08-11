@@ -1,22 +1,30 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideTranslateService } from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { routes } from './app.routes';
-import { authTokenInterceptor } from './Core/interceptors/auth-token.interceptor';
+import { authTokenInterceptor } from './core/interceptors/auth-token.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
+
+export class CustomTranslateLoader implements TranslateLoader {
+  constructor(private http: HttpClient) {}
+  getTranslation(lang: string): Observable<any> {
+    return this.http.get(`/assets/i18n/${lang}.json`);
+  }
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authTokenInterceptor])),
+    provideHttpClient(withInterceptors([authTokenInterceptor, errorInterceptor])),
     provideTranslateService({
-      loader: provideTranslateHttpLoader({
-        prefix: './assets/i18n/',
-        suffix: '.json'
-      })
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) => new CustomTranslateLoader(http),
+        deps: [HttpClient]
+      }
     })
   ]
 };

@@ -1,0 +1,78 @@
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.CATALOGUE']" />
+
+    <div class="catalog-header">
+      <div class="catalog-header__info">
+        <h2>{{ 'CATALOG.TITLE' | translate }}</h2>
+        <p>{{ 'CATALOG.DESCRIPTION' | translate }}</p>
+      </div>
+      <div class="catalog-header__actions">
+        <mat-form-field appearance="outline" class="search-bar">
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+  matInput
+  type="text"
+  id="catalog-search"
+  name="catalog-search"
+  title="Search"
+  (input)="onSearch($event)"
+  [placeholder]="'CATALOG.SEARCH_PLACEHOLDER' | translate"
+  [attr.aria-label]="'CATALOG.SEARCH_PLACEHOLDER' | translate"
+/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="filter-bar">
+          <mat-select (selectionChange)="onFilterCategory($event.value)" [placeholder]="'CATALOG.CATEGORIES.ALL' | translate">
+            <mat-option value="">{{ 'CATALOG.CATEGORIES.ALL' | translate }}</mat-option>
+            <mat-option value="Logiciels">{{ 'CATALOG.CATEGORIES.SOFTWARE' | translate }}</mat-option>
+            <mat-option value="Matériel">{{ 'CATALOG.CATEGORIES.HARDWARE' | translate }}</mat-option>
+            <mat-option value="Services">{{ 'CATALOG.CATEGORIES.SERVICES' | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="filters-row">
+      <button mat-stroked-button (click)="sortByPrice()" [color]="sortField === 'price' ? 'primary' : ''">
+        <mat-icon>sort</mat-icon> {{ 'CATALOG.FILTERS.PRICE' | translate }}
+      </button>
+      <button mat-stroked-button (click)="sortByName()" [color]="sortField === 'name' ? 'primary' : ''">
+        <mat-icon>sort_by_alpha</mat-icon> {{ 'CATALOG.FILTERS.NAME' | translate }}
+      </button>
+      <button mat-stroked-button (click)="sortByRating()" [color]="sortField === 'rating' ? 'primary' : ''">
+        <mat-icon>star</mat-icon> {{ 'CATALOG.FILTERS.RATING' | translate }}
+      </button>
+      <button mat-stroked-button (click)="resetFilters()">
+        <mat-icon>refresh</mat-icon> {{ 'COMMON.ACTIONS.RESET' | translate }}
+      </button>
+    </div>
+
+    @if (productList.length === 0) {
+      <div class="empty-state">
+        <mat-icon class="empty-state__icon">search_off</mat-icon>
+        <h3>{{ 'CATALOG.EMPTY.TITLE' | translate }}</h3>
+        <p>{{ 'CATALOG.EMPTY.DESCRIPTION' | translate }}</p>
+      </div>
+    } @else {
+      <div class="products-grid">
+        @for (product of productList; track product.id) {
+          <mat-card class="product-card" (click)="viewProductDetails(product)">
+            <div class="product-card__emoji">{{ product.image }}</div>
+            <div class="product-card__category">{{ product.category }}</div>
+            <div class="product-card__name">{{ product.nom }}</div>
+            <div class="product-card__description">{{ product.description }}</div>
+            <div class="product-card__meta">
+              <span class="product-card__stock" [class.low-stock]="product.stock_disponible < 10">
+                {{ product.stock_disponible }} {{ 'CATALOG.IN_STOCK' | translate }}
+              </span>
+              <span class="product-card__rating">★ {{ product.rating }}</span>
+            </div>
+            <div class="product-card__footer">
+              <div class="product-card__price">€{{ product.prix_vente_ht?.toFixed(2) }}</div>
+              <button mat-flat-button color="primary" (click)="addToCart(product); $event.stopPropagation()">
+                <mat-icon>add_shopping_cart</mat-icon>
+                {{ 'CATALOG.ADD_TO_CART' | translate }}
+              </button>
+            </div>
+          </mat-card>
+        }
+      </div>
+    }

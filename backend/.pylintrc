@@ -1,0 +1,2 @@
+[TYPECHECK]
+generated-members=db.*,Column,Integer,String,Boolean,DateTime,Numeric,Text,ForeignKey,relationship,backref,primary_key,unique,nullable,default,onupdate,server_default

@@ -1,0 +1,21 @@
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'ACTIVITY.BREADCRUMB']" />
+<mat-card class="activity-card">
+  <h2>{{ 'ACTIVITY.TITLE' | translate }}</h2>
+  <div class="activity-list">
+    @if (activityService.hasError()) {
+      <p class="activity-error">{{ 'ACTIVITY.ERROR' | translate }}</p>
+    } @else if (activityList().length === 0) {
+      <p class="activity-empty">{{ 'ACTIVITY.EMPTY' | translate }}</p>
+    } @else {
+      @for (item of activityList(); track item.title) {
+        <div class="activity-item">
+          <div>
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.detail }}</p>
+          </div>
+          <span>{{ item.time }}</span>
+        </div>
+      }
+    }
+  </div>
+</mat-card>

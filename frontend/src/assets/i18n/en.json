@@ -61,6 +61,7 @@
       "INVOICES": "Invoices",
       "TICKETS": "Tickets"
     },
+
     "LATEST_ORDERS": {
       "TITLE": "Latest orders",
       "SUBTITLE": "Real-time tracking"
@@ -354,5 +355,19 @@
     "TITLE": "Ticket TKT-118",
     "SUBTITLE": "Portal access • High priority",
     "DESCRIPTION": "An access update is required for user Claire Martin."
+  },
+  "ADMIN": {
+  "USERS": {
+    "TITLE": "Create User",
+    "DESCRIPTION": "Add a new user to the client portal.",
+    "EMAIL_LABEL": "Email",
+    "PASSWORD_LABEL": "Password",
+    "FULL_NAME_LABEL": "Full name",
+    "ROLE_LABEL": "Role",
+    "SUBMIT": "Create user",
+    "SUBMITTING": "Creating...",
+    "SUCCESS": "User created successfully.",
+    "ERROR": "An error occurred while creating the user."
   }
+}
 }

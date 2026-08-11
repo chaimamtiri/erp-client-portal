@@ -354,5 +354,20 @@
     "TITLE": "Ticket TKT-118",
     "SUBTITLE": "Accès au portail • Priorité élevée",
     "DESCRIPTION": "Une mise à jour d'accès est nécessaire pour l'utilisateur Claire Martin."
+  },
+  "ADMIN": {
+  "USERS": {
+    "TITLE": "Créer un utilisateur",
+    "DESCRIPTION": "Ajoutez un nouvel utilisateur au portail client.",
+    "EMAIL_LABEL": "E-mail",
+    "PASSWORD_LABEL": "Mot de passe",
+    "FULL_NAME_LABEL": "Nom complet",
+    "ROLE_LABEL": "Rôle",
+    "SUBMIT": "Créer l'utilisateur",
+    "SUBMITTING": "Création en cours...",
+    "SUCCESS": "Utilisateur créé avec succès.",
+    "ERROR": "Une erreur est survenue lors de la création de l'utilisateur."
   }
+}
+
 }

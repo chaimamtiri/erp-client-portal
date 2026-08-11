@@ -25,6 +25,7 @@ export class MainLayoutComponent {
     { label: 'SIDEBAR.NOTIFICATIONS', icon: 'notifications', route: '/notifications' },
     { label: 'SIDEBAR.PROFILE', icon: 'person', route: '/profile' },
     { label: 'SIDEBAR.SETTINGS', icon: 'settings', route: '/settings' },
-    { label: 'SIDEBAR.SUPPORT', icon: 'headset', route: '/support' }
+    { label: 'SIDEBAR.SUPPORT', icon: 'headset', route: '/support' },
+    { label: 'Administration', icon: 'admin_panel_settings', route: '/admin' }
   ];
 }

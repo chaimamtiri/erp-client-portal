@@ -1,0 +1,40 @@
+<div class="admin-users-shell">
+  <mat-card class="admin-card">
+    <mat-card-title>{{ 'ADMIN.USERS.TITLE' | translate }}</mat-card-title>
+    <mat-card-content>
+      <p>{{ 'ADMIN.USERS.DESCRIPTION' | translate }}</p>
+
+      <form [formGroup]="accountForm" (ngSubmit)="submit()" class="admin-form">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'ADMIN.USERS.EMAIL_LABEL' | translate }}</mat-label>
+          <input matInput formControlName="email" type="email" title="Email" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'ADMIN.USERS.PASSWORD_LABEL' | translate }}</mat-label>
+          <input matInput formControlName="password" type="password" title="Password" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'ADMIN.USERS.FULL_NAME_LABEL' | translate }}</mat-label>
+          <input matInput formControlName="nom" title="Full name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'ADMIN.USERS.ROLE_LABEL' | translate }}</mat-label>
+          <input matInput formControlName="role" title="Role" />
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting()">
+          {{ (isSubmitting() ? 'ADMIN.USERS.SUBMITTING' : 'ADMIN.USERS.SUBMIT') | translate }}
+        </button>
+      </form>
+
+      @if (feedbackMessage()) {
+        <p class="feedback" [class.success]="feedbackType() === 'success'" [class.error]="feedbackType() === 'error'">
+          {{ feedbackMessage() }}
+        </p>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

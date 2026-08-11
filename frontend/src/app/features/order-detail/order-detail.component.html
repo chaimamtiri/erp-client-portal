@@ -1,0 +1,43 @@
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.COMMANDES', 'BREADCRUMB.DETAIL']" />
+    @if (order) {
+      <mat-card class="detail-card">
+      <div class="detail-card__header">
+        <div>
+          <h2>{{ 'ORDER_DETAIL.TITLE' | translate }} {{ order.numero }}</h2>
+          <p>{{ order.statusLibelle }} • {{ formatDate(order.date_commande) }}</p>
+        </div>
+        <span class="pill">{{ order.statusLibelle }}</span>
+      </div>
+      <div class="detail-grid">
+        <div>
+          <h3>{{ 'ORDER_DETAIL.CUSTOMER_INFO' | translate }}</h3>
+          <p>{{ profileService.profile()?.name }}</p>
+          <p>{{ profileService.profile()?.email }}</p>
+        </div>
+        <div>
+          <h3>{{ 'ORDER_DETAIL.ADDRESS' | translate }}</h3>
+          @if (defaultAddress) {
+            <p>{{ defaultAddress.adresse }}</p>
+            <p>{{ defaultAddress.complement }}</p>
+          } @else {
+            <p>{{ 'ORDER_DETAIL.NO_ADDRESS' | translate }}</p>
+          }
+        </div>
+      </div>
+      <div class="items-list">
+        @for (item of order.items; track item.id) {
+          <div class="items-list__row">
+            <span>{{ item.nom }} (x{{ item.quantity }})</span>
+            <span>€{{ (item.prix_vente_ht || 0) * item.quantity }}</span>
+          </div>
+        }
+        <div class="items-list__row"><span>{{ 'ORDERS.TIMELINE.SUBTOTAL_HT' | translate }}</span><span>€{{ order.total_ht }}</span></div>
+        <div class="items-list__row"><span>{{ 'ORDERS.TIMELINE.TAX' | translate }}</span><span>€{{ order.total_tva }}</span></div>
+        <div class="items-list__row total"><span>{{ 'CART.SUMMARY.TOTAL' | translate }}</span><span>€{{ order.total_ttc }}</span></div>
+      </div>
+    </mat-card>
+    } @else {
+      <mat-card class="detail-card">
+        <p>{{ 'ORDER_DETAIL.NOT_FOUND' | translate }}</p>
+      </mat-card>
+    }

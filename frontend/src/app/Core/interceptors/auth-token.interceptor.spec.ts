@@ -3,6 +3,10 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authTokenInterceptor } from './auth-token.interceptor';
 import { HttpClient } from '@angular/common/http';
+declare const describe: any;
+declare const beforeEach: any;
+declare const it: any;
+declare const expect: any;
 
 describe('authTokenInterceptor', () => {
   let httpClient: HttpClient;

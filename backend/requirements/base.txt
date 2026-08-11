@@ -1,0 +1,11 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-JWT-Extended
+Flask-CORS
+Flask-Limiter
+flask-marshmallow
+marshmallow
+python-dotenv
+gunicorn
+

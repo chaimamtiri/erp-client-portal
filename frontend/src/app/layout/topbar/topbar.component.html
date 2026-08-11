@@ -23,6 +23,7 @@
         [matMenuTriggerFor]="languageMenu"
         [attr.aria-label]="'LANGUAGE.SWITCHER_ARIA' | translate"
       >
+
         <mat-icon>language</mat-icon>
         <span class="topbar__language-code">{{ currentLanguage().toUpperCase() }}</span>
         <mat-icon class="topbar__language-chevron">expand_more</mat-icon>
@@ -97,7 +98,7 @@
         <div class="avatar-circle">
           {{ initials() }}
         </div>
-        <span class="profile-name">{{ profile.profile().name }}</span>
+        <span class="profile-name">{{ profile.profile()?.name }}</span>
         <mat-icon class="chevron">expand_more</mat-icon>
       </button>
 
@@ -106,8 +107,8 @@
           <div class="profile-panel__header">
             <div class="avatar-large">{{ initials() }}</div>
             <div>
-              <h4>{{ profile.profile().name }}</h4>
-              <p>{{ profile.profile().role }}</p>
+              <h4>{{ profile.profile()?.name }}</h4>
+              <p>{{ profile.profile()?.role }}</p>
             </div>
           </div>
           <div class="profile-panel__body">
@@ -125,7 +126,7 @@
             </a>
           </div>
           <div class="profile-panel__footer">
-            <button class="logout-btn">
+            <button class="logout-btn" (click)="logout()">
               <mat-icon>logout</mat-icon>
               <span>{{ 'TOPBAR.LOGOUT' | translate }}</span>
             </button>
@@ -134,4 +135,10 @@
       }
     </div>
   </div>
+  @if (profile.isAdmin()) {
+  <a routerLink="/admin" class="profile-menu-item" (click)="closeAllDropdowns()">
+    <mat-icon>admin_panel_settings</mat-icon>
+    <span>{{ 'TOPBAR.ADMIN' | translate }}</span>
+  </a>
+}
 </header>

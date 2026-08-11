@@ -1,69 +1,119 @@
-import { Injectable, signal } from '@angular/core';
-import { Adresse, addresses } from '../models/mock-data';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { ApiConfigService } from './api-config.service';
 
-export interface UserProfile {
-  name: string;
-  email: string;
-  company: string;
-  role: string;
-  phone: string;
+export interface Address {
+  id?: number;
+  societe: string;
+  adresse: string;
+  complement: string;
+  est_default?: boolean;
 }
 
-@Injectable({ providedIn: 'root' })
+export interface UserProfile {
+  id: number;
+  email: string;
+  nom: string;
+  name: string;
+  roles: string[];
+  role: string;
+  clientId: number | null;
+  client_id?: number | null;
+  phone?: string;
+  company?: string;
+  addresses?: Address[];
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class ProfileService {
-  readonly profile = signal<UserProfile>({
-    name: 'Claire Martin',
-    email: 'claire.martin@acme.com',
-    company: 'Acme SAS',
-    role: 'Responsable achats',
-    phone: '+33 6 12 34 56 78'
-  });
+  private readonly http = inject(HttpClient);
+  private readonly apiConfig = inject(ApiConfigService);
 
-  readonly addresses = signal<Adresse[]>(addresses);
+  private readonly _profile = signal<UserProfile | null>(null);
+  private readonly _addresses = signal<Address[]>([]);
 
-  updateProfile(newProfile: Partial<UserProfile>): void {
-    this.profile.update((p) => ({ ...p, ...newProfile }));
+  readonly profile = this._profile.asReadonly();
+  readonly addresses = this._addresses.asReadonly();
+
+  constructor() {
+    this.loadProfileFromStorage();
   }
 
-  addAddress(address: Adresse): void {
-    this.addresses.update((list) => {
-      let updated = list;
-      if (address.est_default) {
-        updated = list.map((a) => ({ ...a, est_default: false, default: false }));
-      }
-      return [...updated, address];
-    });
+  loadCurrentUser(): Observable<UserProfile> {
+    return this.http.get<UserProfile>(this.apiConfig.getApiUrl('/auth/me')).pipe(
+      tap((user: UserProfile) => this.setProfile(user))
+    );
   }
 
-  updateAddress(index: number, updatedAddress: Adresse): void {
-    this.addresses.update((list) => {
-      let updated = list.map((item, idx) => (idx === index ? updatedAddress : item));
-      if (updatedAddress.est_default) {
-        updated = updated.map((a, idx) => (idx === index ? a : { ...a, est_default: false, default: false }));
+  setProfile(user: Partial<UserProfile>): void {
+    const mapped: UserProfile = {
+      id: user.id ?? 0,
+      email: user.email ?? '',
+      nom: user.nom ?? user.name ?? '',
+      name: user.name ?? user.nom ?? '',
+      roles: user.roles ?? [],
+      role: user.roles?.[0] ?? user.role ?? '',
+      clientId: user.clientId ?? user.client_id ?? null,
+      client_id: user.client_id ?? user.clientId ?? null,
+      phone: user.phone ?? '',
+      company: user.company ?? '',
+      addresses: user.addresses ?? []
+    };
+    this._profile.set(mapped);
+    this._addresses.set(mapped.addresses ?? []);
+    localStorage.setItem('userProfile', JSON.stringify(mapped));
+  }
+
+  loadProfileFromStorage(): void {
+    const stored = localStorage.getItem('userProfile');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        this.setProfile(parsed);
+      } catch {
+        this._profile.set(null);
       }
+    }
+  }
+
+  updateProfile(data: Partial<UserProfile>): Observable<UserProfile> {
+    return this.http.put<UserProfile>(this.apiConfig.getApiUrl('/auth/profile'), data).pipe(
+      tap((updated: UserProfile) => this.setProfile(updated))
+    );
+  }
+
+  addAddress(address: Address): void {
+    this._addresses.update(list => [...list, address]);
+  }
+
+  updateAddress(index: number, address: Address): void {
+    this._addresses.update(list => {
+      const updated = [...list];
+      updated[index] = address;
       return updated;
     });
   }
 
   deleteAddress(index: number): void {
-    this.addresses.update((list) => {
-      const removed = list.filter((_, idx) => idx !== index);
-      // If we deleted the default, set first as default
-      if (list[index]?.est_default && removed.length > 0) {
-        removed[0].est_default = true;
-        removed[0].default = true;
-      }
-      return removed;
-    });
+    this._addresses.update(list => list.filter((_, i) => i !== index));
   }
 
   setDefaultAddress(index: number): void {
-    this.addresses.update((list) =>
-      list.map((item, idx) => ({
-        ...item,
-        est_default: idx === index,
-        default: idx === index
-      }))
+    this._addresses.update(list =>
+      list.map((addr, i) => ({ ...addr, est_default: i === index }))
     );
+  }
+
+  resetProfile(): void {
+    this._profile.set(null);
+    this._addresses.set([]);
+    localStorage.removeItem('userProfile');
+  }
+
+  isAdmin(): boolean {
+    return this._profile()?.roles?.includes('ROLE_ADMIN') ?? false;
   }
 }

@@ -1,20 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { LanguageService } from './Core/services/language.service';
+import { Component, inject, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { LanguageService } from './core/services/language.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule],
-  templateUrl: './app.html',
-  styleUrl: './app.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [RouterOutlet],
+  template: `<router-outlet></router-outlet>`
 })
-export class App {
-  private readonly languageService: LanguageService = inject(LanguageService);
+export class App implements OnInit {
+  private readonly languageService = inject(LanguageService);
 
-  constructor() {
+  ngOnInit(): void {
     this.languageService.initialize();
   }
 }
-

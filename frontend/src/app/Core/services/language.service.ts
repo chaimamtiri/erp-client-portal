@@ -22,15 +22,6 @@ export class LanguageService {
   readonly languages = SUPPORTED_LANGUAGES;
   readonly currentLanguage = signal<LanguageCode>('fr');
 
-  constructor() {
-    this.translate.onLangChange.subscribe(({ lang }) => {
-      const normalizedLang = this.normalizeLanguage(lang);
-      this.currentLanguage.set(normalizedLang);
-      this.persistLanguage(normalizedLang);
-      this.applyDirection(normalizedLang);
-    });
-  }
-
   initialize(): void {
     const storedLang = this.readStoredLanguage();
     const browserLang = this.normalizeLanguage(this.translate.getBrowserLang());
@@ -50,6 +41,13 @@ export class LanguageService {
     }
 
     this.translate.use(normalizedLang);
+    this.currentLanguage.set(normalizedLang);
+    this.persistLanguage(normalizedLang);
+    this.applyDirection(normalizedLang);
+  }
+
+  getCurrentLang(): string {
+    return this.currentLanguage();
   }
 
   private readStoredLanguage(): LanguageCode | null {
@@ -72,7 +70,6 @@ export class LanguageService {
     if (lang === 'fr' || lang === 'en' || lang === 'ar') {
       return lang;
     }
-
     return 'fr';
   }
 }

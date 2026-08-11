@@ -1,0 +1,197 @@
+<app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.PROFIL_ADRESSES']" />
+
+    <div class="profile-layout">
+      <!-- Profile Header Hero -->
+      <div class="profile-hero">
+        <div class="profile-hero__avatar">
+          {{ initials() }}
+        </div>
+        <div class="profile-hero__info">
+          <h2>{{ profileService.profile()?.name }}</h2>
+          <p class="role">{{ profileService.profile()?.role }} • {{ profileService.profile()?.company }}</p>
+          <p class="email"><mat-icon>email</mat-icon> {{ profileService.profile()?.email }}</p>
+        </div>
+      </div>
+
+      <!-- Tabbed Container Card -->
+      <mat-card class="tabs-card">
+        <!-- Tabs Headers -->
+        <div class="tab-headers">
+          <button class="tab-header-btn" [class.active]="activeTab() === 'info'" (click)="setTab('info')">
+            <mat-icon>person</mat-icon>
+            <span>{{ 'PROFILE.TABS.MY_PROFILE' | translate }}</span>
+          </button>
+          <button class="tab-header-btn" [class.active]="activeTab() === 'addresses'" (click)="setTab('addresses')">
+            <mat-icon>home_work</mat-icon>
+            <span>{{ 'PROFILE.TABS.MY_ADDRESSES' | translate }}</span>
+          </button>
+        </div>
+
+        <div class="tab-content">
+          <!-- TAB 1: Profile info -->
+          @if (activeTab() === 'info') {
+            <div class="tab-pane">
+              @if (!isEditing()) {
+                <div class="info-view">
+                  <div class="info-grid">
+                    <div class="info-group">
+                      <label>{{ 'PROFILE.INFO.FULL_NAME' | translate }}</label>
+                      <p>{{ profileService.profile()?.name }}</p>
+                    </div>
+                    <div class="info-group">
+                      <label>{{ 'PROFILE.INFO.EMAIL' | translate }}</label>
+                      <p>{{ profileService.profile()?.email }}</p>
+                    </div>
+                    <div class="info-group">
+                      <label>{{ 'PROFILE.INFO.PHONE' | translate }}</label>
+                      <p>{{ profileService.profile()?.phone }}</p>
+                    </div>
+                    <div class="info-group">
+                      <label>{{ 'PROFILE.INFO.COMPANY' | translate }}</label>
+                      <p>{{ profileService.profile()?.company }}</p>
+                    </div>
+                    <div class="info-group">
+                      <label>{{ 'PROFILE.INFO.ROLE' | translate }}</label>
+                      <p>{{ profileService.profile()?.role }}</p>
+                    </div>
+                  </div>
+                  <div class="action-row">
+                    <button mat-flat-button color="primary" (click)="startEdit()">
+                      <mat-icon>edit</mat-icon>
+                      {{ 'PROFILE.INFO.EDIT_BUTTON' | translate }}
+                    </button>
+                  </div>
+                </div>
+              } @else {
+                <form [formGroup]="profileForm" (submit)="saveProfile()" class="profile-form">
+                  <div class="form-grid">
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'PROFILE.INFO.FULL_NAME' | translate }}</mat-label>
+                      <input matInput formControlName="name" placeholder="Full name" title="Full name" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'PROFILE.INFO.EMAIL' | translate }}</mat-label>
+                      <input matInput formControlName="email" type="email" placeholder="Email" title="Email" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'PROFILE.INFO.PHONE' | translate }}</mat-label>
+                      <input matInput formControlName="phone" placeholder="Phone number" title="Phone number" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'PROFILE.INFO.COMPANY' | translate }}</mat-label>
+                      <input matInput formControlName="company" readonly placeholder="Company" title="Company" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'PROFILE.INFO.ROLE' | translate }}</mat-label>
+                      <input matInput formControlName="role" placeholder="Role" title="Role" />
+                    </mat-form-field>
+                  </div>
+                  <div class="action-row">
+                    <button mat-stroked-button type="button" (click)="cancelEdit()">{{ 'COMMON.ACTIONS.CANCEL' | translate }}</button>
+                    <button mat-flat-button color="primary" type="submit" [disabled]="profileForm.invalid">{{ 'COMMON.ACTIONS.SAVE' | translate }}</button>
+                  </div>
+                </form>
+              }
+            </div>
+          }
+
+          <!-- TAB 2: Addresses -->
+          @if (activeTab() === 'addresses') {
+            <div class="tab-pane">
+              <!-- Address Editor Form (Shown during Add/Edit) -->
+              @if (isEditingAddress() || isAddingAddress()) {
+                <div class="address-form-container">
+                  <h3>{{ isAddingAddress() ? ('PROFILE.ADDRESSES.ADD_TITLE' | translate) : ('PROFILE.ADDRESSES.EDIT_TITLE' | translate) }}</h3>
+                  <form [formGroup]="addressForm" (submit)="saveAddress()">
+                    <div class="form-grid">
+                      <mat-form-field appearance="outline">
+                        <mat-label>{{ 'PROFILE.ADDRESSES.COMPANY_LABEL' | translate }}</mat-label>
+                        <input matInput formControlName="societe" placeholder="ex: Bureau Principal" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>{{ 'PROFILE.ADDRESSES.LINE_LABEL' | translate }}</mat-label>
+                        <input matInput formControlName="adresse" placeholder="ex: 12 Rue de la Paix" />
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>{{ 'PROFILE.ADDRESSES.CITY_LABEL' | translate }}</mat-label>
+                        <input matInput formControlName="complement" placeholder="ex: 75002 Paris" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="checkbox-row">
+                      <mat-checkbox formControlName="est_default">{{ 'PROFILE.ADDRESSES.SET_DEFAULT' | translate }}</mat-checkbox>
+                    </div>
+
+                    <div class="action-row">
+                      <button mat-stroked-button type="button" (click)="cancelAddressForm()">{{ 'COMMON.ACTIONS.CANCEL' | translate }}</button>
+                      <button mat-flat-button color="primary" type="submit" [disabled]="addressForm.invalid">{{ 'COMMON.ACTIONS.SAVE' | translate }}</button>
+                    </div>
+                  </form>
+                </div>
+              }
+
+              <!-- Addresses List -->
+              <div class="addresses-section" [class.blur-background]="isEditingAddress() || isAddingAddress()">
+                <div class="addresses-header">
+                  <div>
+                    <h3>{{ 'PROFILE.ADDRESSES.HEADER_TITLE' | translate }}</h3>
+                    <p>{{ 'PROFILE.ADDRESSES.HEADER_DESC' | translate }}</p>
+                  </div>
+                  @if (!isEditingAddress() && !isAddingAddress()) {
+                    <button mat-flat-button color="primary" (click)="startAddAddress()">
+                      <mat-icon>add</mat-icon>
+                      {{ 'PROFILE.ADDRESSES.ADD_TITLE' | translate }}
+                    </button>
+                  }
+                </div>
+
+                @if (profileService.addresses().length === 0) {
+                  <div class="empty-addresses">
+                    <mat-icon>home_work</mat-icon>
+                    <p>{{ 'PROFILE.ADDRESSES.EMPTY' | translate }}</p>
+                  </div>
+                } @else {
+                  <div class="addresses-grid">
+                    @for (address of profileService.addresses(); track address.adresse; let idx = $index) {
+                      <div class="address-card" [class.default]="address.est_default">
+                        <div class="address-card__header">
+                          <h4>{{ address.societe }}</h4>
+                          @if (address.est_default) {
+                            <span class="default-badge">{{ 'PROFILE.ADDRESSES.DEFAULT_BADGE' | translate }}</span>
+                          }
+                        </div>
+                        <div class="address-card__body">
+                          <p class="line">{{ address.adresse }}</p>
+                          <p class="city">{{ address.complement }}</p>
+                        </div>
+                        <div class="address-card__actions">
+                          @if (!address.est_default) {
+                            <button mat-button class="set-default-btn" (click)="setDefaultAddress(idx)">
+                              {{ 'PROFILE.ADDRESSES.SET_DEFAULT' | translate }}
+                            </button>
+                          }
+                          <div class="row-actions">
+                            <button mat-icon-button color="primary" (click)="startEditAddress(idx)" [attr.aria-label]="'COMMON.ACTIONS.EDIT' | translate">
+                              <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deleteAddress(idx)" [attr.aria-label]="'COMMON.ACTIONS.DELETE' | translate">
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </mat-card>
+    </div>
