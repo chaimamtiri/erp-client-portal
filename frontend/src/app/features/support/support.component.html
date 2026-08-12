@@ -1,24 +1,75 @@
 <app-breadcrumb [items]="['BREADCRUMB.ACCUEIL', 'BREADCRUMB.SUPPORT_TICKET']" />
-    <mat-card class="support-card">
-      <div class="support-card__header">
-        <div>
-          <h2>{{ 'SUPPORT.TITLE' | translate }}</h2>
-          <p>{{ 'SUPPORT.DESCRIPTION' | translate }}</p>
+<mat-card class="support-card">
+  <div class="support-card__header">
+    <div>
+      <h2>{{ 'SUPPORT.TITLE' | translate }}</h2>
+      <p>{{ 'SUPPORT.DESCRIPTION' | translate }}</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="toggleForm()">
+      {{ 'SUPPORT.NEW_TICKET' | translate }}
+    </button>
+  </div>
+
+  @if (showForm()) {
+    <form [formGroup]="ticketForm" (ngSubmit)="submitTicket()" class="ticket-form">
+      <!-- Subject -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'SUPPORT.FORM.SUBJECT' | translate }}</mat-label>
+        <input matInput formControlName="sujet" required
+               placeholder="Subject"
+               title="Subject" />
+      </mat-form-field>
+
+      <!-- Category -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'SUPPORT.FORM.CATEGORY' | translate }}</mat-label>
+        <input matInput formControlName="categorie"
+               placeholder="Category"
+               title="Category" />
+      </mat-form-field>
+
+      <!-- Priority – already fine -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'SUPPORT.FORM.PRIORITY' | translate }}</mat-label>
+        <mat-select formControlName="priorite">
+          <mat-option value="basse">{{ 'SUPPORT.PRIORITY.LOW' | translate }}</mat-option>
+          <mat-option value="normale">{{ 'SUPPORT.PRIORITY.NORMAL' | translate }}</mat-option>
+          <mat-option value="haute">{{ 'SUPPORT.PRIORITY.HIGH' | translate }}</mat-option>
+          <mat-option value="urgente">{{ 'SUPPORT.PRIORITY.URGENT' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'SUPPORT.FORM.DESCRIPTION' | translate }}</mat-label>
+        <textarea matInput formControlName="description" rows="3"
+                  placeholder="Description"
+                  title="Description"></textarea>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit"
+              [disabled]="ticketForm.invalid || submitting()">
+        {{ 'SUPPORT.FORM.SUBMIT' | translate }}
+      </button>
+    </form>
+  }
+
+  <div class="ticket-list">
+    @for (ticket of ticketList(); track ticket.id) {
+      <div class="ticket-item">
+        <div class="ticket-item__meta">
+          <strong>{{ ticket.sujet }}</strong>
+          <p>{{ ticket.categorie }} • {{ ticket.numero }}</p>
         </div>
-        <button mat-flat-button color="primary">{{ 'SUPPORT.NEW_TICKET' | translate }}</button>
+        <div class="ticket-item__chips">
+          <mat-chip [class]="'prio-' + ticket.priorite">
+            {{ priorityKey(ticket.priorite) | translate }}
+          </mat-chip>
+          <mat-chip [class]="'status-' + ticket.status">
+            {{ statusLabel(ticket.status) | translate }}
+          </mat-chip>
+        </div>
       </div>
-      <div class="ticket-list">
-        @for (ticket of ticketList(); track ticket.id) {
-          <div class="ticket-item">
-            <div class="ticket-item__meta">
-              <strong>{{ ticket.sujet }}</strong>
-              <p>{{ ticket.categorie }} • {{ ticket.numero }}</p>
-            </div>
-            <div class="ticket-item__chips">
-              <mat-chip [class]="'prio-' + ticket.priorite">{{ priorityKey(ticket.priorite) | translate }}</mat-chip>
-              <mat-chip [class]="'status-' + ticket.status">{{ statusLabel(ticket.status) | translate }}</mat-chip>
-            </div>
-          </div>
-        }
-      </div>
-    </mat-card>
+    }
+  </div>
+</mat-card>

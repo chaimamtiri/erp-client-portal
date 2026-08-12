@@ -6,8 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { InvoicesService } from '../../core/services/invoices.service';
-import { TranslatePipe } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-invoice-detail',
@@ -22,12 +21,32 @@ export class InvoiceDetailComponent implements OnInit {
   private readonly translate: TranslateService = inject(TranslateService);
 
   invoice: any;
+  loading = true;
+  notFound = false;
 
   ngOnInit(): void {
     const invoiceId = this.route.snapshot.queryParamMap.get('invoiceId');
-    if (invoiceId) {
-      this.invoice = this.invoicesService.getInvoiceById(Number(invoiceId));
+    if (!invoiceId) {
+      this.loading = false;
+      this.notFound = true;
+      return;
     }
+
+    // Try the cache first for instant render if the list was already loaded,
+    // then always refresh from the server so deep links/refreshes work.
+    this.invoice = this.invoicesService.getInvoiceById(Number(invoiceId));
+    if (this.invoice) this.loading = false;
+
+    this.invoicesService.fetchInvoiceById(Number(invoiceId)).subscribe({
+      next: (inv) => {
+        this.invoice = inv;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        if (!this.invoice) this.notFound = true;
+      }
+    });
   }
 
   formatDate(date: Date): string {
@@ -40,4 +59,3 @@ export class InvoiceDetailComponent implements OnInit {
     console.log('Downloading invoice:', this.invoice?.numero);
   }
 }
-

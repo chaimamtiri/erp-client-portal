@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Article } from '../models/mock-data';
+import { Article } from './api-config.service';
 
 export interface CartItem extends Article {
   quantity: number;

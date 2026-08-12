@@ -3,7 +3,7 @@ from flask import Blueprint, Response, jsonify, request
 from app.models.ArticleFacture import ArticleFacture
 from app.models.Client import Client
 from app.models.Facture import Facture
-from app.services.auth import token_required
+from flask_jwt_extended import jwt_required
 
 facture_bp = Blueprint('facture', __name__)
 
@@ -55,7 +55,7 @@ def _serialize_facture_line(line: ArticleFacture) -> dict:
 
 
 @facture_bp.route('', methods=['GET'])
-@token_required
+@jwt_required()
 def list_factures():
     client_id = request.args.get('client_id', type=int)
     query = Facture.query.filter_by(est_supprime=False)
@@ -66,7 +66,7 @@ def list_factures():
 
 
 @facture_bp.route('/<int:facture_id>', methods=['GET'])
-@token_required
+@jwt_required()
 def get_facture(facture_id: int):
     facture = Facture.query.get_or_404(facture_id)
     payload = _serialize_facture(facture)
@@ -78,7 +78,7 @@ def get_facture(facture_id: int):
 
 
 @facture_bp.route('/<int:facture_id>/pdf', methods=['GET'])
-@token_required
+@jwt_required()
 def facture_pdf(facture_id: int):
     HTML = _load_weasyprint_html()
 

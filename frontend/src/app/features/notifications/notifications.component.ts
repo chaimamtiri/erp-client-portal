@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
-import { NotificationService } from '../../core/services/notification.service';
+import { NotificationService } from '../../core/services/notifications.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

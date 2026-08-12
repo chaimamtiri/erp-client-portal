@@ -1,28 +1,40 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { payments, Reglement } from '../models/mock-data';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+
+export interface Payment {
+  id: number;
+  numero: string;
+  date_paiement: string | null;
+  reference: string;
+  montant_regle: number;
+  est_encaisser: boolean;
+  client_id: number;
+  method: string;
+  amount: number;
+  date: string | null;
+  status: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentsService {
-  private paymentsData = signal(payments);
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrl}/payments`;
 
-  readonly payments$ = this.paymentsData.asReadonly();
-  readonly payments = computed(() => this.paymentsData());
+  private readonly _payments = signal<Payment[]>([]);
+  readonly payments = this._payments.asReadonly();
 
-  getPayments() {
-    return this.paymentsData();
+  constructor() {
+    this.loadPayments();
   }
 
-  getPaymentById(id: number): Reglement | undefined {
-    return this.paymentsData().find(pay => pay.id === id);
-  }
-
-  getPaymentsByClient(clientId: number): Reglement[] {
-    return this.paymentsData().filter(pay => pay.client_id === clientId);
-  }
-
-  getTotalPaid(): number {
-    return this.paymentsData().reduce((sum, pay) => sum + (pay.montant_regle || 0), 0);
+  loadPayments(clientId?: number): void {
+    const url = clientId ? `${this.baseUrl}?client_id=${clientId}` : this.baseUrl;
+    this.http.get<Payment[]>(url).subscribe({
+      next: (payments) => this._payments.set(payments),
+      error: () => this._payments.set([])
+    });
   }
 }

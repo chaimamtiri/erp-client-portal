@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from app.extensions import db
 from app.models.Adresse import Adresse
-from app.services.auth import token_required
+from flask_jwt_extended import jwt_required
 
 adresse_bp = Blueprint('adresse', __name__)
 
@@ -27,7 +27,7 @@ def _serialize_adresse(adresse: Adresse) -> dict:
 
 
 @adresse_bp.route('', methods=['GET'])
-@token_required
+@jwt_required()
 def list_addresses():
     client_id = request.args.get('client_id', type=int)
     query = Adresse.query.filter_by(est_supprime=False)
@@ -38,7 +38,7 @@ def list_addresses():
 
 
 @adresse_bp.route('', methods=['POST'])
-@token_required
+@jwt_required()
 def create_address():
     data = request.get_json() or {}
     adresse = Adresse(

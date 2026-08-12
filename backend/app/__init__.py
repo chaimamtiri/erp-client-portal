@@ -1,30 +1,23 @@
-# backend/app/__init__.py
 import os
-from flask import Flask
+from flask import Flask, app
+
+from app.config import config_by_name
 from app.extensions import db, jwt, migrate, cors, limiter, ma
 
-# =============================================================================
-# CONFIG FLAGS
-# =============================================================================
-RESET_USERS_ON_STARTUP = False  # Set True once if you need to reset admin
-ADMIN_EMAIL = 'admin@erp.local'
-ADMIN_PASSWORD = 'Admin123456789'
-ADMIN_NAME = 'Admin'
 
+def create_app(config_name: str | None = None) -> Flask:
+    config_name = config_name or os.environ.get('FLASK_ENV', 'development')
 
-def create_app():
     app = Flask(__name__)
+    app.config.from_object(config_by_name[config_name])
 
-    # =========================================================================
-    # CONFIG
-    # =========================================================================
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///erp.db')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'dev-secret-change-in-production')
+    _register_extensions(app)
+    _register_blueprints(app)
 
-    # =========================================================================
-    # INIT EXTENSIONS
-    # =========================================================================
+    return app
+
+
+def _register_extensions(app: Flask) -> None:
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
@@ -32,42 +25,50 @@ def create_app():
     cors.init_app(app)
     limiter.init_app(app)
 
-    # =========================================================================
-    # REGISTER BLUEPRINTS
-    # =========================================================================
-    from app.services.auth import auth_bp      # ← YOUR auth file
+
+def _register_blueprints(app: Flask) -> None:
+    from app.services.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
 
-    # Add other blueprints here as you create them:
-    # from app.routes.client import client_bp
-    # app.register_blueprint(client_bp, url_prefix='/api/v1/clients')
+    from app.services.famille_article import famille_article_bp
+    app.register_blueprint(famille_article_bp, url_prefix='/api/v1/families')
 
-    # =========================================================================
-    # CREATE TABLES + ADMIN
-    # =========================================================================
-    with app.app_context():
-        db.create_all()
-        ensure_default_admin_user()
+    from app.services.bon_livraison import bon_livraison_bp
+    app.register_blueprint(bon_livraison_bp, url_prefix='/api/v1/deliveries')
 
-    return app
+    from app.services.facture import facture_bp
+    app.register_blueprint(facture_bp, url_prefix='/api/v1/factures')
 
+    from app.services.activite import activity_bp
+    app.register_blueprint(activity_bp, url_prefix='/api/v1/activity')
 
-def ensure_default_admin_user():
-    from app.models.Utilisateur import Utilisateur
-    
-    admin = Utilisateur.query.filter_by(email=ADMIN_EMAIL).first()
-    if not admin:
-        new_admin = Utilisateur(
-            nom=ADMIN_NAME,
-            email=ADMIN_EMAIL,
-            roles='ROLE_ADMIN',
-            status='ACTIF',
-            est_bloque=False,
-            est_supprime=False
-        )
-        new_admin.set_password(ADMIN_PASSWORD)
-        db.session.add(new_admin)
-        db.session.commit()
-        print(f"✅ Admin created: {ADMIN_EMAIL} / {ADMIN_PASSWORD}")
-    else:
-        print(f"ℹ️  Admin exists: {ADMIN_EMAIL}")
+    from app.services.adresse import adresse_bp
+    app.register_blueprint(adresse_bp, url_prefix='/api/v1/addresses')
+
+    from app.services.article import article_bp
+    app.register_blueprint(article_bp, url_prefix='/api/v1/articles')
+
+    from app.services.article_commande import article_commande_bp
+    app.register_blueprint(article_commande_bp, url_prefix='/api/v1/order-lines')
+
+    from app.services.client import client_bp
+    app.register_blueprint(client_bp, url_prefix='/api/v1/clients')
+
+    from app.services.commande import commande_bp
+    app.register_blueprint(commande_bp, url_prefix='/api/v1/orders')
+
+    from app.services.dashboard import dashboard_bp
+    app.register_blueprint(dashboard_bp, url_prefix='/api/v1/dashboard')
+
+    from app.services.reglement import reglement_bp
+    app.register_blueprint(reglement_bp, url_prefix='/api/v1/payments')
+
+    from app.services.document import document_bp
+    app.register_blueprint(document_bp, url_prefix='/api/v1/documents')
+
+    from app.services.ticket import ticket_bp
+    app.register_blueprint(ticket_bp, url_prefix='/api/v1/tickets')
+
+    from app.services.notification import notification_bp
+    app.register_blueprint(notification_bp, url_prefix='/api/v1/notifications')
+    # Add this import near your other blueprint imports in backend/app/__init__.py:

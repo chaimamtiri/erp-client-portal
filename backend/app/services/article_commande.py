@@ -1,13 +1,13 @@
 from flask import Blueprint, jsonify, request
 
 from app.models.ArticleCommande import ArticleCommande
-from app.services.auth import token_required
+from flask_jwt_extended import jwt_required
 
 article_commande_bp = Blueprint('article_commande', __name__)
 
 
 @article_commande_bp.route('', methods=['GET'])
-@token_required
+@jwt_required()
 def list_order_lines():
     commande_id = request.args.get('commande_id', type=int)
     query = ArticleCommande.query.filter_by(est_supprime=False)

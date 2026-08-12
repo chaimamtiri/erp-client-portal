@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from app.models.Reglement import Reglement
-from app.services.auth import token_required
+from flask_jwt_extended import jwt_required
 
 reglement_bp = Blueprint('reglement', __name__)
 
@@ -26,7 +26,7 @@ def _serialize_reglement(reglement: Reglement) -> dict:
 
 
 @reglement_bp.route('', methods=['GET'])
-@token_required
+@jwt_required()
 def list_payments():
     client_id = request.args.get('client_id', type=int)
     query = Reglement.query.filter_by(est_supprime=False)

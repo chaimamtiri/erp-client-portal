@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from app.models.Article import Article
-from app.services.auth import token_required
+from flask_jwt_extended import jwt_required
 
 article_bp = Blueprint('article', __name__)
 
@@ -28,7 +28,7 @@ def _serialize_article(article: Article) -> dict:
 
 
 @article_bp.route('', methods=['GET'])
-@token_required
+@jwt_required()
 def list_articles():
     only_active = request.args.get('active', 'true').lower() == 'true'
     query = Article.query
@@ -39,7 +39,7 @@ def list_articles():
 
 
 @article_bp.route('/<int:article_id>', methods=['GET'])
-@token_required
+@jwt_required()
 def get_article(article_id: int):
     article = Article.query.get_or_404(article_id)
     return jsonify(_serialize_article(article)), 200

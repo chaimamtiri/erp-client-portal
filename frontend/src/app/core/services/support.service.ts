@@ -1,17 +1,30 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { tickets, Ticket } from '../models/mock-data';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap, catchError, of } from 'rxjs';
+import { Ticket } from './api-config.service';
+import { environment } from '../../../environments/environment';
+import { ProfileService } from './profile.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupportService {
-  private ticketsData = signal(tickets);
+  private readonly http = inject(HttpClient);
+  private readonly profileService = inject(ProfileService);
+  private readonly baseUrl = `${environment.apiUrl}/tickets`;
 
-  readonly tickets$ = this.ticketsData.asReadonly();
+  private readonly ticketsData = signal<Ticket[]>([]);
   readonly tickets = computed(() => this.ticketsData());
 
-  getTickets() {
-    return this.ticketsData();
+  loadTickets(clientId?: number): Observable<Ticket[]> {
+    const url = clientId ? `${this.baseUrl}?client_id=${clientId}` : this.baseUrl;
+    return this.http.get<Ticket[]>(url).pipe(
+      tap(list => this.ticketsData.set(list)),
+      catchError(() => {
+        this.ticketsData.set([]);
+        return of([]);
+      })
+    );
   }
 
   getTicketById(id: number): Ticket | undefined {
@@ -36,20 +49,25 @@ export class SupportService {
     return map[status] ?? status;
   }
 
-  addTicket(ticket: Omit<Ticket, 'id'>): void {
-    const newTicket: Ticket = {
+  // Backend requires client_id and utilisateur_id — pulled from the
+  // logged-in profile rather than trusting the caller to supply them.
+  addTicket(ticket: Pick<Ticket, 'sujet' | 'description' | 'categorie' | 'priorite'>): Observable<Ticket> {
+    const profile = this.profileService.profile();
+    const payload = {
       ...ticket,
-      id: this.ticketsData().length + 1,
-      est_supprime: false
+      client_id: profile?.client_id,
+      utilisateur_id: profile?.id
     };
-    this.ticketsData.update(tickets => [...tickets, newTicket] as Ticket[]);
+    return this.http.post<Ticket>(this.baseUrl, payload).pipe(
+      tap(newTicket => this.ticketsData.update(list => [...list, newTicket]))
+    );
   }
 
+  // NOTE: ticket_bp has no PATCH/PUT route — status updates stay
+  // local-only until the backend supports it.
   updateTicketStatus(id: number, status: 'ouvert' | 'en_cours' | 'resolu' | 'ferme'): void {
-    this.ticketsData.update(tickets =>
-      tickets.map(ticket =>
-        ticket.id === id ? { ...ticket, status } : ticket
-      )
+    this.ticketsData.update(list =>
+      list.map(ticket => ticket.id === id ? { ...ticket, status } : ticket)
     );
   }
 }

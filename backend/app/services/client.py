@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt, create_access_token
+
 from app.extensions import db
 from app.models.Client import Client
 from app.models.Utilisateur import Utilisateur
@@ -7,13 +9,14 @@ from app.schemas.utilisateur import utilisateur_schema
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
-from app.services.auth import token_required, generate_token
 
-client_bp = Blueprint('client', __name__, url_prefix='/api/v1/clients')
+# No url_prefix here — set once at registration time in __init__.py,
+# consistent with every other blueprint.
+client_bp = Blueprint('client', __name__)
 
 
-@client_bp.route('/', methods=['GET'])
-@token_required
+@client_bp.route('', methods=['GET'])
+@jwt_required()
 def get_clients():
     """
     Retrieve all active (non‑deleted) clients
@@ -37,7 +40,7 @@ def get_clients():
 
 
 @client_bp.route('/<int:client_id>', methods=['GET'])
-@token_required
+@jwt_required()
 def get_client(client_id):
     """
     Retrieve a single client by ID
@@ -51,7 +54,6 @@ def get_client(client_id):
         in: path
         type: integer
         required: true
-        description: Client ID
     responses:
       200:
         description: Client object
@@ -68,8 +70,8 @@ def get_client(client_id):
     return client_schema.jsonify(client), 200
 
 
-@client_bp.route('/', methods=['POST'])
-@token_required
+@client_bp.route('', methods=['POST'])
+@jwt_required()
 def create_client():
     """
     Create a new client (does NOT create a user)
@@ -78,30 +80,9 @@ def create_client():
       - Clients
     security:
       - Bearer: []
-    parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          type: object
-          properties:
-            code: {type: string, example: "CLI001"}
-            nom: {type: string, example: "Acme Corp"}
-            email: {type: string, example: "contact@acme.com"}
-            telephone: {type: string, example: "123456789"}
-            portable: {type: string, example: "987654321"}
-            numero_tva: {type: string, example: "FR123456789"}
-            siret: {type: string, example: "12345678901234"}
-            site_web: {type: string, example: "https://acme.com"}
-            est_bloquer: {type: boolean, default: false}
-            est_pospect: {type: boolean, default: false}
-            famille_id: {type: integer, example: 1}
-            mode_reglement_id: {type: integer, example: 2}
     responses:
       201:
         description: Created client
-        schema:
-          $ref: '#/definitions/Client'
       400:
         description: Validation errors
       409:
@@ -109,6 +90,11 @@ def create_client():
       401:
         description: Unauthorized
     """
+    claims = get_jwt()
+    roles = claims.get('roles', [])
+    if 'ROLE_ADMIN' not in roles:
+        return jsonify({'error': 'Only administrators can create clients'}), 403
+
     try:
         data = client_schema.load(request.json)
     except ValidationError as err:
@@ -125,7 +111,7 @@ def create_client():
 
 
 @client_bp.route('/<int:client_id>', methods=['PUT'])
-@token_required
+@jwt_required()
 def update_client(client_id):
     """
     Update an existing client
@@ -134,35 +120,9 @@ def update_client(client_id):
       - Clients
     security:
       - Bearer: []
-    parameters:
-      - name: client_id
-        in: path
-        type: integer
-        required: true
-        description: Client ID
-      - name: body
-        in: body
-        required: true
-        schema:
-          type: object
-          properties:
-            code: {type: string}
-            nom: {type: string}
-            email: {type: string}
-            telephone: {type: string}
-            portable: {type: string}
-            numero_tva: {type: string}
-            siret: {type: string}
-            site_web: {type: string}
-            est_bloquer: {type: boolean}
-            est_pospect: {type: boolean}
-            famille_id: {type: integer}
-            mode_reglement_id: {type: integer}
     responses:
       200:
         description: Updated client
-        schema:
-          $ref: '#/definitions/Client'
       400:
         description: Validation errors
       404:
@@ -192,7 +152,7 @@ def update_client(client_id):
 
 
 @client_bp.route('/<int:client_id>', methods=['DELETE'])
-@token_required
+@jwt_required()
 def delete_client(client_id):
     """
     Soft‑delete a client (sets est_supprime=True)
@@ -201,12 +161,6 @@ def delete_client(client_id):
       - Clients
     security:
       - Bearer: []
-    parameters:
-      - name: client_id
-        in: path
-        type: integer
-        required: true
-        description: Client ID
     responses:
       204:
         description: Deleted (no content)
@@ -215,6 +169,11 @@ def delete_client(client_id):
       401:
         description: Unauthorized
     """
+    claims = get_jwt()
+    roles = claims.get('roles', [])
+    if 'ROLE_ADMIN' not in roles:
+        return jsonify({'error': 'Only administrators can delete clients'}), 403
+
     client = Client.query.filter_by(id=client_id, est_supprime=False).first()
     if not client:
         return jsonify({"error": "Client not found"}), 404
@@ -230,41 +189,9 @@ def signup():
     ---
     tags:
       - Clients
-    parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          type: object
-          properties:
-            client:
-              type: object
-              properties:
-                code: {type: string, example: "CLI001"}
-                nom: {type: string, example: "Acme Corp"}
-                telephone: {type: string, example: "123456789"}
-                portable: {type: string}
-                numero_tva: {type: string}
-                siret: {type: string}
-                site_web: {type: string}
-                famille_id: {type: integer}
-                mode_reglement_id: {type: integer}
-            user:
-              type: object
-              required: [email, password]
-              properties:
-                email: {type: string, example: "user@acme.com"}
-                password: {type: string, example: "secret123"}
-                nom: {type: string, example: "John Doe"}
     responses:
       201:
         description: Created client + user, returns both + JWT token
-        schema:
-          type: object
-          properties:
-            client: {$ref: '#/definitions/Client'}
-            user: {$ref: '#/definitions/Utilisateur'}
-            token: {type: string, example: "eyJ..."}
       400:
         description: Missing email/password or validation errors
       409:
@@ -296,7 +223,7 @@ def signup():
         user = Utilisateur(
             email=email,
             password=hashed,
-            roles='client',
+            roles='ROLE_CLIENT',
             nom=user_data.get('nom'),
             status='active',
             est_bloque=False,
@@ -308,7 +235,17 @@ def signup():
     except IntegrityError:
         return jsonify({"error": "Client code or email already exists"}), 409
 
-    token = generate_token(user.id)
+    # Issue a token the same way /auth/login does, so it works against
+    # every other endpoint immediately (previously used a standalone
+    # generate_token() that produced an incompatible payload shape).
+    token = create_access_token(
+        identity=str(user.id),
+        additional_claims={
+            'email': user.email,
+            'roles': user.roles.split(',') if user.roles else ['ROLE_CLIENT'],
+            'client_id': user.client_id
+        }
+    )
 
     return jsonify({
         "client": client_schema.dump(client),

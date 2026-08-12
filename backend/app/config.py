@@ -12,7 +12,7 @@ class Config:
     
     SQLALCHEMY_DATABASE_URI = os.getenv(
         'DATABASE_URL',
-        'sqlite:///erp_portal.db'
+        'sqlite:///erp.db'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     RATELIMIT_STORAGE_URI = os.getenv('REDIS_URL', 'memory://')

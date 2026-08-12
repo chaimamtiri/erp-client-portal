@@ -6,6 +6,7 @@ from app.models.Commande import Commande
 from app.models.ArticleCommande import ArticleCommande
 from app.models.Utilisateur import Utilisateur
 from app.utils.decorators import client_owner_or_admin
+from app.models.HistoriqueStatutCommande import HistoriqueStatutCommande
 
 commande_bp = Blueprint('commande', __name__)
 
@@ -213,3 +214,41 @@ def get_commande(id, current_user=None):
             } for a in articles
         ]
     }), 200
+
+@commande_bp.route('/<int:id>/tracking', methods=['GET'])
+@jwt_required()
+@client_owner_or_admin
+def get_commande_tracking(id, current_user=None):
+    """
+    Get status history for an order.
+    ---
+    tags:
+      - Commandes
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Chronological list of status changes
+        schema:
+          type: array
+          items:
+            type: object
+    """
+    history = HistoriqueStatutCommande.query.filter_by(
+        commande_id=id
+    ).order_by(HistoriqueStatutCommande.date_changement.asc()).all()
+
+    return jsonify([
+        {
+            'id': h.id,
+            'ancien_status_id': h.ancien_status_id,
+            'nouveau_status_id': h.nouveau_status_id,
+            'commentaire': h.commentaire,
+            'date_changement': h.date_changement.isoformat() if h.date_changement else None
+        } for h in history
+    ]), 200

@@ -1,5 +1,5 @@
 // Composant de la liste des produits - Finalisation Task #14
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
@@ -8,8 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
-import { products } from '../../core/models/mock-data';
 import { CartService } from '../../core/services/cart.service';
+import { ProductsService } from '../../core/services/products.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -20,15 +20,32 @@ import { TranslatePipe } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductsComponent {
-  protected productList = products;
-  private readonly allProducts = products;
+  private readonly productsService = inject(ProductsService);
+  private cartService: CartService = inject(CartService);
+  private router: Router = inject(Router);
+
+  // Real data from the backend (/api/v1/articles), loaded by ProductsService on construction.
+  protected productList: any[] = [];
+  private allProducts: any[] = [];
+
   protected sortField: string = '';
   protected sortDirection: 'asc' | 'desc' = 'asc';
   private currentSearchTerm: string = '';
   private currentCategory: string = '';
 
-  private cartService: CartService = inject(CartService);
-  private router: Router = inject(Router);
+  constructor() {
+    // productsService.products is a signal — re-sync our local arrays whenever
+    // it updates (initial load, or a future loadProducts() refresh call).
+    effect(() => {
+      const products = this.productsService.products();
+      this.allProducts = products;
+      this.applyFilters();
+    });
+  }
+
+  protected get hasError() {
+    return this.productsService.hasError();
+  }
 
   onSearch(event: any) {
     const searchTerm = event.target.value.toLowerCase().trim();
@@ -121,4 +138,3 @@ export class ProductsComponent {
     this.cartService.addToCart(product);
   }
 }
-

@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, of } from 'rxjs';
-import { ActivityItem } from '../models/mock-data';
+import { ActivityItem } from './api-config.service';
 import { ApiConfigService } from './api-config.service';
 
 interface ActivityApiItem {

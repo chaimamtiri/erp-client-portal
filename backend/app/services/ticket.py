@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from app.extensions import db
 from app.models.Ticket import Ticket
-from app.services.auth import token_required
 
 ticket_bp = Blueprint('ticket', __name__)
 
@@ -29,7 +29,7 @@ def _serialize_ticket(ticket: Ticket) -> dict:
 
 
 @ticket_bp.route('', methods=['GET'])
-@token_required
+@jwt_required()
 def list_tickets():
     client_id = request.args.get('client_id', type=int)
     query = Ticket.query.filter_by(est_supprime=False)
@@ -40,7 +40,7 @@ def list_tickets():
 
 
 @ticket_bp.route('', methods=['POST'])
-@token_required
+@jwt_required()
 def create_ticket():
     data = request.get_json() or {}
     ticket = Ticket(

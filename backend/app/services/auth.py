@@ -4,8 +4,6 @@ from flask_jwt_extended import (
     jwt_required, get_jwt_identity, get_jwt
 )
 from datetime import datetime, timedelta
-from functools import wraps
-import jwt
 
 from app.extensions import db, token_blocklist
 from app.models.Utilisateur import Utilisateur
@@ -21,33 +19,6 @@ def register():
     ---
     tags:
       - Authentication
-    parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          type: object
-          required:
-            - email
-            - password
-          properties:
-            email:
-              type: string
-              example: client@example.com
-            password:
-              type: string
-              example: password123
-            nom:
-              type: string
-              example: Jean Dupont
-            client_id:
-              type: integer
-              example: 1
-            roles:
-              type: array
-              items:
-                type: string
-              example: ["ROLE_CLIENT"]
     responses:
       201:
         description: User registered successfully
@@ -93,34 +64,9 @@ def login():
     ---
     tags:
       - Authentication
-    parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          type: object
-          required:
-            - email
-            - password
-          properties:
-            email:
-              type: string
-              example: client@example.com
-            password:
-              type: string
-              example: password123
     responses:
       200:
         description: Login successful
-        schema:
-          type: object
-          properties:
-            access_token: {type: string}
-            refresh_token: {type: string}
-            token_type: {type: string}
-            expires_in: {type: integer}
-            user:
-              type: object
       401:
         description: Invalid credentials
       403:
@@ -182,10 +128,6 @@ def refresh():
     responses:
       200:
         description: New access token
-        schema:
-          type: object
-          properties:
-            access_token: {type: string}
       401:
         description: Invalid refresh token
     """
@@ -237,16 +179,6 @@ def get_me():
     responses:
       200:
         description: Current user info
-        schema:
-          type: object
-          properties:
-            id: {type: integer}
-            email: {type: string}
-            nom: {type: string}
-            roles: {type: array, items: {type: string}}
-            client_id: {type: integer}
-            status: {type: string}
-            date_token: {type: string}
     """
     user_id = get_jwt_identity()
     user = Utilisateur.query.get(int(user_id))
@@ -274,15 +206,6 @@ def change_password():
       - Authentication
     security:
       - Bearer: []
-    parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          type: object
-          properties:
-            current_password: {type: string}
-            new_password: {type: string}
     responses:
       200:
         description: Password updated
@@ -297,35 +220,7 @@ def change_password():
     user.set_password(data.get('new_password'))
     db.session.commit()
 
-    # Invalidate current token
     jti = get_jwt()['jti']
     token_blocklist.add(jti)
 
     return jsonify({'message': 'Password updated successfully'}), 200
-
-
-# ---------- Helpers for client service ----------
-def generate_token(user_id):
-    """Generate a JWT token for a given user ID (expires in 24h)."""
-    payload = {
-        'user_id': user_id,
-        'exp': datetime.utcnow() + timedelta(hours=24)
-    }
-    return jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
-
-
-def token_required(f):
-    """Decorator to protect endpoints with a Bearer token."""
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth_header = request.headers.get('Authorization')
-        if not auth_header or not auth_header.startswith('Bearer '):
-            return jsonify({'error': 'Missing or invalid Authorization header'}), 401
-        token = auth_header.split(' ')[1]
-        try:
-            payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-            request.user_id = payload['user_id']
-        except jwt.InvalidTokenError:
-            return jsonify({'error': 'Invalid or expired token'}), 401
-        return f(*args, **kwargs)
-    return decorated

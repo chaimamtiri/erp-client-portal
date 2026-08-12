@@ -11,7 +11,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ProfileService } from '../../core/services/profile.service';
 import { AuthService } from '../../core/services/auth.service';
 import { LanguageService, LanguageCode } from '../../core/services/language.service';
-import { NotificationService } from '../../core/services/notification.service';
+import { NotificationService } from '../../core/services/notifications.service';
 
 @Component({
   selector: 'app-topbar',

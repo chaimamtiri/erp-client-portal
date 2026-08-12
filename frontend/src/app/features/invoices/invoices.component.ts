@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DOCUMENT, formatDate, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { MatCardModule } from '@angular/material/card';
@@ -8,9 +8,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
 import { InvoicesService } from '../../core/services/invoices.service';
-import { Facture } from '../../core/models/mock-data';
-import { TranslatePipe } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
+import { ProfileService } from '../../core/services/profile.service';
+import { Facture } from '../../core/services/api-config.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 const LOCALE = 'fr-FR';
 registerLocaleData(localeFr, LOCALE);
@@ -22,15 +22,20 @@ registerLocaleData(localeFr, LOCALE);
   styleUrl: './invoices.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InvoicesComponent {
+export class InvoicesComponent implements OnInit {
   protected readonly invoicesService: InvoicesService = inject(InvoicesService);
+  private readonly profileService = inject(ProfileService);
   private readonly document: Document = inject(DOCUMENT);
   private readonly translate: TranslateService = inject(TranslateService);
 
   protected readonly displayedColumns = ['numero', 'customer', 'total_ttc', 'date_facture', 'est_solder', 'actions'];
   protected readonly dataSource = this.invoicesService.invoices;
 
-  /** Génère un récapitulatif de facture téléchargeable à partir des données de la facture. */
+  ngOnInit(): void {
+    const clientId = this.profileService.profile()?.client_id ?? undefined;
+    this.invoicesService.loadInvoices(clientId);
+  }
+
   protected downloadInvoice(invoice: Facture): void {
     const content = [
       `Facture - ${invoice.numero}`,

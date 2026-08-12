@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject, effect, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule, formatCurrency, formatDate, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -14,8 +14,21 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from '../../ui/breadcrumb/breadcrumb.component';
-import { orders, orderLines, orderTracking, deliveries, Commande, LigneCommande, BonLivraison, EtapeCommande } from '../../core/models/mock-data';
+// NOTE: orderTracking and deliveries remain mock-sourced — commande_bp has no
+// tracking-event or delivery-linkage data yet (confirmed by reading commande.py:
+// GET / and GET /<id> only return order fields + nested `articles` line items,
+// nothing resembling etape/date/description events). The timeline dialog below
+// is therefore intentionally left un-migrated. `orders` mock array is no longer
+// used directly (replaced by real data) — only types are imported here now.
+// NOTE: delivery/BonLivraison intentionally removed — BonLivraison has no
+// foreign key back to Commande in the schema (only tier_id, status_id), so
+// there is no real query that links an order to a delivery record. Rather
+// than guess a match (e.g. by numero string), the delivery card is removed
+// from the timeline dialog entirely until the backend adds that link.
+import { Commande, LigneCommande, EtapeCommande } from '../../core/services/api-config.service';
 import { CartService } from '../../core/services/cart.service';
+import { OrdersService, OrderListItem, OrderArticle, OrderTrackingEvent } from '../../core/services/orders.service';
+import { ProfileService } from '../../core/services/profile.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -31,35 +44,6 @@ interface TimelineStep {
   status: StepStatus;
 }
 
-interface StepDefinition {
-  key: EtapeCommande;
-  title: string;
-  icon: string;
-  fallback: string;
-}
-
-/** Étapes du suivi, dans l'ordre d'avancement (style e-commerce). */
-const STEP_DEFINITIONS: readonly StepDefinition[] = [
-  { key: 'commande', title: 'Commande passée', icon: 'shopping_cart', fallback: 'Commande enregistrée.' },
-  { key: 'paiement', title: 'Paiement confirmé', icon: 'verified', fallback: 'En attente du règlement.' },
-  { key: 'preparation', title: 'Préparation', icon: 'inventory_2', fallback: 'Préparation à venir.' },
-  { key: 'expediee', title: 'Expédiée', icon: 'local_shipping', fallback: 'Remise au transporteur à venir.' },
-  { key: 'centre_local', title: 'Arrivée au centre local', icon: 'location_on', fallback: 'Acheminement vers le centre local.' },
-  { key: 'en_livraison', title: 'En cours de livraison', icon: 'delivery_dining', fallback: 'Livraison à programmer.' },
-  { key: 'livree', title: 'Livrée', icon: 'home', fallback: 'Colis non encore livré.' }
-];
-
-const CANCELED_STEP: StepDefinition = { key: 'annulee', title: 'Annulée', icon: 'cancel', fallback: 'Commande annulée.' };
-
-/** Nombre d'étapes atteintes selon le statut de la commande. */
-const STATUS_PROGRESS: Record<string, number> = {
-  'Confirmée': 1,
-  'En cours': 3,
-  'Expédiée': 5,
-  'En livraison': 6,
-  'Livrée': 7
-};
-
 const LOCALE = 'fr-FR';
 registerLocaleData(localeFr, LOCALE);
 
@@ -72,13 +56,61 @@ registerLocaleData(localeFr, LOCALE);
 })
 export class OrdersComponent {
   private readonly cartService: CartService = inject(CartService);
+  private readonly ordersService: OrdersService = inject(OrdersService);
+  private readonly profileService: ProfileService = inject(ProfileService);
   private readonly router: Router = inject(Router);
   private readonly dialog: MatDialog = inject(MatDialog);
   private readonly translate: TranslateService = inject(TranslateService);
 
   protected readonly displayedColumns = ['numero', 'clientNom', 'date_commande', 'total_ttc', 'est_valider', 'est_solder', 'statusLibelle'];
 
+  // Real orders loaded from the backend (commande_bp), scoped to the logged-in
+  // user's client_id. Populated by the effect() below once profile.clientId is known.
+  private readonly _realOrders = signal<Commande[]>([]);
+  protected readonly loadError = signal(false);
+
+  constructor() {
+    effect(() => {
+      const clientId = this.profileService.profile()?.clientId;
+      if (!clientId) {
+        return;
+      }
+      this.loadError.set(false);
+      this.ordersService.listOrders(clientId).subscribe({
+        next: (res) => this._realOrders.set(res.items.map(item => this.toCommande(item))),
+        error: () => {
+          this.loadError.set(true);
+          this._realOrders.set([]);
+        }
+      });
+    });
+  }
+
+  // Maps the backend's list-item shape (OrderListItem) onto the Commande shape
+  // the rest of this component/template already expects, so downstream code
+  // (filtering, formatting, table columns) doesn't need to change.
+  private toCommande(item: OrderListItem): Commande {
+    return {
+      id: item.id,
+      numero: item.numero,
+      date_commande: item.date_commande ? new Date(item.date_commande) : null,
+      total_ht: item.total_ht,
+      total_ttc: item.total_ttc,
+      total_tva: item.total_ttc - item.total_ht,
+      est_valider: item.est_valider,
+      est_solder: item.est_solder,
+      montant_regle: item.total_ttc - item.solde_du,
+      solde_du: item.solde_du,
+      clientNom: '',
+      statusLibelle: item.est_solder ? 'Livrée' : item.est_valider ? 'En cours' : 'Confirmée',
+      lignes: undefined
+    } as unknown as Commande;
+  }
+
   protected readonly allOrders = computed<Commande[]>(() => {
+    // Cart-originated orders are still local-only — placeOrder() has no
+    // backend POST route to call yet (commande_bp is GET-only). These are
+    // merged in on top of real orders so users still see what they just "placed."
     const cartOrders = this.cartService.getOrders().map(order => ({
       ...order,
       clientNom: 'Acme SAS',
@@ -92,7 +124,7 @@ export class OrdersComponent {
       soldeDu: order.solde_du,
       lignes: this.toOrderLines(order)
     }));
-    return [...orders, ...cartOrders];
+    return [...this._realOrders(), ...cartOrders];
   });
 
   protected searchTerm = signal('');
@@ -128,6 +160,9 @@ export class OrdersComponent {
   private dialogRef: ReturnType<MatDialog['open']> | null = null;
 
   protected selectedOrder = signal<Commande | null>(null);
+  protected readonly loadingOrderDetail = signal(false);
+  private readonly _realOrderItems = signal<LigneCommande[]>([]);
+  private readonly _realTracking = signal<OrderTrackingEvent[]>([]);
 
   protected goToProducts(): void {
     this.router.navigate(['/products']);
@@ -135,6 +170,8 @@ export class OrdersComponent {
 
   protected openTimeline(order: Commande): void {
     this.selectedOrder.set(order);
+    this._realOrderItems.set([]);
+    this._realTracking.set([]);
     this.dialogRef = this.dialog.open(this.timelineTpl, {
       width: '960px',
       maxWidth: '96vw',
@@ -142,17 +179,52 @@ export class OrdersComponent {
       autoFocus: false
     });
     this.dialogRef.afterClosed().subscribe(() => this.selectedOrder.set(null));
+
+    // Cart-originated orders already carry their line items locally (order.lignes).
+    // Real orders don't — the list endpoint doesn't return articles, only the
+    // detail endpoint does. Fetch it now instead of falling back to mock data.
+    if (!order.lignes) {
+      this.loadingOrderDetail.set(true);
+      this.ordersService.getOrderById(order.id).subscribe({
+        next: (detail) => {
+          this._realOrderItems.set(detail.articles.map((a: OrderArticle) => ({
+            id: a.id,
+            commande_id: order.id,
+            article_id: a.id,
+            designation: a.nom_article,
+            reference: a.reference,
+            quantite: a.quantite,
+            prix_unitaire_ht: a.prix_ht,
+            total_ht: a.total_prix_ht,
+            image: undefined,
+            est_supprime: false
+          })));
+          this.loadingOrderDetail.set(false);
+        },
+        error: () => {
+          this._realOrderItems.set([]);
+          this.loadingOrderDetail.set(false);
+        }
+      });
+
+      // Real status-history from HistoriqueStatutCommande. No mock fallback.
+      this.ordersService.getOrderTracking(order.id).subscribe({
+        next: (events) => this._realTracking.set(events),
+        error: () => this._realTracking.set([])
+      });
+    }
   }
 
   protected closeTimeline(): void {
     this.dialogRef?.close();
   }
 
-  /** Articles de la commande sélectionnée (mock-data ou panier). */
   protected readonly orderItems = computed<LigneCommande[]>(() => {
     const order = this.selectedOrder();
     if (!order) return [];
-    return order.lignes ?? orderLines.filter(line => line.commande_id === order.id && !line.est_supprime);
+    // Cart-originated orders carry their own lines; real orders use the
+    // fetched detail from openTimeline() above. No mock fallback.
+    return order.lignes ?? this._realOrderItems();
   });
 
   protected readonly itemsCount = computed(() =>
@@ -163,54 +235,34 @@ export class OrdersComponent {
     this.orderItems().reduce((sum, line) => sum + line.total_ht, 0)
   );
 
-  /** Bon de livraison associé à la commande sélectionnée. */
-  protected readonly delivery = computed<BonLivraison | null>(() => {
-    const order = this.selectedOrder();
-    if (!order) return null;
-    return deliveries.find(item => item.order === order.numero) ?? null;
-  });
-
+  /**
+   * Real status-change history from HistoriqueStatutCommande, rendered
+   * chronologically. There is no Statut lookup table in the backend models,
+   * so status IDs can't be turned into human labels — showing raw IDs with
+   * timestamps/comments until that mapping exists is more honest than
+   * pretending to know what they mean.
+   */
   protected readonly timelineSteps = computed<TimelineStep[]>(() => {
     const order = this.selectedOrder();
     if (!order) return [];
 
-    const events = new Map(
-      orderTracking
-        .filter(event => event.commande_numero === order.numero)
-        .map(event => [event.etape, event] as const)
-    );
-    const reached = this.reachedSteps(order);
-    const isCanceled = order.statusLibelle === 'Annulée';
-
-    const steps = STEP_DEFINITIONS.map((definition, index) => {
-      let status: StepStatus = 'pending';
-      if (index < reached) {
-        status = 'done';
-      } else if (index === reached && !isCanceled) {
-        status = 'active';
-      }
-      return this.toTimelineStep(definition, status, events.get(definition.key)?.date ?? null, events.get(definition.key)?.description);
-    });
-
-    const visible = isCanceled ? steps.slice(0, reached) : steps;
-    if (!isCanceled) {
-      return visible;
+    // Cart-originated (local) orders have no backend history to fetch.
+    if (order.lignes) {
+      return [];
     }
-    const canceledDate = events.get('annulee')?.date ?? null;
-    return [...visible, this.toTimelineStep(CANCELED_STEP, 'canceled', canceledDate, events.get('annulee')?.description)];
-  });
 
-  private toTimelineStep(definition: StepDefinition, status: StepStatus, date: Date | null, description?: string): TimelineStep {
-    return {
-      key: definition.key,
-      title: definition.title,
-      icon: definition.icon,
-      description: description ?? definition.fallback,
-      dateLabel: date ? this.formatDay(date) : '',
-      timeLabel: date ? formatDate(date, 'HH:mm', this.currentLocale()) : '',
-      status
-    };
-  }
+    return this._realTracking().map((event, index) => ({
+      key: 'commande' as EtapeCommande,
+      title: event.nouveau_status_id !== null
+        ? `Statut #${event.nouveau_status_id}`
+        : `Étape ${index + 1}`,
+      icon: 'sync_alt',
+      description: event.commentaire ?? '',
+      dateLabel: event.date_changement ? this.formatDay(new Date(event.date_changement)) : '',
+      timeLabel: event.date_changement ? formatDate(new Date(event.date_changement), 'HH:mm', this.currentLocale()) : '',
+      status: (index === this._realTracking().length - 1 ? 'active' : 'done') as StepStatus
+    }));
+  });
 
   private formatDay(date: Date): string {
     return formatDate(date, 'd MMMM y', this.currentLocale());
@@ -241,13 +293,6 @@ export class OrdersComponent {
     if (lang === 'en') return 'en-US';
     if (lang === 'ar') return 'ar';
     return LOCALE;
-  }
-
-  /** Étapes déjà franchies, dérivées des champs métier de la commande. */
-  private reachedSteps(order: Commande): number {
-    const fromStatus = STATUS_PROGRESS[order.statusLibelle ?? ''] ?? 1;
-    const fromPayment = order.est_valider || order.est_solder ? 2 : 1;
-    return Math.min(Math.max(fromStatus, fromPayment), STEP_DEFINITIONS.length);
   }
 
   private toOrderLines(order: { id: number; items?: { id: number; nom: string; reference: string; prix_vente_ht?: number; image?: string; quantity: number }[] }): LigneCommande[] {

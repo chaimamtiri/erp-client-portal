@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from app.models.Notification import Notification
-from app.services.auth import token_required
 
 notification_bp = Blueprint('notification', __name__)
 
@@ -27,7 +27,7 @@ def _serialize_notification(notification: Notification) -> dict:
 
 
 @notification_bp.route('', methods=['GET'])
-@token_required
+@jwt_required()
 def list_notifications():
     client_id = request.args.get('client_id', type=int)
     query = Notification.query

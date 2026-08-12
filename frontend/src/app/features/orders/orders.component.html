@@ -129,27 +129,33 @@
 
           <section class="dialog-section">
             <h4 class="section-title"><mat-icon>timeline</mat-icon>{{ 'ORDERS.TIMELINE.TITLE' | translate }}</h4>
-            <div class="timeline timeline--horizontal">
-              @for (step of timelineSteps(); track step.key; let last = $last) {
-                <div class="timeline-row" [class]="step.status">
-                  <div class="timeline-row__marker">
-                    <div class="step-circle">
-                      <mat-icon>{{ step.icon }}</mat-icon>
+            @if (loadingOrderDetail()) {
+              <p class="empty-hint">{{ 'COMMON.LOADING' | translate }}</p>
+            } @else if (timelineSteps().length === 0) {
+              <p class="empty-hint">{{ 'ORDERS.TIMELINE.EMPTY_ITEMS' | translate }}</p>
+            } @else {
+              <div class="timeline timeline--horizontal">
+                @for (step of timelineSteps(); track step.key + step.dateLabel + step.timeLabel; let last = $last) {
+                  <div class="timeline-row" [class]="step.status">
+                    <div class="timeline-row__marker">
+                      <div class="step-circle">
+                        <mat-icon>{{ step.icon }}</mat-icon>
+                      </div>
+                      @if (!last) {
+                        <div class="step-connector"></div>
+                      }
                     </div>
-                    @if (!last) {
-                      <div class="step-connector"></div>
-                    }
+                    <div class="timeline-row__content">
+                      <strong class="step-title">{{ step.title }}</strong>
+                      @if (step.dateLabel) {
+                        <span class="step-date">{{ step.dateLabel }}<br>{{ step.timeLabel }}</span>
+                      }
+                      <p class="step-description">{{ step.description }}</p>
+                    </div>
                   </div>
-                  <div class="timeline-row__content">
-                    <strong class="step-title">{{ step.title }}</strong>
-                    @if (step.dateLabel) {
-                      <span class="step-date">{{ step.dateLabel }}<br>{{ step.timeLabel }}</span>
-                    }
-                    <p class="step-description">{{ step.description }}</p>
-                  </div>
-                </div>
-              }
-            </div>
+                }
+              </div>
+            }
           </section>
 
           <section class="dialog-section">
@@ -188,50 +194,13 @@
             }
           </section>
 
-          <section class="dialog-section">
-            <h4 class="section-title"><mat-icon>local_shipping</mat-icon>{{ 'ORDERS.TIMELINE.DELIVERY_INFO' | translate }}</h4>
-            @if (delivery(); as shipment) {
-              <div class="delivery-card">
-                <div class="delivery-item">
-                  <mat-icon class="delivery-icon">local_shipping</mat-icon>
-                  <div>
-                    <span class="info-label">{{ 'ORDERS.TIMELINE.CARRIER' | translate }}</span>
-                    <span class="info-value">{{ shipment.transporteur }}</span>
-                  </div>
-                </div>
-                <div class="delivery-item">
-                  <mat-icon class="delivery-icon">qr_code_2</mat-icon>
-                  <div>
-                    <span class="info-label">{{ 'ORDERS.TIMELINE.TRACKING_NO' | translate }}</span>
-                    <span class="info-value">{{ shipment.numero_suivi }}</span>
-                  </div>
-                </div>
-                <div class="delivery-item">
-                  <mat-icon class="delivery-icon">location_on</mat-icon>
-                  <div>
-                    <span class="info-label">{{ 'ORDERS.TIMELINE.ADDRESS' | translate }}</span>
-                    <span class="info-value">{{ shipment.adresse_livraison }}</span>
-                  </div>
-                </div>
-                <div class="delivery-item">
-                  <mat-icon class="delivery-icon">schedule</mat-icon>
-                  <div>
-                    <span class="info-label">{{ 'ORDERS.TIMELINE.ETA' | translate }}</span>
-                    <span class="info-value">{{ shipment.eta }}</span>
-                  </div>
-                </div>
-                <div class="delivery-item">
-                  <mat-icon class="delivery-icon">flag</mat-icon>
-                  <div>
-                    <span class="info-label">{{ 'DELIVERIES.COLUMNS.STATUS' | translate }}</span>
-                    <mat-chip class="info-chip">{{ shipment.status }}</mat-chip>
-                  </div>
-                </div>
-              </div>
-            } @else {
-              <p class="empty-hint">{{ 'ORDERS.TIMELINE.EMPTY_DELIVERY' | translate }}</p>
-            }
-          </section>
+          <!--
+            Delivery Info section removed. BonLivraison has no commande_id (or any
+            foreign key back to Commande) in the backend schema, so there is no real
+            query that can link an order to a delivery record. Re-add this section
+            if/when the backend adds that link — do not restore it with a guessed
+            match (e.g. by numero string), that would be fabricated, not real data.
+          -->
 
           <section class="dialog-section">
             <h4 class="section-title"><mat-icon>payments</mat-icon>{{ 'ORDERS.TIMELINE.FINANCIAL_SUMMARY' | translate }}</h4>

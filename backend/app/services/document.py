@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 from app.models.Document import Document
-from app.services.auth import token_required
 
 document_bp = Blueprint('document', __name__)
 
@@ -22,7 +22,7 @@ def _serialize_document(document: Document) -> dict:
 
 
 @document_bp.route('', methods=['GET'])
-@token_required
+@jwt_required()
 def list_documents():
     client_id = request.args.get('client_id', type=int)
     query = Document.query.filter_by(est_supprime=False)

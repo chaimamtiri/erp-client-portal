@@ -20,11 +20,29 @@ export class TicketDetailComponent implements OnInit {
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
 
   ticket: any;
+  loading = true;
 
   ngOnInit(): void {
     const ticketId = this.route.snapshot.queryParamMap.get('ticketId');
-    if (ticketId) {
-      this.ticket = this.supportService.getTicketById(Number(ticketId));
+    if (!ticketId) {
+      this.loading = false;
+      return;
+    }
+    const id = Number(ticketId);
+
+    // Cache first for instant render, then load the full list if it's empty
+    // (covers deep-link/refresh where nothing has populated the signal yet).
+    this.ticket = this.supportService.getTicketById(id);
+    if (this.ticket) {
+      this.loading = false;
+    } else {
+      this.supportService.loadTickets().subscribe({
+        next: () => {
+          this.ticket = this.supportService.getTicketById(id);
+          this.loading = false;
+        },
+        error: () => { this.loading = false; }
+      });
     }
   }
 
@@ -60,4 +78,3 @@ export class TicketDetailComponent implements OnInit {
     console.log('Adding message:', message);
   }
 }
-

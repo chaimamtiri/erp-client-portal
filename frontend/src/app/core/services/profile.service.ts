@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { ApiConfigService } from './api-config.service';
+import { AddressesService } from './addresses.service';
 
 export interface Address {
   id?: number;
@@ -31,6 +32,7 @@ export interface UserProfile {
 export class ProfileService {
   private readonly http = inject(HttpClient);
   private readonly apiConfig = inject(ApiConfigService);
+  private readonly addressesService = inject(AddressesService);
 
   private readonly _profile = signal<UserProfile | null>(null);
   private readonly _addresses = signal<Address[]>([]);
@@ -44,8 +46,20 @@ export class ProfileService {
 
   loadCurrentUser(): Observable<UserProfile> {
     return this.http.get<UserProfile>(this.apiConfig.getApiUrl('/auth/me')).pipe(
-      tap((user: UserProfile) => this.setProfile(user))
+      tap((user: UserProfile) => {
+        this.setProfile(user);
+        if (user.clientId ?? user.client_id) {
+          this.loadAddresses((user.clientId ?? user.client_id)!);
+        }
+      })
     );
+  }
+
+  loadAddresses(clientId: number): void {
+    this.addressesService.getByClient(clientId).subscribe({
+      next: (addresses) => this._addresses.set(addresses),
+      error: () => this._addresses.set([])
+    });
   }
 
   setProfile(user: Partial<UserProfile>): void {
@@ -63,7 +77,6 @@ export class ProfileService {
       addresses: user.addresses ?? []
     };
     this._profile.set(mapped);
-    this._addresses.set(mapped.addresses ?? []);
     localStorage.setItem('userProfile', JSON.stringify(mapped));
   }
 
@@ -85,10 +98,21 @@ export class ProfileService {
     );
   }
 
+  // Real backend call — the only address mutation the backend supports.
   addAddress(address: Address): void {
-    this._addresses.update(list => [...list, address]);
+    this.addressesService.create(address).subscribe({
+      next: (created) => this._addresses.update(list => [...list, created]),
+      error: () => {
+        // Backend rejected it — fall back to local-only so the UI doesn't silently drop the input.
+        this._addresses.update(list => [...list, address]);
+      }
+    });
   }
 
+  // NOTE: no PUT/DELETE route exists on adresse_bp yet. These remain
+  // local-only until that's built — changes here will NOT persist
+  // past a page reload or across devices. Flagging clearly rather than
+  // pretending this is fully migrated.
   updateAddress(index: number, address: Address): void {
     this._addresses.update(list => {
       const updated = [...list];
