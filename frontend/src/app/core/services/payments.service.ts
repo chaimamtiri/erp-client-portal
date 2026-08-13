@@ -26,10 +26,6 @@ export class PaymentsService {
   private readonly _payments = signal<Payment[]>([]);
   readonly payments = this._payments.asReadonly();
 
-  constructor() {
-    this.loadPayments();
-  }
-
   loadPayments(clientId?: number): void {
     const url = clientId ? `${this.baseUrl}?client_id=${clientId}` : this.baseUrl;
     this.http.get<Payment[]>(url).subscribe({
