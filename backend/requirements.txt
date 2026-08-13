@@ -13,3 +13,4 @@ redis==5.0.4
 flasgger==0.9.7.1
 WeasyPrint==62.3
 flask-marshmallow==1.2.1
+Flask-Mail==0.10.0

@@ -11,6 +11,9 @@ interface ChatMessage {
   isHtml?: boolean;
 }
 
+// Calls your own Flask backend, which holds the Groq key server-side.
+const CHAT_API_URL = 'http://localhost:5000/api/v1/chatbot/chat'; // adjust for prod
+
 @Component({
   selector: 'app-chatbot',
   imports: [ReactiveFormsModule, MatIconModule, MatButtonModule],
@@ -26,7 +29,10 @@ export class ChatbotComponent {
   isOpen = signal<boolean>(false);
   isTyping = signal<boolean>(false);
   messageInput = new FormControl('');
-  
+
+  // Keep a running history so the model has context; system prompt lives in Flask.
+  private conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [];
+
   messages = signal<ChatMessage[]>([
     {
       sender: 'bot',
@@ -36,10 +42,8 @@ export class ChatbotComponent {
   ]);
 
   constructor() {
-    // Scroll to bottom when messages list updates
     effect(() => {
       this.messages();
-      // Wait for DOM layout
       setTimeout(() => this.scrollToBottom(), 50);
     });
   }
@@ -57,7 +61,6 @@ export class ChatbotComponent {
     const text = this.messageInput.value?.trim();
     if (!text) return;
 
-    // Add user message
     const userMsg: ChatMessage = {
       sender: 'user',
       text: text,
@@ -65,45 +68,50 @@ export class ChatbotComponent {
     };
     this.messages.update((list) => [...list, userMsg]);
     this.messageInput.setValue('');
+    this.conversationHistory.push({ role: 'user', content: text });
 
-    // Trigger bot reply simulation
     this.isTyping.set(true);
-    setTimeout(() => {
-      this.isTyping.set(false);
-      this.generateBotResponse(text);
-    }, 850);
+    this.fetchAiResponse();
   }
 
-  private generateBotResponse(userText: string): void {
-    let replyText = '';
-    let isHtml = false;
+  private async fetchAiResponse(): Promise<void> {
+    try {
+      const response = await fetch(CHAT_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ history: this.conversationHistory })
+      });
 
-    const lowerText = userText.toLowerCase();
+      if (!response.ok) {
+        throw new Error(`Backend error: ${response.status}`);
+      }
 
-    if (lowerText.includes('commande')) {
-      replyText = `Voici vos commandes récentes :
-• <b>ORD-1025</b> : En cours (Livraison prévue : Demain, 10:30)
-• <b>ORD-1026</b> : Confirmée (En attente d'expédition)`;
-      isHtml = true;
-    } else if (lowerText.includes('facture')) {
-      replyText = `Votre dernière facture <b>INV-2048</b> (Montant: €2,450, Statut: Payée) est disponible au téléchargement. <a href="/documents">Télécharger INV-2048.pdf (760 KB)</a>`;
-      isHtml = true;
-    } else if (lowerText.includes('adresse')) {
-      replyText = `Vous pouvez gérer vos adresses de livraison et de facturation directement depuis votre espace <a href="/profile?tab=addresses">Profil & Adresses</a>.`;
-      isHtml = true;
-    } else {
-      replyText = `Je comprends votre demande concernant "${userText}". 
+      const data = await response.json();
+      const replyText: string = data?.reply?.trim()
+        || "Désolé, je n'ai pas pu générer de réponse pour le moment.";
 
-En tant qu'assistant prototype, mes réponses complètes seront connectées à notre IA dans la prochaine version. Pour l'instant, vous pouvez utiliser les raccourcis d'actions rapides ci-dessous !`;
+      this.conversationHistory.push({ role: 'assistant', content: replyText });
+
+      const botMsg: ChatMessage = {
+        sender: 'bot',
+        text: replyText,
+        time: this.getCurrentTime(),
+        isHtml: false
+      };
+      this.messages.update((list) => [...list, botMsg]);
+    } catch (err) {
+      const botMsg: ChatMessage = {
+        sender: 'bot',
+        text: "Une erreur est survenue lors de la connexion à l'assistant. Veuillez réessayer.",
+        time: this.getCurrentTime()
+      };
+      this.messages.update((list) => [...list, botMsg]);
+      console.error('Chatbot AI error:', err);
+    } finally {
+      this.isTyping.set(false);
     }
-
-    const botMsg: ChatMessage = {
-      sender: 'bot',
-      text: replyText,
-      time: this.getCurrentTime(),
-      isHtml: isHtml
-    };
-    this.messages.update((list) => [...list, botMsg]);
   }
 
   private getCurrentTime(): string {

@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 
 from app.extensions import db, token_blocklist
 from app.models.Utilisateur import Utilisateur
+from app.services.email_service import send_welcome_email, send_reset_password_email
+from app.utils.tokens import generate_reset_token, verify_reset_token
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -40,6 +42,8 @@ def register():
     if Utilisateur.query.filter_by(email=data['email'].lower()).first():
         return jsonify({'error': 'Email already registered'}), 409
 
+    plain_password = data['password']
+
     user = Utilisateur(
         email=data['email'].lower().strip(),
         nom=data.get('nom', ''),
@@ -47,12 +51,24 @@ def register():
         client_id=data.get('client_id'),
         status='ACTIF'
     )
-    user.set_password(data['password'])
+    user.set_password(plain_password)
     db.session.add(user)
     db.session.commit()
 
+    email_sent = True
+    try:
+        send_welcome_email(
+            email=user.email,
+            nom=user.nom,
+            password=plain_password
+        )
+    except Exception as e:
+        current_app.logger.error(f"Failed to send welcome email to {user.email}: {e}")
+        email_sent = False
+
     return jsonify({
-        'message': 'User registered successfully',
+        'message': 'User registered successfully' if email_sent
+                    else 'User registered, but the welcome email could not be sent.',
         'user_id': user.id
     }), 201
 
@@ -224,3 +240,69 @@ def change_password():
     token_blocklist.add(jti)
 
     return jsonify({'message': 'Password updated successfully'}), 200
+
+
+@auth_bp.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    """
+    Request a password reset email.
+    ---
+    tags:
+      - Authentication
+    responses:
+      200:
+        description: Reset email sent (if the account exists)
+      400:
+        description: Missing email
+    """
+    data = request.get_json()
+    email = (data.get('email') or '').lower().strip()
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+
+    user = Utilisateur.query.filter_by(email=email).first()
+
+    if user and not user.est_supprime and not user.est_bloque:
+        token = generate_reset_token(user.id)
+        try:
+            send_reset_password_email(email=user.email, nom=user.nom, token=token)
+        except Exception as e:
+            current_app.logger.error(f"Failed to send reset email to {user.email}: {e}")
+
+    return jsonify({'message': 'If an account exists for this email, a reset link has been sent.'}), 200
+
+
+@auth_bp.route('/reset-password', methods=['POST'])
+def reset_password():
+    """
+    Reset password using a valid token.
+    ---
+    tags:
+      - Authentication
+    responses:
+      200:
+        description: Password reset successful
+      400:
+        description: Invalid or expired token
+    """
+    data = request.get_json()
+    token = data.get('token')
+    new_password = data.get('new_password')
+
+    if not token or not new_password:
+        return jsonify({'error': 'Token and new password are required'}), 400
+    if len(new_password) < 8:
+        return jsonify({'error': 'Password must be at least 8 characters'}), 400
+
+    user_id = verify_reset_token(token)
+    if user_id is None:
+        return jsonify({'error': 'Invalid or expired reset link'}), 400
+
+    user = Utilisateur.query.get(user_id)
+    if not user or user.est_supprime or user.est_bloque:
+        return jsonify({'error': 'Invalid or expired reset link'}), 400
+
+    user.set_password(new_password)
+    db.session.commit()
+
+    return jsonify({'message': 'Password reset successfully'}), 200

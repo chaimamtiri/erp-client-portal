@@ -2,7 +2,7 @@ import os
 from flask import Flask, app
 
 from app.config import config_by_name
-from app.extensions import db, jwt, migrate, cors, limiter, ma
+from app.extensions import db, jwt, migrate, cors, limiter, ma, mail
 
 
 def create_app(config_name: str | None = None) -> Flask:
@@ -24,6 +24,7 @@ def _register_extensions(app: Flask) -> None:
     ma.init_app(app)
     cors.init_app(app)
     limiter.init_app(app)
+    mail.init_app(app)
 
 
 def _register_blueprints(app: Flask) -> None:
@@ -71,4 +72,6 @@ def _register_blueprints(app: Flask) -> None:
 
     from app.services.notification import notification_bp
     app.register_blueprint(notification_bp, url_prefix='/api/v1/notifications')
-    # Add this import near your other blueprint imports in backend/app/__init__.py:
+
+    from app.services.chatbot import chatbot_bp
+    app.register_blueprint(chatbot_bp, url_prefix='/api/v1/chatbot')

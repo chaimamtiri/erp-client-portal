@@ -368,6 +368,24 @@
     "SUCCESS": "Utilisateur créé avec succès.",
     "ERROR": "Une erreur est survenue lors de la création de l'utilisateur."
   }
+},
+"FORGOT_PASSWORD": {
+  "TITLE": "Mot de passe oublié ?",
+  "DESCRIPTION": "Saisissez l'e-mail associé à votre compte et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+  "SUBMIT": "Envoyer le lien",
+  "CHECK_EMAIL_TITLE": "Consultez vos e-mails",
+  "CHECK_EMAIL_DESCRIPTION": "Si un compte existe pour cet e-mail, nous avons envoyé un lien de réinitialisation.",
+  "BACK_TO_LOGIN": "Retour à la connexion"
+},
+"RESET_PASSWORD": {
+  "TITLE": "Réinitialiser le mot de passe",
+  "DESCRIPTION": "Choisissez un nouveau mot de passe pour votre compte.",
+  "NEW_PASSWORD": "Nouveau mot de passe",
+  "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+  "PASSWORD_MINLENGTH": "Le mot de passe doit comporter au moins 8 caractères.",
+  "SUBMIT": "Réinitialiser",
+  "SUCCESS_TITLE": "Mot de passe mis à jour",
+  "SUCCESS_DESCRIPTION": "Votre mot de passe a été réinitialisé avec succès. Redirection vers la connexion..."
 }
 
 }

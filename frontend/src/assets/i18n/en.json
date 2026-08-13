@@ -369,5 +369,23 @@
     "SUCCESS": "User created successfully.",
     "ERROR": "An error occurred while creating the user."
   }
+},
+"FORGOT_PASSWORD": {
+  "TITLE": "Forgot your password?",
+  "DESCRIPTION": "Enter the email associated with your account and we'll send you a link to reset your password.",
+  "SUBMIT": "Send reset link",
+  "CHECK_EMAIL_TITLE": "Check your email",
+  "CHECK_EMAIL_DESCRIPTION": "If an account exists for that email, we've sent a link to reset your password.",
+  "BACK_TO_LOGIN": "Back to login"
+},
+"RESET_PASSWORD": {
+  "TITLE": "Reset your password",
+  "DESCRIPTION": "Choose a new password for your account.",
+  "NEW_PASSWORD": "New password",
+  "CONFIRM_PASSWORD": "Confirm password",
+  "PASSWORD_MINLENGTH": "Password must be at least 8 characters long.",
+  "SUBMIT": "Reset password",
+  "SUCCESS_TITLE": "Password updated",
+  "SUCCESS_DESCRIPTION": "Your password has been reset successfully. Redirecting you to login..."
 }
 }

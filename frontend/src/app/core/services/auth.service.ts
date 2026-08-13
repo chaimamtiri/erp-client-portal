@@ -29,6 +29,14 @@ export interface RegisterResponse {
   user_id: number;
 }
 
+export interface ForgotPasswordResponse {
+  message: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -60,6 +68,20 @@ export class AuthService {
     return this.http.post<RegisterResponse>(
       this.apiConfig.getApiUrl('/auth/register'),
       data
+    );
+  }
+
+  forgotPassword(email: string): Observable<ForgotPasswordResponse> {
+    return this.http.post<ForgotPasswordResponse>(
+      this.apiConfig.getApiUrl('/auth/forgot-password'),
+      { email }
+    );
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(
+      this.apiConfig.getApiUrl('/auth/reset-password'),
+      { token, new_password: newPassword }
     );
   }
 
