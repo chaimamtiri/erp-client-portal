@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 interface ChatMessage {
   sender: 'bot' | 'user';
@@ -11,7 +12,7 @@ interface ChatMessage {
   isHtml?: boolean;
 }
 
-// Calls your own Flask backend, which holds the Groq key server-side.
+// Calls your Flask backend, which is registered under /api/v1/chatbot (see app/__init__.py).
 const CHAT_API_URL = 'http://localhost:5000/api/v1/chatbot/chat'; // adjust for prod
 
 @Component({
@@ -23,6 +24,7 @@ const CHAT_API_URL = 'http://localhost:5000/api/v1/chatbot/chat'; // adjust for 
 })
 export class ChatbotComponent {
   private readonly router: Router = inject(Router);
+  private readonly authService: AuthService = inject(AuthService);
 
   @ViewChild('messageContainer') private messageContainer?: ElementRef;
 
@@ -76,13 +78,24 @@ export class ChatbotComponent {
 
   private async fetchAiResponse(): Promise<void> {
     try {
+      const token = this.authService.getToken();
+
+      if (!token) {
+        throw new Error('No auth token found — user is not logged in.');
+      }
+
       const response = await fetch(CHAT_API_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ history: this.conversationHistory })
       });
+
+      if (response.status === 401) {
+        throw new Error('Unauthorized — token missing or expired.');
+      }
 
       if (!response.ok) {
         throw new Error(`Backend error: ${response.status}`);
